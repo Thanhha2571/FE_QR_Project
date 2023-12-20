@@ -64,3 +64,12 @@ export const roleListForInhaber = [
         name:"Employee"
     }
 ];
+
+export const shiftType = [
+    {
+        name:"normal",
+    }, 
+    {
+        name:"overtime",
+    }
+]

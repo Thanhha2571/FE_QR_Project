@@ -9,6 +9,7 @@ import { positionList } from "assets/data/data"
 import { roleList, roleListForInhaber } from "assets/data/data"
 import { genderList } from "assets/data/data"
 import ScheduleTable from "./ScheduleTable"
+// import { useNavigate } from "react-router-dom"
 const ProfileEmployee = () => {
     const { id } = useParams();
     const [user, setUser] = useState(null);
@@ -78,17 +79,17 @@ const ProfileEmployee = () => {
     }, [id]);
 
     useEffect(() => {
-        if(user) {
+        if (user) {
             const departmentDefined = user[0]?.department?.map((item) => item.name);
             setDepartmentDefined(departmentDefined);
-    
+
             const restDepartmentList = departmentList
-                .map((item) => item.name)
-                .filter((item) => !departmentDefined.includes(item));
+                ?.map((item) => item.name)
+                ?.filter((item) => !departmentDefined?.includes(item));
             setRestDepartmentList(restDepartmentList);
         }
     }, [user, departmentList]);
-    
+
     // console.log("Department", restDepartmentList);
 
     useEffect(() => {
@@ -534,7 +535,13 @@ const ProfileEmployee = () => {
                         </div>
                     </div>)
                     }
-                    {scheduleState && <ScheduleTable id={id} name={editingData.name} department={editingData.department} role={editingData.role} position={editingData.position} />}
+                    {scheduleState && <ScheduleTable
+                        id={id}
+                        name={editingData.name}
+                        departmentDefined={departmentDefined}
+                        role={editingData.role}
+                        position={editingData.position}
+                    />}
                 </div >
             )}
 
@@ -556,7 +563,7 @@ const ProfileEmployee = () => {
                             <div className="flex flex-col px-8 w-full mt-7">
                                 <div
                                     className="flex flex-col gap-6 w-full justify-center items-center"
-                                    >
+                                >
                                     {loading && (<div className="absolute flex w-full h-full items-center justify-center">
                                         <div className="loader"></div>
                                     </div>)}

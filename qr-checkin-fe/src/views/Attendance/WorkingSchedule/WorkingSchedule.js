@@ -13,30 +13,32 @@ const WorkingSchedule = () => {
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
-    useEffect(() => {
-        const getAllShifts = async () => {
-            if (userObject?.role === "Admin") {
-                try {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-shift/get-all', { withCredentials: true });
-                    // console.log(response.data.message);
-                    setShiftList(response.data.message);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
+    const getAllShifts = async () => {
+        if (userObject?.role === "Admin") {
+            try {
+                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-shift/get-all', { withCredentials: true });
+                // console.log(response.data.message);
+                setShiftList(response.data.message);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
+        }
 
-            if (userObject?.role === "Inhaber") {
-                try {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/get-all', { withCredentials: true });
-                    // console.log(response.data.message);
-                    setShiftList(response.data.message);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                // console.log(response.data.message);
+                setShiftList(response.data.message);
+            } catch (error) {
+                console.error('Error fetching data:', error);
             }
-        };
+        }
+    };
+
+    useEffect(() => {
         getAllShifts();
-    }, [userObject?.role]);
+    }, []);
+
     if (shiftList) {
         console.log(shiftList);
     }
@@ -46,8 +48,6 @@ const WorkingSchedule = () => {
         name: '',
         start_time: '',
         end_time: '',
-        total_number: 1,
-        time_check: 2,
     });
 
     const handleInputChange = (e) => {
@@ -59,6 +59,7 @@ const WorkingSchedule = () => {
     };
 
     const handleSubmit = async (e) => {
+        e.preventDefault();
         const shiftData = {
             code: formData.code,
             name: formData.name,
@@ -69,32 +70,35 @@ const WorkingSchedule = () => {
         };
         setLoading(true);
 
-        if (userObject?.role === "Admin") {
-            try {
-                const { data } = await axios.post('https://qr-code-checkin.vercel.app/api/admin/manage-shift/create', shiftData, { withCredentials: true })
-                // setTimeout(() => {
-                //     window.location.reload();
-                // }, 3000);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
+        try {
+            let response;
 
-        if (userObject?.role === "Inhaber") {
-            try {
-                const { data } = await axios.post('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/create', shiftData, { withCredentials: true })
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
-            } finally {
-                setLoading(false);
+            if (userObject?.role === "Admin") {
+                response = await axios.post('https://qr-code-checkin.vercel.app/api/admin/manage-shift/create', shiftData, { withCredentials: true });
+            } else if (userObject?.role === "Inhaber") {
+                response = await axios.post('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/create', shiftData, { withCredentials: true });
             }
+
+            // Fetch the updated list of shifts after creating a new shift
+            getAllShifts();
+
+            // Optionally, you can clear the form data or close the form
+            setFormData({
+                code: '',
+                name: '',
+                start_time: '',
+                end_time: '',
+            });
+
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 3000);
+        } catch (error) {
+            // Handle error
+            console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
+            setCreateShiftFormState(false);
         }
     };
 

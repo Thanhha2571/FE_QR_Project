@@ -36,7 +36,7 @@ function Employee() {
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
 
-    const PAGE_SIZE = 20
+    const PAGE_SIZE = 8
     const [currentPage, setCurrentPage] = useState(1);
     const indexOfLastItem = currentPage * PAGE_SIZE;
     const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
@@ -91,6 +91,7 @@ function Employee() {
                     { withCredentials: true }
                 );
 
+                getAllUsers()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -99,6 +100,7 @@ function Employee() {
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                setAddEmployee(false)
             }
         }
         //CREATE EMPLOYEE BY INHABER
@@ -222,7 +224,9 @@ function Employee() {
                 // console.log(query);
                 setUserList(response.data.message);
             } catch (error) {
-                console.error('Error fetching data:', error);
+                // if(error.)
+                setUserList([])
+                // console.error('Error fetching data:', error);
             }
         }
 
@@ -246,9 +250,7 @@ function Employee() {
                 SeacrhTyoe(selectedDepartment, "", selectedRole)
             }
             if (inputSearch === "" && selectedDepartment === "Select Department" && selectedRole === "Select Role") {
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                getAllUsers()
             }
             setTimeout(() => {
                 setSelectedDepartment("Select Department")
@@ -268,30 +270,35 @@ function Employee() {
         }
     }
 
-    useEffect(() => {
-        const getAllUsers = async () => {
-            try {
-                if (userObject?.role === 'Admin') {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific', { withCredentials: true });
-                    setUserList(response.data.message);
-                }
-                if (userObject?.role === 'Inhaber') {
-                    // console.log("sdfs");
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/get-all?inhaber_name=${userObject.name}`, { withCredentials: true }
-                    );
-                    setUserList(response.data.message);
-                }
-                if (userObject?.role === 'Manager') {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all', {
-                        manager_name: userObject.name
-                    }, { withCredentials: true });
-                    setUserList(response.data.message);
-                }
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
+    const getAllUsers = async () => {
+        setLoading(true);
+        try {
+            if (userObject?.role === 'Admin') {
+                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific', { withCredentials: true });
+                setUserList(response.data.message);
             }
-        };
+            if (userObject?.role === 'Inhaber') {
+                // console.log("sdfs");
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/get-all?inhaber_name=${userObject.name}`, { withCredentials: true }
+                );
+                setUserList(response.data.message);
+            }
+            if (userObject?.role === 'Manager') {
+                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all', {
+                    manager_name: userObject.name
+                }, { withCredentials: true });
+                setUserList(response.data.message);
+            }
+
+        } catch (error) {
+            console.log("Error: " + error);
+        }
+        finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
 
         if (selectedRoleUser === "Employee") {
             setPositionFormMenuState(true)
@@ -310,6 +317,7 @@ function Employee() {
                 console.error('Error fetching data:', error);
             }
         };
+
         getAllUsers();
         getAllDepartments()
     }, [selectedRoleUser, userObject?.role, userObject?.name]);

@@ -5,10 +5,11 @@ import "./calendar.css";
 import axios from "axios";
 import "date-fns-tz";
 import { format } from "date-fns-tz";
-import { set } from "date-fns";
+import { shiftType } from "assets/data/data";
 
 const ScheduleTable = (props) => {
-    const { id, name, department, role, position } = props
+    const { id, name, departmentDefined, role } = props
+    console.log(departmentDefined);
     const [selectedYear, setSelectedYear] = useState(new Date());
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [employeeData, setEmployeeData] = useState(null);
@@ -21,7 +22,12 @@ const ScheduleTable = (props) => {
     const [selectedShift, setSelectedShift] = useState(null);
     const [attendanceDataByDate, setAttendanceDataByDate] = useState()
     const [scheduleDataByDate, setScheduleDataByDate] = useState()
+    const [scheduleEmployee, setScheduleEmployee] = useState()
     const [shiftDataByDate, setShiftDataByDate] = useState()
+    const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
+    const [selectedShiftType, setSelectedShiftType] = useState()
+    const [selectedDateAddShift, setSelectedDateAddShift] = useState(null)
+
     const handleShiftClick = (shift) => {
         setSelectedShift(shift);
         console.log(shift);
@@ -40,6 +46,18 @@ const ScheduleTable = (props) => {
             }
         };
         fetchData();
+
+        const fetchScheduleEmployyee = async () => {
+            try {
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
+                console.log("schedule", response.data);
+                setScheduleEmployee(response.data);
+                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+            } catch (error) {
+                console.error("Error fetching employee data:", error);
+            }
+        };
+        fetchScheduleEmployyee();
 
         const fetchScheduleDataByDate = async () => {
             try {
@@ -61,7 +79,6 @@ const ScheduleTable = (props) => {
                 }
             }
         };
-
         fetchScheduleDataByDate();
     }, [id, selectedDate, dateFormDb, role]);
 
@@ -69,7 +86,7 @@ const ScheduleTable = (props) => {
         console.log("sdfdfsfd", shiftDataByDate);
     }
     const renderTileContent = ({ date }) => {
-        if (!employeeData || !employeeData.message) return null;
+        if (!scheduleEmployee || !scheduleEmployee.message) return null;
 
         const formattedDate = date.toLocaleDateString("en-US", {
             day: "numeric",
@@ -77,27 +94,24 @@ const ScheduleTable = (props) => {
             year: "numeric",
         });
 
-        const shiftCodesForDate = employeeData?.message[0]?.department
+        const dataForDate = scheduleEmployee?.message
             ?.filter((schedule) => {
                 const scheduleDate = new Date(schedule.date);
                 return scheduleDate.toDateString() === date.toDateString();
             })
-            .map((schedule) =>
-                schedule.shift_design.map((shift) => ({
-                    position: shift.position,
-                    shiftCode: shift.shift_code,
-                }))
-            )
-            .flat();
+            .map((schedule) => ({
+                departmentName: schedule.department_name,
+                shiftCode: schedule.shift_code,
+            }));
 
         return (
-            <div className={`font-Changa calendar-tile ${shiftCodesForDate?.length > 0 ? "scheduled" : ""}`}>
+            <div className={`font-Changa calendar-tile ${dataForDate?.length > 0 ? "scheduled" : ""}`}>
                 {/* You can customize the content of the tile here */}
-                {shiftCodesForDate?.length > 0 ? (
-                    shiftCodesForDate.map(({ position, shiftCode }, index) => (
+                {dataForDate?.length > 0 ? (
+                    dataForDate.map(({ departmentName, shiftCode }, index) => (
                         <div key={index} className="flex flex-row gap-2 border-solid border-2 border-textColor py-2 rounded-md mt-2 bg-slate-200 items-center">
                             <div className="border border-solid bg-red-800 ml-6 rounded-full w-3 h-3"></div>
-                            <div className="">{position}: {shiftCode}</div>
+                            <div className="text-textColor">{departmentName}: {shiftCode}</div>
                         </div>
                     ))
                 ) : (
@@ -106,25 +120,32 @@ const ScheduleTable = (props) => {
             </div>
         );
     };
+
     const handleMonthChange = (date) => {
         setSelectedMonth(date);
     };
 
     const [formData, setFormData] = useState({
         data: {
-            shift_code: ''
+            shift_code: '',
+            dates: [],
         },
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        // If the field is 'dates', split the input into an array
+        const updatedValue = name === "dates" ? value.split(",") : value;
+
         setFormData((prevData) => ({
             data: {
                 ...prevData.data,
-                [name]: value,
+                [name]: updatedValue,
             },
         }));
     };
+
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -135,17 +156,18 @@ const ScheduleTable = (props) => {
         // if (userObject.role === 'Admin') {
         try {
             const { data } = await axios.post(
-                `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create?employeeID=${id}`,
+                `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
                 {
-                    date: selectedDate,
+                    dates: formData.data.dates,
                     shift_code: formData.data.shift_code,
+
                 },
                 { withCredentials: true }
             );
 
-            setTimeout(() => {
-                window.location.reload();
-            }, 3000);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 3000);
         } catch (error) {
             // Handle error
             console.error("Error submitting form:", error);
@@ -243,6 +265,63 @@ const ScheduleTable = (props) => {
                                             placeholder="Enter shift ID..."
                                         />
                                     </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Department</span>
+                                        </div>
+                                        <select
+                                            id="department"
+                                            name="department"
+                                            className="w-full cursor-pointer"
+                                            value={selectedDepartmentEmployee}
+                                            onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            {departmentDefined?.map((item, index) => (
+                                                <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                    {item}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="w-full h-auto flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Dates</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="dates"
+                                            required
+                                            value={formData.data.dates.join(",")}
+                                            onChange={handleChange}
+                                            placeholder="Enter date (format: MM/DD/YYYY) and separate by commas ..."
+                                        />
+                                    </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Shift Type</span>
+                                        </div>
+                                        <select
+                                            id="shift-type"
+                                            name="shift-type"
+                                            className="w-full cursor-pointer"
+                                            value={selectedShiftType}
+                                            onChange={(e) => setSelectedShiftType(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Shift Type*</option>
+                                            {shiftType?.map((item, index) => (
+                                                <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                         <button type="submit" className="w-full">Add</button>
