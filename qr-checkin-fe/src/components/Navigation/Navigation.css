@@ -1,0 +1,57 @@
+.navigation-container {
+    position: fixed;
+    height: 100%;
+    /* width: 240px; */
+    top: 0;
+    left: 0;
+}
+
+.routerLink {
+    list-style-type: none;
+    text-decoration: none;
+}
+
+.routerLink li {
+    width: auto;
+    cursor: pointer;
+    display: flex;
+    /* align-items: center;
+    justify-content: center; */
+    gap: 0.5rem;
+}
+
+.routerLink li:hover {
+    color: white;
+    background: #7071E8;
+}
+
+.routerLink h4 {
+    margin: 0;
+}
+
+.routerLink i {
+    display: flex;
+    font-size: 1.5rem;
+}
+
+.routerLink a {
+    text-decoration: none;
+}
+
+.nav-menu {
+    width: 260px;
+    background-color: #34444c;
+    height: 100vh;
+}
+
+.nav-menu.active {
+    width: 80px;
+}
+
+.navName {
+    display: none;
+}
+
+.navName.fullsize {
+    display: inline-block;
+}
