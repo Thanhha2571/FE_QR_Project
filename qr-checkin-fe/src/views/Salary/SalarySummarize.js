@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import "./Salary.css"
+import * as XLSX from "xlsx";
 
 const SalarySummarizie = () => {
     const [inputMonth, setInputMonth] = useState("")
@@ -14,6 +15,7 @@ const SalarySummarizie = () => {
     const [salaryCountingFormState, setSalaryCountingFormState] = useState(false)
     const [editSalaryCountingFormState, setEditSalaryCountingFormState] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [exportEmployee, setExportEmployee] = useState(false)
 
     const handleSeacrh = async () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
@@ -23,6 +25,7 @@ const SalarySummarizie = () => {
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.salaries)
+                console.log("data", data?.salaries);
                 // console.log(data?.);
             } catch (error) {
                 // Handle error
@@ -39,7 +42,7 @@ const SalarySummarizie = () => {
             a: '',
             b: '',
             c: '',
-            d: '',
+            d: '0.25',
         },
     });
 
@@ -82,13 +85,42 @@ const SalarySummarizie = () => {
                         a: '',
                         b: '',
                         c: '',
-                        d: '',
+                        d: '0.25',
                     },
                 });
             }
         };
         salaryCounting()
     }
+    const handleExportSalaryByEmloyeeFile = async () => {
+        setLoading(true);
+        try {
+            setLoading(true);
+
+            if (userObject?.role === "Admin") {
+                const { data } = await axios.get(
+                    `https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/salary-data?year=${inputYear}&month=${inputMonth}`,
+                    { responseType: "arraybuffer", withCredentials: true }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "employee_data.xlsx";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (error) {
+            console.error("Error exporting Excel file:", error);
+        } finally {
+            setLoading(false);
+            setExportEmployee(false)
+        }
+    }
+
     return (
         <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
             <div className="flex flex-row items-center justify-between">
@@ -104,6 +136,10 @@ const SalarySummarizie = () => {
                     <button onClick={() => setSalaryCountingFormState(!salaryCountingFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                         Salary Counting
+                    </button>
+                    <button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                        Export File
                     </button>
                 </div>
             </div>
@@ -144,16 +180,10 @@ const SalarySummarizie = () => {
                                 <span className="table-title-id">Employee ID</span>
                             </th>
                             <th className="p-2 text-left">
-                                <span className="table-title-role">Department</span>
+                                <span className="table-title-status">Hour Normal</span>
                             </th>
                             <th className="p-2 text-left">
-                                <span className="table-title-role">Position</span>
-                            </th>
-                            <th className="p-2 text-left">
-                                <span className="table-title-status">Total Hour</span>
-                            </th>
-                            <th className="p-2 text-left">
-                                <span className="table-title-status">Total Hour Overtine</span>
+                                <span className="table-title-status">Hour Overtine</span>
                             </th>
                             <th className="p-2 text-left">
                                 <span className="table-title-status">a_parameter</span>
@@ -179,7 +209,7 @@ const SalarySummarizie = () => {
                         <div className="no-result-text text-center">NO RESULT</div>
                     ) : (
                         <tbody className="tbody">
-                            {salaryListByMonth?.map(({ employee_id, employee_name, department_name, role, position, salary }) => (
+                            {salaryListByMonth?.map(({ employee_id, employee_name, role, salary }) => (
                                 <tr className="tr-item" key={employee_id}>
                                     <td className="p-2 hover:text-buttonColor2">
                                         <h2 className="text-left">
@@ -189,10 +219,16 @@ const SalarySummarizie = () => {
                                         </h2>
                                     </td>
                                     <td className="p-2">{employee_id}</td>
-                                    <td className="p-2">{department_name}</td>
-                                    <td className="p-2">{position}</td>
-                                    <td className="p-2">{salary?.hour_normal}</td>
-                                    <td className="p-2">{salary?.hour_overtime}</td>
+                                    <td className="p-2">
+                                        <div className="flex flex-col">
+                                            {salary?.hour_normal?.map(({ department_name, total_hour, total_minutes }) => (
+                                                <div className="flex flex-row gap-3">
+                                                    <span>{department_name}: {total_hour}h {total_minutes}m</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    {salary?.hour_overtime?.length > 0 ? <td className="p-2">{salary?.hour_overtime}</td> : <td className="p-2">0</td>}
                                     <td className="p-2">{salary?.a_parameter}</td>
                                     <td className="p-2">{salary?.b_parameter}</td>
                                     <td className="p-2">{salary?.c_parameter}</td>
@@ -322,6 +358,31 @@ const SalarySummarizie = () => {
                                         <button type="submit" className="w-full">Couting Salary</button>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {exportEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                <div
+                    onClick={() => setExportEmployee(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Export file</div>
+                                <div
+                                    onClick={() => setExportEmployee(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                <span>Do you want to export employee_data.xlsx?</span>
+                                <div className="flex flex-row gap-3">
+                                    <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                    <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                </div>
                             </div>
                         </div>
                     </div>
