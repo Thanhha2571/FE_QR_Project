@@ -5,6 +5,7 @@ import { roleList, roleListForInhaber } from "assets/data/data";
 import EmployeeItem from "./EmployeeItem";
 import "./Employee.css"
 import axios, { all } from "axios";
+import * as XLSX from "xlsx";
 // import { response, response } from "express";
 function Employee() {
     document.title = "Employee";
@@ -17,6 +18,7 @@ function Employee() {
     const [roleMenu, setRoleMenu] = useState(false)
 
     const [addEmployee, setAddEmployee] = useState(false)
+    const [exportEmployee, setExportEmployee] = useState(false)
 
     const [loading, setLoading] = useState(false);
     const [userList, setUserList] = useState()
@@ -270,6 +272,34 @@ function Employee() {
         }
     }
 
+    const handleExportEmloyeeFile = async () => {
+        setLoading(true);
+        try {
+            setLoading(true);
+
+            if (userObject?.role === "Admin") {
+                const { data } = await axios.get(
+                    "https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/employee-data",
+                    { responseType: "arraybuffer", withCredentials: true }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "employee_data.xlsx";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (error) {
+            console.error("Error exporting Excel file:", error);
+        } finally {
+            setLoading(false);
+            setExportEmployee(false)
+        }
+    }
     const getAllUsers = async () => {
         setLoading(true);
         try {
@@ -360,7 +390,7 @@ function Employee() {
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Add Employee
                         </button>
-                        <button className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Export File
                         </button>
@@ -713,6 +743,31 @@ function Employee() {
                                             <button type="submit" className="w-full">Add</button>
                                         </div>
                                     </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>)}
+                {exportEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                    <div
+                        onClick={() => setExportEmployee(false)}
+                        className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                    <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                        <div className="w-full h-full">
+                            <div className="flex flex-col mt-8">
+                                <div className="flex flex-row justify-between px-8 items-center">
+                                    <div className="font-bold text-xl">Approve Request</div>
+                                    <div
+                                        onClick={() => setExportEmployee(false)}
+                                        className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                </div>
+                                <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                    <span>Are you sure to approve this request?</span>
+                                    <div className="flex flex-row gap-3">
+                                        <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                        <button onClick={handleExportEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
