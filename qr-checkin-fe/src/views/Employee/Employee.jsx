@@ -756,14 +756,14 @@ function Employee() {
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
-                                    <div className="font-bold text-xl">Approve Request</div>
+                                    <div className="font-bold text-xl">Export file</div>
                                     <div
                                         onClick={() => setExportEmployee(false)}
                                         className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Are you sure to approve this request?</span>
+                                    <span>Do you want to export employee_data.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>

@@ -59,6 +59,28 @@ const ScheduleTable = (props) => {
         };
         fetchScheduleEmployyee();
 
+        const fetchAttendanceDataByDate = async () => {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-attendance/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+
+                setAttendanceDataByDate(response.data.message);
+                console.log("attendance", response.data);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setAttendanceDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        };
+        fetchAttendanceDataByDate();
+
         const fetchScheduleDataByDate = async () => {
             try {
                 const year = selectedDate.substring(0, 4);
@@ -346,44 +368,44 @@ const ScheduleTable = (props) => {
                                 </div>
                                 {selectedShift && (
                                     <div>
-                                        {scheduleDataByDate
-                                            ?.filter((item) => item?.shift_code === selectedShift)
+                                        {attendanceDataByDate
+                                            ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
                                             .map((filteredItem) => (
                                                 <div key={filteredItem._id}>
-                                                    {/* {filteredItem?.status === "checked" ? ( */}
-                                                    <div className="flex flex-col gap-4">
-                                                        <div className="flex flex-row justify-between mt-5">
-                                                            <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
-                                                                <div>CHECKIN TIME</div>
-                                                                <div>{filteredItem?.shift_info?.time_slot?.check_in_time}</div>
-                                                            </div>
-                                                            <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                <div>WORKING TIME</div>
-                                                                <div>{`${filteredItem?.shift_info?.total_hour}h ${filteredItem?.shift_info?.total_minutes}m`}</div>
-                                                            </div>
-                                                            <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
-                                                                <div>CHECKOUT TIME</div>
-                                                                <div>{filteredItem?.shift_info?.time_slot?.check_out_time}</div>
-                                                            </div>
-                                                        </div>
-                                                        {filteredItem?.total_km !== 0 ? (<div className="flex flex-row justify-between mt-5">
-                                                            <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
-                                                                <div>CHECKIN KM</div>
-                                                                <div>{filteredItem?.check_in_km}</div>
-                                                            </div>
-                                                            <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                <div>TOTAL KM TIME</div>
-                                                                <div>{filteredItem?.total_km}</div>
-                                                            </div>
-                                                            <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
-                                                                <div>CHECKOUT KM</div>
-                                                                <div>{filteredItem?.check_out_km}</div>
-                                                            </div>
-                                                        </div>) : (<div></div>)}
-                                                    </div>
-                                                    {/* ) : (
+                                                    {filteredItem?.status === "missing" ? (
                                                         <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: MISSING</div>
-                                                    )} */}
+                                                    ) : (
+                                                        <div className="flex flex-col gap-4">
+                                                            <div className="flex flex-row justify-between mt-5">
+                                                                <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
+                                                                    <div>CHECKIN TIME</div>
+                                                                    <div>{filteredItem?.shift_info?.time_slot?.check_in_time}</div>
+                                                                </div>
+                                                                <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
+                                                                    <div>WORKING TIME</div>
+                                                                    <div>{`${filteredItem?.shift_info?.total_hour}h ${filteredItem?.shift_info?.total_minutes}m`}</div>
+                                                                </div>
+                                                                <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
+                                                                    <div>CHECKOUT TIME</div>
+                                                                    <div>{filteredItem?.shift_info?.time_slot?.check_out_time}</div>
+                                                                </div>
+                                                            </div>
+                                                            {filteredItem?.position === "Autofahrer" ? (<div className="flex flex-row justify-between mt-5">
+                                                                <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
+                                                                    <div>CHECKIN KM</div>
+                                                                    <div>{filteredItem?.check_in_km}</div>
+                                                                </div>
+                                                                <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
+                                                                    <div>TOTAL KM TIME</div>
+                                                                    <div>{filteredItem?.total_km}</div>
+                                                                </div>
+                                                                <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
+                                                                    <div>CHECKOUT KM</div>
+                                                                    <div>{filteredItem?.check_out_km}</div>
+                                                                </div>
+                                                            </div>) : (<div></div>)}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ))}
                                     </div>
@@ -391,17 +413,17 @@ const ScheduleTable = (props) => {
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>
                                 {selectedShift && (
                                     <div>
-                                        {scheduleDataByDate
-                                            ?.filter((item) => item?.shift_code === selectedShift)
+                                        {attendanceDataByDate
+                                            ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
                                             .map((filteredItem) => (
                                                 <div className="w-full flex flex-col justify-center items-center gap-3 mt-3 text-base">
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's Name</span>
-                                                        <span className="w-2/3">{name}</span>
+                                                        <span className="w-2/3">{filteredItem?.employee_name}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's ID</span>
-                                                        <span className="w-2/3">{id}</span>
+                                                        <span className="w-2/3">{filteredItem?.employee_id}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Department</span>
@@ -409,7 +431,7 @@ const ScheduleTable = (props) => {
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Role</span>
-                                                        <span className="w-2/3">{role}</span>
+                                                        <span className="w-2/3">{filteredItem?.role}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Position</span>
@@ -427,36 +449,6 @@ const ScheduleTable = (props) => {
                                             ))}
                                     </div>
                                 )}
-                                {/* {selectedShift && (<div className="w-full flex flex-col justify-center items-center gap-3 mt-3 text-base">
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's Name</span>
-                                        <span className="w-2/3">{name}</span>
-                                    </div>
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's ID</span>
-                                        <span className="w-2/3">{id}</span>
-                                    </div>
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Department</span>
-                                        <span className="w-2/3">{department}</span>
-                                    </div>
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Role</span>
-                                        <span className="w-2/3">{role}</span>
-                                    </div>
-                                    {positionTextState && (<div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Position</span>
-                                        <span className="w-2/3">{position}</span>
-                                    </div>)}
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Date</span>
-                                        <span className="w-2/3">{selectedDate.substring(0, 10)}</span>
-                                    </div>
-                                    <div className="flex flex-wrap w-full items-center justify-center">
-                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Shift's Code</span>
-                                        <span className="w-2/3">{selectedShift}</span>
-                                    </div>
-                                </div>)} */}
                             </div>)}
                         </div>
                     </div>
