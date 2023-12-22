@@ -17,9 +17,17 @@ const SalaryEmployee = () => {
     const [filterEmployeeById, setFilterEmployeeById] = useState()
     const [userSalarybyMonthInfoState, setUserSalaryByMonthInfoState] = useState(false)
     const [userSalarybyMonth, setUserSalaryByMonth] = useState()
+    const [checkAdmin, setCheckAdmin] = useState(false)
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+
+    useEffect(() => {
+        if (userObject?.role === 'Admin') {
+            setCheckAdmin(true)
+        }
+
+    }, [userObject?.role]);
 
     const handleSeacrh = async () => {
         setLoading(true);
@@ -27,6 +35,23 @@ const SalaryEmployee = () => {
             try {
                 const { data } = await axios.get(
                     `https://qr-code-checkin.vercel.app/api/admin/manage-salary/get-all?year=${inputYear}&month=${inputMonth}`,
+                    { withCredentials: true }
+                );
+                setSalaryListByMonth(data?.salaries)
+                // console.log(data?.);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false)
+            }
+        }
+        setSalaryInfoState(true)
+
+        if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-salary/get-all?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.salaries)
@@ -155,7 +180,7 @@ const SalaryEmployee = () => {
                             </div>
                         </div>
                     </div>)}
-                    {salaryInfoState && (<div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                    {salaryInfoState && checkAdmin ? (<div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
                         <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                         <div className="flex flex-wrap w-full">
                             {department_name?.map(({ _id, name, attendance_stats }) => (
@@ -171,8 +196,24 @@ const SalaryEmployee = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>)}
-                </div >
+                    </div>) : (
+                        <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                            {/* <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
+                            <div className="flex flex-wrap w-full">
+                                <div key={_id} className="flex flex-col w-1/2 py-4 gap-2">
+                                    <div className="text-xl font-semibold leading-6">Department: {name}</div>
+                                    {attendance_stats?.map((stats, index) => (
+                                        <div key={index} className="flex flex-col gap-2">
+                                            <span>Date Late: {stats.date_late}</span>
+                                            <span>Date Missing: {stats.date_missing}</span>
+                                            <span>Date On Time: {stats.date_on_time}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div> */}
+                        </div>
+                    )}
+                </div>
             )}
             {exportEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                 <div

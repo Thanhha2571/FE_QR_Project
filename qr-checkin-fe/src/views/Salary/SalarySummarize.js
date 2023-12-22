@@ -32,6 +32,20 @@ const SalarySummarizie = () => {
                 console.error("Error submitting form:", error);
             }
         }
+        if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-salary/get-all?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
+                    { withCredentials: true }
+                );
+                setSalaryListByMonth(data?.salaries)
+                console.log("data", data?.salaries);
+                // console.log(data?.);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            }
+        }
     }
 
     const [formData, setFormData] = useState({
@@ -61,33 +75,68 @@ const SalarySummarizie = () => {
 
         setLoading(true)
         const salaryCounting = async () => {
-            try {
-                const { data } = await axios.post(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
-                    {
-                        a_new: formData.user.a,
-                        b_new: formData.user.b,
-                        c_new: formData.user.c,
-                        d_new: formData.user.d,
-                    },
-                    { withCredentials: true }
-                );
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
-            } finally {
-                setLoading(false);
-                setFormData({
-                    user: {
-                        id: '',
-                        month: '',
-                        year: '',
-                        a: '',
-                        b: '',
-                        c: '',
-                        d: '0.25',
-                    },
-                });
+            if(userObject?.role === "Admin") {
+                try {
+                    const { data } = await axios.post(
+                        `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
+                        {
+                            a_new: formData.user.a,
+                            b_new: formData.user.b,
+                            c_new: formData.user.c,
+                            d_new: formData.user.d,
+                        },
+                        { withCredentials: true }
+                    );
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    handleSeacrh()
+                    setLoading(false);
+                    setFormData({
+                        user: {
+                            id: '',
+                            month: '',
+                            year: '',
+                            a: '',
+                            b: '',
+                            c: '',
+                            d: '0.25',
+                        },
+                    });
+                }
+            }
+
+            if(userObject?.role === "Inhaber") {
+                try {
+                    const { data } = await axios.post(
+                        `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}&inhaber_name=${userObject?.name}`,
+                        {
+                            a_new: formData.user.a,
+                            b_new: formData.user.b,
+                            c_new: formData.user.c,
+                            d_new: formData.user.d,
+                        },
+                        { withCredentials: true }
+                    );
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    handleSeacrh()
+                    setLoading(false);
+                    setFormData({
+                        user: {
+                            id: '',
+                            month: '',
+                            year: '',
+                            a: '',
+                            b: '',
+                            c: '',
+                            d: '0.25',
+                        },
+                    });
+                }
             }
         };
         salaryCounting()
