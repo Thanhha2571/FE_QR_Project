@@ -12,6 +12,8 @@ function Employee() {
     const [selectedPosition, setSelectedPosition] = useState("Select Position")
     const [selectedDepartment, setSelectedDepartment] = useState("Select Department")
     const [selectedRole, setSelectedRole] = useState("Select Role")
+    const userString = localStorage.getItem('user');
+    const userObject = userString ? JSON.parse(userString) : null;
 
     const [positionMenu, setPositionMenu] = useState(false)
     const [departmentMenu, setDepartmentMenu] = useState(false)
@@ -78,7 +80,7 @@ function Employee() {
         // ----------------------------------------------------------------CREATE BY ADMIN ---------------------------------------------------------------- //
 
         //CREATE EMPLOYEE BY ADMIN
-        if (userObject.role === 'Admin' && selectedRoleUser === 'Employee') {
+        if (userObject?.role === 'Admin' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
                     "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-employee",
@@ -107,7 +109,7 @@ function Employee() {
             }
         }
         //CREATE EMPLOYEE BY INHABER
-        if (userObject.role === 'Inhaber' && selectedRoleUser === 'Employee') {
+        if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
                     `https://qr-code-checkin.vercel.app/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
@@ -134,7 +136,7 @@ function Employee() {
         }
 
         //CREATE MANAGER BY INHABER
-        if (userObject.role === 'Inhaber' && selectedRoleUser === 'Manager') {
+        if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
                     `https://qr-code-checkin.vercel.app/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
@@ -160,7 +162,7 @@ function Employee() {
         }
 
         //CREATE INHABER BY ADMIN
-        if (userObject.role === 'Admin' && selectedRoleUser === 'Inhaber') {
+        if (userObject?.role === 'Admin' && selectedRoleUser === 'Inhaber') {
             try {
                 const { data } = await axios.post(
                     "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-inhaber",
@@ -176,18 +178,17 @@ function Employee() {
                     { withCredentials: true }
                 );
 
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
+                getAllUsers()
             } catch (error) {
                 // Handle error
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                setAddEmployee(false)
             }
         }
         //CREATE MANAGER BY ADMIN
-        if (userObject.role === 'Admin' && selectedRole === 'Manager') {
+        if (userObject?.role === 'Admin' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
                     "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-manager",
@@ -202,15 +203,13 @@ function Employee() {
                     },
                     { withCredentials: true }
                 );
-
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
+                getAllUsers()
             } catch (error) {
                 // Handle error
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                setAddEmployee(false)
             }
         }
     };
@@ -403,8 +402,6 @@ function Employee() {
     }, [selectedRoleUser, userObject?.role, userObject?.name]);
 
     // useEffect(() => {
-        const userString = localStorage.getItem('user');
-        const userObject = userString ? JSON.parse(userString) : null;
     //     setUserObject(userObject)
     //     console.log(userObject);
     // }, [])
