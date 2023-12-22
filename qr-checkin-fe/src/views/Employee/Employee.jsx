@@ -22,7 +22,7 @@ function Employee() {
 
     const [loading, setLoading] = useState(false);
     const [userList, setUserList] = useState()
-    const [userObject, setUserObject] = useState()
+    // const [userObject, setUserObject] = useState()
 
     const [departmentList, setDepartmentList] = useState()
 
@@ -402,12 +402,12 @@ function Employee() {
         getAllDepartments()
     }, [selectedRoleUser, userObject?.role, userObject?.name]);
 
-    useEffect(() => {
+    // useEffect(() => {
         const userString = localStorage.getItem('user');
         const userObject = userString ? JSON.parse(userString) : null;
-        setUserObject(userObject)
-        console.log(userObject);
-    }, [])
+    //     setUserObject(userObject)
+    //     console.log(userObject);
+    // }, [])
 
     useEffect(() => {
         if (userObject?.role === 'Admin') {

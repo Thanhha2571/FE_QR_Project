@@ -31,23 +31,61 @@ const ScheduleTable = (props) => {
     const [positionList, setPositionList] = useState()
     const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState()
     const [positionsByDepartment, setPositionsByDepartment] = useState({});
+    // const [userObject, setUserObject] = useState()
+
+    const [checkInhaber, setCheckInhaber] = useState(false)
+    const [checkManager, setCheckManager] = useState(false)
+    const [checkAdmin, setCheckAdmin] = useState(false)
 
     const handleShiftClick = (shift) => {
         setSelectedShift(shift);
         console.log(shift);
     };
 
-
     const fetchScheduleEmployyee = async () => {
-        try {
-            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
-            console.log("scheduleEmployeeAll", response.data);
-            setScheduleEmployee(response.data);
-            // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
-        } catch (error) {
-            console.error("Error fetching employee data:", error);
+        if (userObject?.role === "Admin") {
+            try {
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
+                console.log("scheduleEmployeeAll", response.data);
+                setScheduleEmployee(response.data);
+                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+            } catch (error) {
+                console.error("Error fetching employee data:", error);
+            }
+        }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                console.log("scheduleEmployeeAll", response.data);
+                setScheduleEmployee(response.data);
+                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+            } catch (error) {
+                console.error("Error fetching employee data:", error);
+            }
         }
     };
+
+    // useEffect(() => {
+    const userString = localStorage.getItem('user');
+    const userObject = userString ? JSON.parse(userString) : null;
+    //     setUserObject(userObject)
+    //     console.log(userObject);
+    // }, [])
+
+    useEffect(() => {
+        if (userObject?.role === 'Admin') {
+            setCheckAdmin(true)
+            setCheckInhaber(false)
+            setCheckManager(false)
+        }
+
+        if (userObject?.role === 'Inhaber') {
+            setCheckAdmin(false)
+            setSelectedDepartmentEmployee(userObject?.department_name)
+            setCheckInhaber(true)
+            setCheckManager(false)
+        }
+    }, [userObject?.role, userObject?.department_name]);
 
     useEffect(() => {
         const getAllShifts = async () => {
@@ -88,62 +126,101 @@ const ScheduleTable = (props) => {
         fetchScheduleEmployyee();
 
         const fetchAttendanceDataByDate = async () => {
-            try {
-                const year = selectedDate.substring(0, 4);
-                const month = selectedDate.substring(5, 7);
-                const day = selectedDate.substring(8, 10)
-                const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-attendance/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+            if (userObject?.role === "Admin") {
+                try {
+                    const year = selectedDate.substring(0, 4);
+                    const month = selectedDate.substring(5, 7);
+                    const day = selectedDate.substring(8, 10)
+                    const date = `${month}/${day}/${year}`
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-attendance/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
 
-                setAttendanceDataByDate(response.data.message);
-                console.log("attendance", response.data);
-            } catch (error) {
-                if (error.response && error.response.status) {
-                    if (error.response.status === 404) {
-                        setAttendanceDataByDate([])
+                    setAttendanceDataByDate(response.data.message);
+                    console.log("attendance", response.data);
+                } catch (error) {
+                    if (error.response && error.response.status) {
+                        if (error.response.status === 404) {
+                            setAttendanceDataByDate([])
+                        }
+                    } else {
+                        console.error("Error fetching schedule data:", error.message);
                     }
-                } else {
-                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+            if (userObject?.role === "Inhaber") {
+                try {
+                    const year = selectedDate.substring(0, 4);
+                    const month = selectedDate.substring(5, 7);
+                    const day = selectedDate.substring(8, 10)
+                    const date = `${month}/${day}/${year}`
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
+
+                    setAttendanceDataByDate(response.data.message);
+                    console.log("attendance", response.data);
+                } catch (error) {
+                    if (error.response && error.response.status) {
+                        if (error.response.status === 404) {
+                            setAttendanceDataByDate([])
+                        }
+                    } else {
+                        console.error("Error fetching schedule data:", error.message);
+                    }
                 }
             }
         };
         fetchAttendanceDataByDate();
 
         const fetchScheduleDataByDate = async () => {
-            try {
-                const year = selectedDate.substring(0, 4);
-                const month = selectedDate.substring(5, 7);
-                const day = selectedDate.substring(8, 10)
-                const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+            if (userObject?.role === "Admin") {
+                try {
+                    const year = selectedDate.substring(0, 4);
+                    const month = selectedDate.substring(5, 7);
+                    const day = selectedDate.substring(8, 10)
+                    const date = `${month}/${day}/${year}`
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
 
-                setScheduleDataByDate(response.data.message);
-                console.log("schedule", response.data.message);
-            } catch (error) {
-                if (error.response && error.response.status) {
-                    if (error.response.status === 404) {
-                        setScheduleDataByDate([])
+                    setScheduleDataByDate(response.data.message);
+                    console.log("schedule", response.data.message);
+                } catch (error) {
+                    if (error.response && error.response.status) {
+                        if (error.response.status === 404) {
+                            setScheduleDataByDate([])
+                        }
+                    } else {
+                        console.error("Error fetching schedule data:", error.message);
                     }
-                } else {
-                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+
+            if (userObject?.role === "Inhaber") {
+                try {
+                    const year = selectedDate.substring(0, 4);
+                    const month = selectedDate.substring(5, 7);
+                    const day = selectedDate.substring(8, 10)
+                    const date = `${month}/${day}/${year}`
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+
+                    setScheduleDataByDate(response.data.message);
+                    console.log("schedule", response.data.message);
+                } catch (error) {
+                    if (error.response && error.response.status) {
+                        if (error.response.status === 404) {
+                            setScheduleDataByDate([])
+                        }
+                    } else {
+                        console.error("Error fetching schedule data:", error.message);
+                    }
                 }
             }
         };
         fetchScheduleDataByDate();
-    }, [id, selectedDate, dateFormDb, role]);
+    }, [id, selectedDate, dateFormDb, role, userObject?.role]);
 
     if (shiftDataByDate) {
         console.log("sdfdfsfd", shiftDataByDate);
     }
+
     const renderTileContent = ({ date }) => {
         if (!scheduleEmployee || !scheduleEmployee.message) return null;
-
-        const formattedDate = date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "numeric",
-            year: "numeric",
-        });
-
         const dataForDate = scheduleEmployee?.message
             ?.filter((schedule) => {
                 const scheduleDate = new Date(schedule.date);
@@ -196,42 +273,70 @@ const ScheduleTable = (props) => {
     };
 
 
-    const userString = localStorage.getItem('user');
-    const userObject = userString ? JSON.parse(userString) : null;
-    // console.log(userObject);
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // if (userObject.role === 'Admin') {
-        try {
-            setLoading(true)
-            const { data } = await axios.post(
-                `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
-                {
-                    dates: formData.data.dates,
-                    shift_code: selectedShiftAddShiftForm,
-                    position: selectedPositionEmployee
+        if (userObject.role === 'Admin') {
+            try {
+                setLoading(true)
+                const { data } = await axios.post(
+                    `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
+                    {
+                        dates: formData.data.dates,
+                        shift_code: selectedShiftAddShiftForm,
+                        position: selectedPositionEmployee
 
-                },
-                { withCredentials: true }
-            );
-        fetchScheduleEmployyee()
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 3000);
-        } catch (error) {
-            // Handle error
-            console.error("Error submitting form:", error);
-        } finally {
-            setLoading(false);
-            setFormData({
-                dates:[]
-            })
-            setSelectedShiftAddShiftForm("")
-            setSelectedDepartmentEmployee("")
-            setSelectedPositionEmployee("")
+                    },
+                    { withCredentials: true }
+                );
+                fetchScheduleEmployyee()
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 3000);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setFormState(false)
+                setFormData({
+                    dates: []
+                })
+                setSelectedShiftAddShiftForm("")
+                setSelectedDepartmentEmployee("")
+                setSelectedPositionEmployee("")
+            }
         }
-        // }
+        if (userObject.role === 'Inhaber') {
+            try {
+                setLoading(true)
+                const { data } = await axios.post(
+                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}`,
+                    {
+                        dates: formData.data.dates,
+                        shift_code: selectedShiftAddShiftForm,
+                        position: selectedPositionEmployee
+
+                    },
+                    { withCredentials: true }
+                );
+                fetchScheduleEmployyee()
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 3000);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setFormState(false)
+                setFormData({
+                    dates: []
+                })
+                setSelectedShiftAddShiftForm("")
+                setSelectedDepartmentEmployee(userObject?.department_name)
+                setSelectedPositionEmployee("")
+            }
+        }
     }
 
     const handleClickDay = (value, event) => {
@@ -329,7 +434,7 @@ const ScheduleTable = (props) => {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="w-full flex flex-col gap-2">
+                                    {checkAdmin ? (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
                                             <span className="">Department</span>
@@ -349,7 +454,9 @@ const ScheduleTable = (props) => {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div>
+                                    </div>) : (
+                                        <div></div>
+                                    )}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>

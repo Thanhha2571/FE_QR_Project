@@ -24,13 +24,12 @@ const ProfileEmployee = () => {
     const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
     const [departmentDefined, setDepartmentDefined] = useState()
     const [restDepartmentList, setRestDepartmentList] = useState()
+    // const [userObject, setUserObject] = useState()
 
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
 
-    const userString = localStorage.getItem('user');
-    const userObject = userString ? JSON.parse(userString) : null;
 
     const handleShiftClick = (department) => {
         setSelectedDepartment(department);
@@ -62,25 +61,45 @@ const ProfileEmployee = () => {
 
     }
     const getUser = async () => {
-        try {
-            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
-            console.log(response.data.message);
-            setUser(response.data.message);
-            // setDepartmentDefined(response.data.message[0]?.department)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        } finally {
-            setLoading(false);
+        if (userObject?.role === 'Admin') {
+            try {
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
+                console.log(response.data.message);
+                setUser(response.data.message);
+                // setDepartmentDefined(response.data.message[0]?.department)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        if (userObject?.role === 'Inhaber') {
+            try {
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${id}`, { withCredentials: true });
+                console.log(response.data.message);
+                setUser(response.data.message);
+                // setDepartmentDefined(response.data.message[0]?.department)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
         }
     };
-    
+    // useEffect(() => {
+        const userString = localStorage.getItem('user');
+        const userObject = userString ? JSON.parse(userString) : null;
+    //     setUserObject(userObject)
+    //     console.log(userObject);
+    // }, [])
+
     useEffect(() => {
         setLoading(true);
         getUser();
     }, [id]);
 
     useEffect(() => {
-        if (user) {
+        if (user && userObject?.role === "Admin") {
             const departmentDefined = user[0]?.department?.map((item) => item.name);
             setDepartmentDefined(departmentDefined);
 
@@ -89,18 +108,20 @@ const ProfileEmployee = () => {
                 ?.filter((item) => !departmentDefined?.includes(item));
             setRestDepartmentList(restDepartmentList);
         }
-    }, [user, departmentList]);
+    }, [user, departmentList, userObject?.role]);
 
     // console.log("Department", restDepartmentList);
 
     useEffect(() => {
         setLoading(true);
         const getAllDepartments = async () => {
-            try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-department/get-all', { withCredentials: true });
-                setDepartmentList(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (userObject?.role === "Admin") {
+                try {
+                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-department/get-all', { withCredentials: true });
+                    setDepartmentList(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         }
         getAllDepartments()
@@ -142,7 +163,7 @@ const ProfileEmployee = () => {
         address: '',
         default_day_off: '',
         house_rent_money: '',
-        realistic_day_off:''
+        realistic_day_off: ''
     });
 
     const handleCancel = () => {
@@ -224,6 +245,7 @@ const ProfileEmployee = () => {
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                getUser()
             }
             // setTimeout(() => {
             //     window.location.reload();
@@ -238,14 +260,13 @@ const ProfileEmployee = () => {
                         name: editingData.name,
                         email: editingData.email,
                         role: editingData.role,
-                        department_name: editingData.department,
-                        position: editingData.position,
                         status: editingData.status,
-                        dob: editingData.dateOfBirth,
+                        dob: editingData.dob,
                         address: editingData.address,
                         gender: editingData.gender,
                         default_day_off: editingData.default_day_off,
-                        house_rent_money: editingData.house_rent_money
+                        house_rent_money: editingData.house_rent_money,
+                        realistic_day_off: editingData.realistic_day_off,
                     },
                     { withCredentials: true },
                 );
@@ -256,6 +277,7 @@ const ProfileEmployee = () => {
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                getUser()
             }
             // setTimeout(() => {
             //     window.location.reload();
@@ -278,9 +300,9 @@ const ProfileEmployee = () => {
                     </div>
                 </div>
                 <div className="flex flex-row px-4 gap-4">
-                    <button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
+                    {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
-                    </button>
+                    </button>)}
                     <button className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                         <img className="w-4 h-4" src={DeleteIcon} />Delete Employee
                     </button>
@@ -426,7 +448,7 @@ const ProfileEmployee = () => {
                                         onChange={handleChange}
                                     />
                                 </div>)}
-                                {checkAdmin && (checkRole ? (< div className="flex flex-wrap w-[600px] items-center">
+                                <div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
                                     <input
                                         type="text"
@@ -437,43 +459,8 @@ const ProfileEmployee = () => {
                                         readOnly
                                     // onChange={handleChange}
                                     />
-                                </div>) : (<div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
-                                    <input
-                                        type="text"
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4"
-                                        value={editingData.role}
-                                        readOnly
-                                    // onChange={handleChange}
-                                    />
-                                </div>))}
-
-                                {checkInhaber && (checkRole ? (< div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="role">Role:</label>
-                                    <input
-                                        type="text"
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4"
-                                        value={editingData.role}
-                                        // onChange={handleChange}
-                                        readOnly={true}
-                                    />
-                                </div>) : (<div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="role">Role:</label>
-                                    <input
-                                        type="text"
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4"
-                                        value={editingData.role}
-                                        // onChange={handleChange}
-                                        readOnly={true}
-                                    />
-                                </div>))}
-                                <div className="flex flex-col w-[600px] items-center">
+                                </div>
+                                {checkAdmin && (checkRole ? (<div className="flex flex-col w-[600px] items-center">
                                     <div className="flex flex-wrap w-[600px] items-center">
                                         <div className="flex flex-row"></div>
                                         <label className="w-1/4 text-right p-4">Department:</label>
@@ -494,7 +481,39 @@ const ProfileEmployee = () => {
                                             }
                                         </div>
                                     </div>)}
-                                </div>
+                                </div>) : (<div></div>))}
+                                {checkInhaber && (checkRole ? (<div className="flex flex-col w-[600px] items-center">
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <div className="flex flex-row"></div>
+                                        <label className="w-1/4 text-right p-4">Department:</label>
+                                        <div className="flex flex-row gap-4">
+                                            {user[0]?.department
+                                                ?.filter((item) => item.name === userObject?.department_name)
+                                                ?.map((item, index) => (
+                                                    <span
+                                                        className={`cursor-pointer ${selectedDepartment === item.name
+                                                            ? 'text-buttonColor1 underline decoration-buttonColor1'
+                                                            : ''
+                                                            }`}
+                                                        onClick={() => handleShiftClick(item.name)}
+                                                        key={index}
+                                                    >
+                                                        {item.name}
+                                                    </span>
+                                                ))}
+                                        </div>
+                                    </div>
+                                    {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4">Position:</label>
+                                        <div className="flex flex-row gap-4">
+                                            {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
+                                                .map((filteredItem, index) => (<div key={index}>
+                                                    {filteredItem?.position?.join(", ")}
+                                                </div>))
+                                            }
+                                        </div>
+                                    </div>)}
+                                </div>) : (<div></div>))}
                                 {checkRole && (<div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="phone">Days Off (per year):</label>
                                     <input
