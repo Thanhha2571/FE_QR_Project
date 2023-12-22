@@ -37,6 +37,7 @@ function Employee() {
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
+    const [checkAdminAndInhaber, setCheckAdminAndInhaber] = useState(false)
 
     const PAGE_SIZE = 8
     const [currentPage, setCurrentPage] = useState(1);
@@ -122,16 +123,42 @@ function Employee() {
                     { withCredentials: true }
                 );
 
-                setTimeout(() => {
-                    window.location.reload();
-                }, 3000);
+                getAllUsers()
             } catch (error) {
                 // Handle error
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                setAddEmployee(false)
             }
         }
+
+        //CREATE MANAGER BY INHABER
+        if (userObject.role === 'Inhaber' && selectedRoleUser === 'Manager') {
+            try {
+                const { data } = await axios.post(
+                    `https://qr-code-checkin.vercel.app/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
+                    {
+                        id: formData.user.id,
+                        name: formData.user.name,
+                        password: formData.user.password,
+                        email: formData.user.email,
+                        department_name: selectedDepartmentEmployee,
+                        role: "Manager",
+                    },
+                    { withCredentials: true }
+                );
+
+                getAllUsers()
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setAddEmployee(false)
+            }
+        }
+
         //CREATE INHABER BY ADMIN
         if (userObject.role === 'Admin' && selectedRoleUser === 'Inhaber') {
             try {
@@ -220,6 +247,7 @@ function Employee() {
     }
 
     const SeacrhTyoe = async (department, details, role) => {
+        //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
         if (userObject.role === 'Admin') {
             try {
                 const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, { withCredentials: true });
@@ -231,6 +259,7 @@ function Employee() {
                 // console.error('Error fetching data:', error);
             }
         }
+        //----------------------------------------------------------------SEARCH BY INHABER----------------------------------------------------------------//
 
     };
 
@@ -260,15 +289,36 @@ function Employee() {
                 setSelectedPosition("Select Position")
             }, 2000);
         }
-
         if (userObject.role === 'Inhaber') {
-            try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/get-specific?inhaber_name=${userObject.name}&query=${inputSearch}`, { withCredentials: true });
-                // console.log(query);
-                setUserList(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (inputSearch === "" && selectedRole !== "Select Role") {
+                try {
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
+                    // console.log(query);
+                    setUserList(response.data.message);
+                } catch (error) {
+                    // if(error.)
+                    setUserList([])
+                    // console.error('Error fetching data:', error);
+                }
             }
+            if (inputSearch !== "" && selectedRole !== "Select Role") {
+                try {
+                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}&details=${inputSearch}`, { withCredentials: true });
+                    // console.log(query);
+                    setUserList(response.data.message);
+                } catch (error) {
+                    // if(error.)
+                    setUserList([])
+                    // console.error('Error fetching data:', error);
+                }
+            }
+            if (inputSearch === "" && selectedRole === "Select Role") {
+                getAllUsers()
+            }
+            setTimeout(() => {
+                setSelectedRole("Select Role")
+                setSelectedPosition("Select Position")
+            }, 2000);
         }
     }
 
@@ -309,7 +359,7 @@ function Employee() {
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/get-all?inhaber_name=${userObject.name}`, { withCredentials: true }
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject.name}`, { withCredentials: true }
                 );
                 setUserList(response.data.message);
             }
@@ -373,6 +423,10 @@ function Employee() {
             setCheckInhaber(true)
             setCheckManager(false)
         }
+
+        if (userObject?.role === 'Inhaber' || userObject?.role === 'Admin') {
+            setCheckAdminAndInhaber(true)
+        }
     }, [userList, userObject?.role])
     return (
         <>
@@ -407,7 +461,7 @@ function Employee() {
                         value={inputSearch}
                         onChange={(e) => setInputSearch(e.target.value)}
                     />
-                    {checkRole && (<div
+                    {checkAdminAndInhaber && (<div
                         onClick={handleRoleMenu}
                         className="w-1/6 h-[50px] text-base cursor-pointer">
                         <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
@@ -445,24 +499,6 @@ function Employee() {
                         </div>)}
                     </div>)}
 
-                    {/* <div
-                        onClick={handlePositionMenu}
-                        className="w-1/6 h-[50px] text-base cursor-pointer">
-                        <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
-                            <div className="flex flex-row items-center justify-around w-full">
-                                <div className="ml-4">{selectedPosition}</div>
-                                <div className={`w-4 h-4 flex justify-center items-center ${positionMenu ? "rotate-180" : ""}`}>
-                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        {positionMenu && (<div className=" text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
-                            {positionList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedPosition(name)} className="py-1">{name}</div>
-                            })}
-                        </div>)}
-                    </div> */}
                     <div
                         onClick={handleSeacrh}
                         className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
