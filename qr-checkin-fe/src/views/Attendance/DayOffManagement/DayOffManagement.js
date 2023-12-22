@@ -25,23 +25,24 @@ const DayOffManagement = () => {
             { withCredentials: true });
             // After successfully updating, close the modal and fetch the updated data
             setRequestModal(false);
+            getAllRequestList()
         } catch (error) {
             console.error('Error approving request:', error);
         }
     };
 
 
-    useEffect(() => {
-        const getAllRequestList = async () => {
-            try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-request/get-all', { withCredentials: true });
-                setRequestList(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        getAllRequestList();
+    const getAllRequestList = async () => {
+        try {
+            const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-request/get-all', { withCredentials: true });
+            setRequestList(response.data.message);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
+    useEffect(() => {
+        getAllRequestList();
     }, []);
 
     if (requestList) {

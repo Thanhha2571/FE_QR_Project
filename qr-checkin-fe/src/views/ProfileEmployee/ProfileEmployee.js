@@ -61,20 +61,21 @@ const ProfileEmployee = () => {
         }
 
     }
+    const getUser = async () => {
+        try {
+            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
+            console.log(response.data.message);
+            setUser(response.data.message);
+            // setDepartmentDefined(response.data.message[0]?.department)
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     useEffect(() => {
         setLoading(true);
-        const getUser = async () => {
-            try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
-                console.log(response.data.message);
-                setUser(response.data.message);
-                // setDepartmentDefined(response.data.message[0]?.department)
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
         getUser();
     }, [id]);
 
@@ -140,7 +141,8 @@ const ProfileEmployee = () => {
         dob: '',
         address: '',
         default_day_off: '',
-        house_rent_money: ''
+        house_rent_money: '',
+        realistic_day_off:''
     });
 
     const handleCancel = () => {
@@ -158,6 +160,7 @@ const ProfileEmployee = () => {
                 role: user[0]?.role || '',
                 default_day_off: user[0]?.default_day_off || '',
                 house_rent_money: user[0]?.house_rent_money || '',
+                realistic_day_off: user[0]?.realistic_day_off || '',
             });
         }
     };
@@ -177,6 +180,7 @@ const ProfileEmployee = () => {
                 address: user[0]?.address || '',
                 default_day_off: user[0]?.default_day_off || '',
                 house_rent_money: user[0]?.house_rent_money || '',
+                realistic_day_off: user[0]?.realistic_day_off || '',
             });
         }
     }, [user]);
@@ -209,6 +213,7 @@ const ProfileEmployee = () => {
                         gender: editingData.gender,
                         default_day_off: editingData.default_day_off,
                         house_rent_money: editingData.house_rent_money,
+                        realistic_day_off: editingData.realistic_day_off,
                     },
                     { withCredentials: true },
                 );
@@ -498,6 +503,17 @@ const ProfileEmployee = () => {
                                         name="default_day_off"
                                         className="w-3/4"
                                         value={editingData.default_day_off}
+                                        onChange={handleChange}
+                                    />
+                                </div>)}
+                                {checkRole && (<div className="flex flex-wrap w-[600px] items-center">
+                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Rest Days Off:</label>
+                                    <input
+                                        type="text"
+                                        id="realistic_day_off"
+                                        name="realistic_day_off"
+                                        className="w-3/4"
+                                        value={editingData.realistic_day_off}
                                         onChange={handleChange}
                                     />
                                 </div>)}

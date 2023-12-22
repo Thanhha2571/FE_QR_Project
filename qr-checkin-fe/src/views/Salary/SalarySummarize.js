@@ -107,7 +107,7 @@ const SalarySummarizie = () => {
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = "employee_data.xlsx";
+                link.download = `Employee_Salary_Data_${inputYear}_${inputMonth}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -303,52 +303,52 @@ const SalarySummarizie = () => {
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
-                                            <span className="text-rose-500">*</span>
+                                            {/* <span className="text-rose-500">*</span> */}
                                             <span className="">a_parameter</span>
                                         </div>
                                         <input
                                             type="text"
                                             name="a"
-                                            required
+                                            // required
                                             value={formData.user.a}
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
-                                            <span className="text-rose-500">*</span>
+                                            {/* <span className="text-rose-500">*</span> */}
                                             <span className="">b_parameter</span>
                                         </div>
                                         <input
                                             type="text"
                                             name="b"
-                                            required
+                                            // required
                                             value={formData.user.b}
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
-                                            <span className="text-rose-500">*</span>
+                                            {/* <span className="text-rose-500">*</span> */}
                                             <span className="">c_parameter</span>
                                         </div>
                                         <input
                                             type="text"
                                             name="c"
-                                            required
+                                            // required
                                             value={formData.user.c}
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
-                                            <span className="text-rose-500">*</span>
+                                            {/* <span className="text-rose-500">*</span> */}
                                             <span className="">d_parameter</span>
                                         </div>
                                         <input
                                             type="text"
                                             name="d"
-                                            required
+                                            // required
                                             value={formData.user.d}
                                             onChange={handleChange}
                                         />
@@ -367,7 +367,7 @@ const SalarySummarizie = () => {
                 <div
                     onClick={() => setExportEmployee(false)}
                     className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                <div className="absolute w-[500px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
@@ -378,7 +378,7 @@ const SalarySummarizie = () => {
                             </div>
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                <span>Do you want to export employee_data.xlsx?</span>
+                                <span>Do you want to export Employee_Salary_Data_{inputYear}_{inputMonth}.xlsx?</span>
                                 <div className="flex flex-row gap-3">
                                     <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                     <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>

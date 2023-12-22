@@ -25,8 +25,12 @@ const ScheduleTable = (props) => {
     const [scheduleEmployee, setScheduleEmployee] = useState()
     const [shiftDataByDate, setShiftDataByDate] = useState()
     const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
+    const [selectedPositionEmployee, setSelectedPositionEmployee] = useState('');
     const [selectedShiftType, setSelectedShiftType] = useState()
-    const [selectedDateAddShift, setSelectedDateAddShift] = useState(null)
+    const [shiftList, setShiftList] = useState()
+    const [positionList, setPositionList] = useState()
+    const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState()
+    const [positionsByDepartment, setPositionsByDepartment] = useState({});
 
     const handleShiftClick = (shift) => {
         setSelectedShift(shift);
@@ -34,11 +38,45 @@ const ScheduleTable = (props) => {
     };
 
 
+    const fetchScheduleEmployyee = async () => {
+        try {
+            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
+            console.log("scheduleEmployeeAll", response.data);
+            setScheduleEmployee(response.data);
+            // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+        } catch (error) {
+            console.error("Error fetching employee data:", error);
+        }
+    };
+
     useEffect(() => {
+        const getAllShifts = async () => {
+            if (userObject?.role === "Admin") {
+                try {
+                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-shift/get-all', { withCredentials: true });
+                    // console.log(response.data.message);
+                    setShiftList(response.data.message);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+
+            if (userObject?.role === "Inhaber") {
+                try {
+                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                    // console.log(response.data.message);
+                    setShiftList(response.data.message);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+        };
+        getAllShifts()
+
         const fetchData = async () => {
             try {
                 const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
-                console.log(response.data);
+                console.log("userData", response.data);
                 setEmployeeData(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
             } catch (error) {
@@ -47,16 +85,6 @@ const ScheduleTable = (props) => {
         };
         fetchData();
 
-        const fetchScheduleEmployyee = async () => {
-            try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
-                console.log("schedule", response.data);
-                setScheduleEmployee(response.data);
-                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
-            } catch (error) {
-                console.error("Error fetching employee data:", error);
-            }
-        };
         fetchScheduleEmployyee();
 
         const fetchAttendanceDataByDate = async () => {
@@ -90,7 +118,7 @@ const ScheduleTable = (props) => {
                 const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
 
                 setScheduleDataByDate(response.data.message);
-                console.log("attendance", response.data);
+                console.log("schedule", response.data.message);
             } catch (error) {
                 if (error.response && error.response.status) {
                     if (error.response.status === 404) {
@@ -149,7 +177,6 @@ const ScheduleTable = (props) => {
 
     const [formData, setFormData] = useState({
         data: {
-            shift_code: '',
             dates: [],
         },
     });
@@ -177,16 +204,18 @@ const ScheduleTable = (props) => {
         e.preventDefault();
         // if (userObject.role === 'Admin') {
         try {
+            setLoading(true)
             const { data } = await axios.post(
                 `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
                 {
                     dates: formData.data.dates,
-                    shift_code: formData.data.shift_code,
+                    shift_code: selectedShiftAddShiftForm,
+                    position: selectedPositionEmployee
 
                 },
                 { withCredentials: true }
             );
-
+        fetchScheduleEmployyee()
             // setTimeout(() => {
             //     window.location.reload();
             // }, 3000);
@@ -195,6 +224,12 @@ const ScheduleTable = (props) => {
             console.error("Error submitting form:", error);
         } finally {
             setLoading(false);
+            setFormData({
+                dates:[]
+            })
+            setSelectedShiftAddShiftForm("")
+            setSelectedDepartmentEmployee("")
+            setSelectedPositionEmployee("")
         }
         // }
     }
@@ -273,19 +308,26 @@ const ScheduleTable = (props) => {
                                     {loading && (<div className="absolute flex w-full h-full items-center justify-center">
                                         <div className="loader"></div>
                                     </div>)}
-                                    <div className="w-full h-auto flex flex-col gap-2">
+                                    <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Shift's ID</span>
+                                            <span className="">Shift Code</span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            name="shift_code"
+                                        <select
+                                            id="department"
+                                            name="department"
+                                            className="w-full cursor-pointer"
+                                            value={selectedShiftAddShiftForm}
+                                            onChange={(e) => setSelectedShiftAddShiftForm(e.target.value)}
                                             required
-                                            value={formData.data.shift_code}
-                                            onChange={handleChange}
-                                            placeholder="Enter shift ID..."
-                                        />
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
+                                            {shiftList?.map((item, index) => (
+                                                <option className='text-sm text-textColor w-full' key={index} value={item.code}>
+                                                    {item.code}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -308,6 +350,31 @@ const ScheduleTable = (props) => {
                                             ))}
                                         </select>
                                     </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Position</span>
+                                        </div>
+                                        <select
+                                            id="department"
+                                            name="department"
+                                            className="w-full cursor-pointer"
+                                            value={selectedPositionEmployee}
+                                            onChange={(e) => setSelectedPositionEmployee(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            {employeeData.message[0]?.department
+                                                ?.filter((item) => item.name === selectedDepartmentEmployee)
+                                                .map((dept) =>
+                                                    dept.position.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))
+                                                )}
+                                        </select>
+                                    </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
@@ -317,7 +384,7 @@ const ScheduleTable = (props) => {
                                             type="text"
                                             name="dates"
                                             required
-                                            value={formData.data.dates.join(",")}
+                                            value={formData.data?.dates?.join(",")}
                                             onChange={handleChange}
                                             placeholder="Enter date (format: MM/DD/YYYY) and separate by commas ..."
                                         />
@@ -413,17 +480,17 @@ const ScheduleTable = (props) => {
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>
                                 {selectedShift && (
                                     <div>
-                                        {attendanceDataByDate
-                                            ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
+                                        {scheduleDataByDate
+                                            ?.filter((item) => item?.shift_code === selectedShift)
                                             .map((filteredItem) => (
                                                 <div className="w-full flex flex-col justify-center items-center gap-3 mt-3 text-base">
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's Name</span>
-                                                        <span className="w-2/3">{filteredItem?.employee_name}</span>
+                                                        <span className="w-2/3">{name}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Employee's ID</span>
-                                                        <span className="w-2/3">{filteredItem?.employee_id}</span>
+                                                        <span className="w-2/3">{id}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Department</span>
@@ -431,7 +498,7 @@ const ScheduleTable = (props) => {
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Role</span>
-                                                        <span className="w-2/3">{filteredItem?.role}</span>
+                                                        <span className="w-2/3">{role}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Position</span>
