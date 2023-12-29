@@ -6,6 +6,7 @@ import axios from "axios";
 import "date-fns-tz";
 import { format } from "date-fns-tz";
 import { shiftType } from "assets/data/data";
+import { statusAttendance } from "assets/data/data";
 
 const ScheduleTable = (props) => {
     const { id, name, departmentDefined, role } = props
@@ -24,18 +25,38 @@ const ScheduleTable = (props) => {
     const [scheduleDataByDate, setScheduleDataByDate] = useState()
     const [scheduleEmployee, setScheduleEmployee] = useState()
     const [shiftDataByDate, setShiftDataByDate] = useState()
+    const [employeeStats, setEmployeeStats] = useState()
     const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
     const [selectedPositionEmployee, setSelectedPositionEmployee] = useState('');
     const [selectedShiftType, setSelectedShiftType] = useState()
     const [shiftList, setShiftList] = useState()
-    const [positionList, setPositionList] = useState()
     const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState()
-    const [positionsByDepartment, setPositionsByDepartment] = useState({});
+    const [changeAttendanceFormState, setChangeAttendanceFormState] = useState(false)
+    const [selectedCheckInStatus, setSelectedCheckInStatus] = useState("")
+    const [selectedCheckOutStatus, setSelectedCheckOutStatus] = useState("")
+    const [attendanceId, setAttendanceId] = useState("")
     // const [userObject, setUserObject] = useState()
 
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
+
+    const [attendanceData, setAttendanceData] = useState({
+        data: {
+            check_in_time: '',
+            check_out_time: '',
+        },
+    });
+
+    const handleChangeAttendanceData = (e) => {
+        const { name, value } = e.target;
+        setAttendanceData((prevData) => ({
+            data: {
+                ...prevData.data,
+                [name]: value,
+            },
+        }));
+    };
 
     const handleShiftClick = (shift) => {
         setSelectedShift(shift);
@@ -45,7 +66,7 @@ const ScheduleTable = (props) => {
     const fetchScheduleEmployyee = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}`, { withCredentials: true });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -55,7 +76,7 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&inhaber_name=${userObject?.name}`, { withCredentials: true });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -65,6 +86,29 @@ const ScheduleTable = (props) => {
         }
     };
 
+    const fetchEmployeeStatsByMonth = async () => {
+        const year = selectedDate.substring(0, 4);
+        const month = selectedDate.substring(5, 7);
+        const day = selectedDate.substring(8, 10)
+        const date = `${month}/${day}/${year}`
+
+        if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${year}&month=${month}&employeeID=${id}`, { withCredentials: true });
+                setEmployeeStats(response.data.message);
+                // console.log("attendance stats", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setEmployeeStats([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+
+    }
     // useEffect(() => {
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -72,6 +116,48 @@ const ScheduleTable = (props) => {
     //     console.log(userObject);
     // }, [])
 
+    const fetchAttendanceDataByDate = async () => {
+        if (userObject?.role === "Admin") {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
+
+                setAttendanceDataByDate(response.data.message);
+                console.log("attendance", response.data);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setAttendanceDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
+
+                setAttendanceDataByDate(response.data.message);
+                console.log("attendance", response.data);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setAttendanceDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+    };
     useEffect(() => {
         if (userObject?.role === 'Admin') {
             setCheckAdmin(true)
@@ -91,7 +177,7 @@ const ScheduleTable = (props) => {
         const getAllShifts = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-shift/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', { withCredentials: true });
                     // console.log(response.data.message);
                     setShiftList(response.data.message);
                 } catch (error) {
@@ -101,7 +187,7 @@ const ScheduleTable = (props) => {
 
             if (userObject?.role === "Inhaber") {
                 try {
-                    const response = await axios.get('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', { withCredentials: true });
                     // console.log(response.data.message);
                     setShiftList(response.data.message);
                 } catch (error) {
@@ -113,7 +199,7 @@ const ScheduleTable = (props) => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
                 console.log("userData", response.data);
                 setEmployeeData(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -124,80 +210,40 @@ const ScheduleTable = (props) => {
         fetchData();
 
         fetchScheduleEmployyee();
-
-        const fetchAttendanceDataByDate = async () => {
-            if (userObject?.role === "Admin") {
-                try {
-                    const year = selectedDate.substring(0, 4);
-                    const month = selectedDate.substring(5, 7);
-                    const day = selectedDate.substring(8, 10)
-                    const date = `${month}/${day}/${year}`
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-attendance/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
-
-                    setAttendanceDataByDate(response.data.message);
-                    console.log("attendance", response.data);
-                } catch (error) {
-                    if (error.response && error.response.status) {
-                        if (error.response.status === 404) {
-                            setAttendanceDataByDate([])
-                        }
-                    } else {
-                        console.error("Error fetching schedule data:", error.message);
-                    }
-                }
-            }
-            if (userObject?.role === "Inhaber") {
-                try {
-                    const year = selectedDate.substring(0, 4);
-                    const month = selectedDate.substring(5, 7);
-                    const day = selectedDate.substring(8, 10)
-                    const date = `${month}/${day}/${year}`
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
-
-                    setAttendanceDataByDate(response.data.message);
-                    console.log("attendance", response.data);
-                } catch (error) {
-                    if (error.response && error.response.status) {
-                        if (error.response.status === 404) {
-                            setAttendanceDataByDate([])
-                        }
-                    } else {
-                        console.error("Error fetching schedule data:", error.message);
-                    }
-                }
-            }
-        };
         fetchAttendanceDataByDate();
 
         const fetchScheduleDataByDate = async () => {
-            if (userObject?.role === "Admin") {
-                try {
-                    const year = selectedDate.substring(0, 4);
-                    const month = selectedDate.substring(5, 7);
-                    const day = selectedDate.substring(8, 10)
-                    const date = `${month}/${day}/${year}`
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+            const year = selectedDate.substring(0, 4);
+            const month = selectedDate.substring(5, 7);
+            const day = selectedDate.substring(8, 10)
+            const date = `${month}/${day}/${year}`
 
+            if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
                     setScheduleDataByDate(response.data.message);
-                    console.log("schedule", response.data.message);
+                    // console.log("schedule", response.data.message);
                 } catch (error) {
                     if (error.response && error.response.status) {
                         if (error.response.status === 404) {
-                            setScheduleDataByDate([])
+                            console.log("No shift designs found for the specified criteria.");
+                            setScheduleDataByDate([]);
+                        } else {
+                            console.error("Error fetching schedule data. Status:", error.response.status, "Message:", error.response.data.message);
                         }
                     } else {
-                        console.error("Error fetching schedule data:", error.message);
+                        console.error("Unexpected error:", error.message);
                     }
                 }
             }
 
-            if (userObject?.role === "Inhaber") {
+            if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
                 try {
                     const year = selectedDate.substring(0, 4);
                     const month = selectedDate.substring(5, 7);
                     const day = selectedDate.substring(8, 10)
                     const date = `${month}/${day}/${year}`
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
 
                     setScheduleDataByDate(response.data.message);
                     console.log("schedule", response.data.message);
@@ -213,6 +259,7 @@ const ScheduleTable = (props) => {
             }
         };
         fetchScheduleDataByDate();
+        fetchEmployeeStatsByMonth()
     }, [id, selectedDate, dateFormDb, role, userObject?.role]);
 
     if (shiftDataByDate) {
@@ -279,7 +326,7 @@ const ScheduleTable = (props) => {
             try {
                 setLoading(true)
                 const { data } = await axios.post(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}`,
                     {
                         dates: formData.data.dates,
                         shift_code: selectedShiftAddShiftForm,
@@ -289,6 +336,7 @@ const ScheduleTable = (props) => {
                     { withCredentials: true }
                 );
                 fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -310,7 +358,7 @@ const ScheduleTable = (props) => {
             try {
                 setLoading(true)
                 const { data } = await axios.post(
-                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}`,
                     {
                         dates: formData.data.dates,
                         shift_code: selectedShiftAddShiftForm,
@@ -320,6 +368,7 @@ const ScheduleTable = (props) => {
                     { withCredentials: true }
                 );
                 fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -363,7 +412,39 @@ const ScheduleTable = (props) => {
     // if (attendanceDataByDate) {
     //     console.log(attendanceDataByDate);
     // }
+    const handleSubmitChangeAttendancInfo = async (e) => {
+        e.preventDefault();
 
+        setLoading(true);
+
+        if (userObject?.role === 'Admin') {
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                    {
+                        "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                        "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                        "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                    },
+                    { withCredentials: true }
+                );
+
+                fetchAttendanceDataByDate();
+            } catch (error) {
+                // Handle error
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceData({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+            }
+        }
+    };
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
             <h2 className="text-2xl font-bold">Schedule Calendar</h2>
@@ -382,8 +463,8 @@ const ScheduleTable = (props) => {
             {FormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                 <div
                     onClick={() => setFormState(false)}
-                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                <div className="absolute w-[750px] top-0 right-0 bottom-0 z-30 bg-white">
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer "></div>
+                <div className="absolute w-[750px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-auto">
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
@@ -407,6 +488,9 @@ const ScheduleTable = (props) => {
                             </div>
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             {addShiftFormState && (<div className="flex flex-col px-8 w-full mt-7">
+                                {employeeStats?.map((item, index) => (
+                                    <div key={index}>Time left: {item?.realistic_schedule_times}</div>
+                                ))}
                                 <form
                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                     onSubmit={handleSubmit}>
@@ -545,7 +629,7 @@ const ScheduleTable = (props) => {
                                         {attendanceDataByDate
                                             ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
                                             .map((filteredItem) => (
-                                                <div key={filteredItem._id}>
+                                                <div className="flex flex-col gap-4" key={filteredItem._id}>
                                                     {filteredItem?.status === "missing" ? (
                                                         <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: MISSING</div>
                                                     ) : (
@@ -554,6 +638,7 @@ const ScheduleTable = (props) => {
                                                                 <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
                                                                     <div>CHECKIN TIME</div>
                                                                     <div>{filteredItem?.shift_info?.time_slot?.check_in_time}</div>
+                                                                    <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_in_status}</div>
                                                                 </div>
                                                                 <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
                                                                     <div>WORKING TIME</div>
@@ -562,6 +647,7 @@ const ScheduleTable = (props) => {
                                                                 <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
                                                                     <div>CHECKOUT TIME</div>
                                                                     <div>{filteredItem?.shift_info?.time_slot?.check_out_time}</div>
+                                                                    <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_out_status}</div>
                                                                 </div>
                                                             </div>
                                                             {filteredItem?.position === "Autofahrer" ? (<div className="flex flex-row justify-between mt-5">
@@ -580,7 +666,120 @@ const ScheduleTable = (props) => {
                                                             </div>) : (<div></div>)}
                                                         </div>
                                                     )}
+                                                    <div className="flex flex-col">
+                                                        <button onClick={() => {
+                                                            setAttendanceId(filteredItem?._id)
+                                                            setChangeAttendanceFormState(!changeAttendanceFormState)
+                                                        }
+                                                        } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                                            Change Attendance Information
+                                                        </button>
+                                                        {changeAttendanceFormState && (<div className="w-full h-full">
+                                                            <div className="flex flex-col mt-8">
+                                                                <div className="flex flex-row justify-between px-8 items-center">
+                                                                    <div className="font-bold text-xl">Change Attendance Information</div>
+                                                                </div>
+                                                                <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                                                <div className="flex flex-col px-8 w-full mt-7">
+                                                                    <form
+                                                                        className="flex flex-col gap-6 w-full justify-center items-center"
+                                                                        onSubmit={handleSubmitChangeAttendancInfo}>
+                                                                        {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                                            <div className="loader"></div>
+                                                                        </div>)}
+                                                                        <div className="w-full h-auto flex flex-col gap-2">
+                                                                            <div className="flex flex-row gap-2">
+                                                                                <span className="text-rose-500">*</span>
+                                                                                <span className="">Attendance ID</span>
+                                                                            </div>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="id"
+                                                                                value={attendanceId}
+                                                                                // onChange={(e) => setAttendanceId(e.target.value)}
+                                                                                readOnly={true}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="w-full h-auto flex flex-col gap-2">
+                                                                            <div className="flex flex-row gap-2">
+                                                                                <span className="text-rose-500">*</span>
+                                                                                <span className="">Check_in_time</span>
+                                                                            </div>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="check_in_time"
+                                                                                // required
+                                                                                value={attendanceData.data.check_in_time}
+                                                                                onChange={handleChangeAttendanceData}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="w-full flex flex-col gap-2">
+                                                                            <div className="flex flex-row gap-2">
+                                                                                <span className="text-rose-500">*</span>
+                                                                                <span className="">Check_in_status</span>
+                                                                            </div>
+                                                                            <select
+                                                                                id="department"
+                                                                                name="department"
+                                                                                className="w-full cursor-pointer"
+                                                                                value={selectedCheckInStatus}
+                                                                                onChange={(e) => setSelectedCheckInStatus(e.target.value)}
+                                                                            // required
+                                                                            >
+                                                                                <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                {statusAttendance?.map((item, index) => (
+                                                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                        {item.name}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div className="w-full h-auto flex flex-col gap-2">
+                                                                            <div className="flex flex-row gap-2">
+                                                                                <span className="text-rose-500">*</span>
+                                                                                <span className="">Check_out_time</span>
+                                                                            </div>
+                                                                            <input
+                                                                                type="text"
+                                                                                name="check_out_time"
+                                                                                // required
+                                                                                value={attendanceData.data.check_out_time}
+                                                                                onChange={handleChangeAttendanceData}
+                                                                            />
+                                                                        </div>
+                                                                        <div className="w-full flex flex-col gap-2">
+                                                                            <div className="flex flex-row gap-2">
+                                                                                <span className="text-rose-500">*</span>
+                                                                                <span className="">Check_out_status</span>
+                                                                            </div>
+                                                                            <select
+                                                                                id="department"
+                                                                                name="department"
+                                                                                className="w-full cursor-pointer"
+                                                                                value={selectedCheckOutStatus}
+                                                                                onChange={(e) => setSelectedCheckOutStatus(e.target.value)}
+                                                                            // required
+                                                                            >
+                                                                                <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                {statusAttendance?.map((item, index) => (
+                                                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                        {item.name}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div
+                                                                            className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                                                            <button type="submit" className="w-full">Save Changes</button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>)}
+                                                    </div>
                                                 </div>
+                                                //     </div>
+                                                // </div>
                                             ))}
                                     </div>
                                 )}
@@ -615,7 +814,7 @@ const ScheduleTable = (props) => {
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Date</span>
                                                         <span className="w-2/3">{selectedDate.substring(0, 10)}</span>
                                                     </div>
-                                                    <div className="flex flex-wrap w-full items-center justify-center">
+                                                    <div className="flex flex-wrap w-full items-center justify-center mb-5">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Shift's Code</span>
                                                         <span className="w-2/3">{selectedShift}</span>
                                                     </div>
@@ -627,8 +826,8 @@ const ScheduleTable = (props) => {
                         </div>
                     </div>
                 </div>
-            </div>)}
-        </div>
+            </div >)}
+        </div >
     );
 };
 

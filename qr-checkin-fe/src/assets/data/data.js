@@ -69,15 +69,25 @@ export const shiftType = [
     {
         name:"normal",
     }, 
-    {
-        name:"overtime",
-    }
 ]
 
 export const statusList = [
     {
         name:"active",
     },
+    // {
+    //     name:"inactive"
+    // }
+];
+
+export const statusAttendance = [
+    {
+        name:"on time",
+    },
+
+    {
+        name:"late",
+    }
     // {
     //     name:"inactive"
     // }

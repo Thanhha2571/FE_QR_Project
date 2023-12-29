@@ -303,25 +303,25 @@ const ProfileEmployee = () => {
         }
 
     };
-    // const handleDelete = async () => {
-    //     setLoading(true);
+    const handleDelete = async () => {
+        setLoading(true);
 
-    //     if (userObject?.role === "Admin") {
-    //         try {
-    //             const { data } = await axios.delete(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/delete-byId?employeeID=${id}`,
-    //                 { withCredentials: true },
-    //             );
+        if (userObject?.role === "Admin") {
+            try {
+                const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/delete-byId?employeeID=${id}`,
+                    { withCredentials: true },
+                );
 
 
-    //         } catch (error) {
-    //             // Handle error
-    //             console.error("Error submitting form:", error);
-    //         } finally {
-    //             setLoading(false);
-    //             navigate("/employee")
-    //         }
-    //     }
-    // }
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                navigate("/employee")
+            }
+        }
+    }
     const handleChangeStatus = async () => {
         setLoading(true);
 
@@ -785,7 +785,7 @@ const ProfileEmployee = () => {
                                 <span>Are you sure to to delete user {id}?</span>
                                 <div className="flex flex-row gap-3">
                                     <button onClick={() => setDeleteFormState(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
-                                    <button onClick={() => setChangeStatus(false)} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                    <button onClick={handleDelete} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
                                 </div>
                             </div>
                         </div>
