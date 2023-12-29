@@ -12,6 +12,9 @@ function Dashboard() {
     const [departmentList, setDepartmentList] = useState()
     const [departmentMenu, setDepartmentMenu] = useState(false)
 
+    const userString = localStorage.getItem('user');
+    const userObject = userString ? JSON.parse(userString) : null;
+
     const [currentDate, setCurrentDate] = useState("");
     const [year, setYear] = useState()
     const [month, setMonth] = useState()
@@ -114,7 +117,7 @@ function Dashboard() {
     useEffect(() => {
         const getAllDepartments = async () => {
             try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-department/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
                 setDepartmentList(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -123,9 +126,19 @@ function Dashboard() {
         const getEmployeeByDateAndShift = async () => {
             // if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
             setLoading(true)
-            if (currentDate) {
+            if (currentDate && userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
+                    setUserListToday(response.data.message);
+                } catch (error) {
+                    console.error('Error fetching employees by date and shift:', error);
+                } finally {
+                    setLoading(false)
+                }
+            }
+            if (currentDate && userObject?.role === "Inhaber") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
                     setUserListToday(response.data.message);
                 } catch (error) {
                     console.error('Error fetching employees by date and shift:', error);
