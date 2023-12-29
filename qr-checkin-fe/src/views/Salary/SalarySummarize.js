@@ -21,10 +21,10 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-salary/get-all?year=${inputYear}&month=${inputMonth}`,
+                    `https://qr-code-checkin.vercel.app/api/admin/manage-salary/get?year=${inputYear}&month=${inputMonth}`,
                     { withCredentials: true }
                 );
-                setSalaryListByMonth(data?.salaries)
+                setSalaryListByMonth(data?.message)
                 console.log("data", data?.salaries);
                 // console.log(data?.);
             } catch (error) {
@@ -75,7 +75,7 @@ const SalarySummarizie = () => {
 
         setLoading(true)
         const salaryCounting = async () => {
-            if(userObject?.role === "Admin") {
+            if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
                         `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
@@ -107,7 +107,7 @@ const SalarySummarizie = () => {
                 }
             }
 
-            if(userObject?.role === "Inhaber") {
+            if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
                         `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}&inhaber_name=${userObject?.name}`,
@@ -143,10 +143,9 @@ const SalarySummarizie = () => {
     }
     const handleExportSalaryByEmloyeeFile = async () => {
         setLoading(true);
-        try {
-            setLoading(true);
-
-            if (userObject?.role === "Admin") {
+        if (userObject?.role === "Admin") {
+            try {
+                setLoading(true);
                 const { data } = await axios.get(
                     `https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/salary-data?year=${inputYear}&month=${inputMonth}`,
                     { responseType: "arraybuffer", withCredentials: true }
@@ -161,13 +160,37 @@ const SalarySummarizie = () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+            } catch (error) {
+                console.error("Error exporting Excel file:", error);
+            } finally {
+                setLoading(false);
+                setExportEmployee(false)
             }
-        } catch (error) {
-            console.error("Error exporting Excel file:", error);
-        } finally {
-            setLoading(false);
-            setExportEmployee(false)
         }
+        // if (userObject?.role === "Inhaber") {
+        //     try {
+        //         setLoading(true);
+        //         const { data } = await axios.get(
+        //             `https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/salary-data?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}`,
+        //             { responseType: "arraybuffer", withCredentials: true }
+        //         );
+
+        //         const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        //         const link = document.createElement("a");
+
+        //         link.href = window.URL.createObjectURL(blob);
+        //         link.download = `Employee_Salary_Data_${inputYear}_${inputMonth}.xlsx`;
+
+        //         document.body.appendChild(link);
+        //         link.click();
+        //         document.body.removeChild(link);
+        //     } catch (error) {
+        //         console.error("Error exporting Excel file:", error);
+        //     } finally {
+        //         setLoading(false);
+        //         setExportEmployee(false)
+        //     }
+        // }
     }
 
     return (
@@ -258,17 +281,16 @@ const SalarySummarizie = () => {
                         <div className="no-result-text text-center">NO RESULT</div>
                     ) : (
                         <tbody className="tbody">
-                            {salaryListByMonth?.map(({ employee_id, employee_name, role, salary }) => (
+                            {salaryListByMonth?.map(({ employee_id, employee_name, hour_normal }) => (
                                 <tr className="tr-item" key={employee_id}>
                                     <td className="p-2 hover:text-buttonColor2">
                                         <h2 className="text-left">
                                             <Link className="cursor-pointer flex flex-col" to={`/salary/sumarize/${employee_id}`}>{employee_name}
-                                                <span className="text-xs text-neutral-400">{role}</span>
                                             </Link>
                                         </h2>
                                     </td>
                                     <td className="p-2">{employee_id}</td>
-                                    <td className="p-2">
+                                    {/* <td className="p-2">
                                         <div className="flex flex-col">
                                             {salary?.hour_normal?.map(({ department_name, total_hour, total_minutes }) => (
                                                 <div className="flex flex-row gap-3">
@@ -277,13 +299,21 @@ const SalarySummarizie = () => {
                                             ))}
                                         </div>
                                     </td>
-                                    {salary?.hour_overtime?.length > 0 ? <td className="p-2">{salary?.hour_overtime}</td> : <td className="p-2">0</td>}
+                                    <td className="p-2">
+                                        {salary?.hour_overtime?.length > 0 ?
+                                            salary.hour_overtime.map(({ department_name, total_hour, total_minutes }) => (
+                                                <div>
+                                                    {`${department_name}: ${total_hour}h ${total_minutes}m`}
+                                                </div>
+                                            ))
+                                            : '0'}
+                                    </td>
                                     <td className="p-2">{salary?.a_parameter}</td>
                                     <td className="p-2">{salary?.b_parameter}</td>
                                     <td className="p-2">{salary?.c_parameter}</td>
                                     <td className="p-2">{salary?.d_parameter}</td>
                                     <td className="p-2">{salary?.total_km}</td>
-                                    <td className="p-2">{salary?.total_salary}</td>
+                                    <td className="p-2">{salary?.total_salary}</td> */}
                                 </tr>
                             ))}
                         </tbody>

@@ -9,7 +9,8 @@ import { positionList } from "assets/data/data"
 import { roleList, roleListForInhaber } from "assets/data/data"
 import { genderList } from "assets/data/data"
 import ScheduleTable from "./ScheduleTable"
-// import { useNavigate } from "react-router-dom"
+import { statusList } from "assets/data/data"
+import { useNavigate } from "react-router-dom"
 const ProfileEmployee = () => {
     const { id } = useParams();
     const [user, setUser] = useState(null);
@@ -24,6 +25,14 @@ const ProfileEmployee = () => {
     const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
     const [departmentDefined, setDepartmentDefined] = useState()
     const [restDepartmentList, setRestDepartmentList] = useState()
+    const [deleteFormState, setDeleteFormState] = useState(false)
+    const [selectedStatus, setSelectedStatus] = useState("active")
+    const [changeStatus, setChangeStatus] = useState(false)
+    const [inputDateInactive, setInputDateInactive] = useState()
+    const navigate = useNavigate()
+    const userString = localStorage.getItem('user');
+    const userObject = userString ? JSON.parse(userString) : null;
+
     // const [userObject, setUserObject] = useState()
 
     const [checkInhaber, setCheckInhaber] = useState(false)
@@ -63,7 +72,7 @@ const ProfileEmployee = () => {
     const getUser = async () => {
         if (userObject?.role === 'Admin') {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -87,8 +96,6 @@ const ProfileEmployee = () => {
         }
     };
     // useEffect(() => {
-        const userString = localStorage.getItem('user');
-        const userObject = userString ? JSON.parse(userString) : null;
     //     setUserObject(userObject)
     //     console.log(userObject);
     // }, [])
@@ -163,7 +170,9 @@ const ProfileEmployee = () => {
         address: '',
         default_day_off: '',
         house_rent_money: '',
-        realistic_day_off: ''
+        realistic_day_off: '',
+        total_time_per_month: '',
+        // inactive_day:''
     });
 
     const handleCancel = () => {
@@ -182,6 +191,8 @@ const ProfileEmployee = () => {
                 default_day_off: user[0]?.default_day_off || '',
                 house_rent_money: user[0]?.house_rent_money || '',
                 realistic_day_off: user[0]?.realistic_day_off || '',
+                total_time_per_month: user[0]?.total_time_per_month || '',
+                // inactive_day: user[0]?.inactive_day || '',
             });
         }
     };
@@ -202,6 +213,8 @@ const ProfileEmployee = () => {
                 default_day_off: user[0]?.default_day_off || '',
                 house_rent_money: user[0]?.house_rent_money || '',
                 realistic_day_off: user[0]?.realistic_day_off || '',
+                inactive_day: user[0]?.inactive_day || '',
+                total_time_per_month: user[0]?.total_time_per_month || '',
             });
         }
     }, [user]);
@@ -235,6 +248,8 @@ const ProfileEmployee = () => {
                         default_day_off: editingData.default_day_off,
                         house_rent_money: editingData.house_rent_money,
                         realistic_day_off: editingData.realistic_day_off,
+                        total_time_per_month: editingData.total_time_per_month,
+                        // inactive_day: editingData.inactive_day,
                     },
                     { withCredentials: true },
                 );
@@ -267,6 +282,7 @@ const ProfileEmployee = () => {
                         default_day_off: editingData.default_day_off,
                         house_rent_money: editingData.house_rent_money,
                         realistic_day_off: editingData.realistic_day_off,
+                        total_time_per_month: editingData.total_time_per_month
                     },
                     { withCredentials: true },
                 );
@@ -285,6 +301,50 @@ const ProfileEmployee = () => {
         }
 
     };
+    // const handleDelete = async () => {
+    //     setLoading(true);
+
+    //     if (userObject?.role === "Admin") {
+    //         try {
+    //             const { data } = await axios.delete(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/delete-byId?employeeID=${id}`,
+    //                 { withCredentials: true },
+    //             );
+
+
+    //         } catch (error) {
+    //             // Handle error
+    //             console.error("Error submitting form:", error);
+    //         } finally {
+    //             setLoading(false);
+    //             navigate("/employee")
+    //         }
+    //     }
+    // }
+    const handleChangeStatus = async () => {
+        setLoading(true);
+
+        if (userObject?.role === "Admin") {
+            try {
+                const { data } = await axios.put(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/make-inactive?employeeID=${id}`,
+                    {
+
+                        inactive_day: inputDateInactive,
+                    },
+                    { withCredentials: true },
+                );
+
+
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+            }
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 2000);
+        }
+    }
     return (
         <div className="ml-[260px] flex flex-col font-Changa text-textColor">
             {loading && (<div className="absolute flex w-full h-full justify-center mt-52">
@@ -303,8 +363,11 @@ const ProfileEmployee = () => {
                     {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
                     </button>)}
-                    <button className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                    <button onClick={() => setDeleteFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                         <img className="w-4 h-4" src={DeleteIcon} />Delete Employee
+                    </button>
+                    <button onClick={() => setChangeStatus(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                        Make Inactive
                     </button>
                 </div>
             </div>
@@ -515,6 +578,17 @@ const ProfileEmployee = () => {
                                     </div>)}
                                 </div>) : (<div></div>))}
                                 {checkRole && (<div className="flex flex-wrap w-[600px] items-center">
+                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Total Hour(per month):</label>
+                                    <input
+                                        type="text"
+                                        id="total_time_per_month"
+                                        name="total_time_per_month"
+                                        className="w-3/4"
+                                        value={editingData.total_time_per_month}
+                                        onChange={handleChange}
+                                    />
+                                </div>)}
+                                {checkRole && (<div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="phone">Days Off (per year):</label>
                                     <input
                                         type="text"
@@ -548,15 +622,21 @@ const ProfileEmployee = () => {
                                     />
                                 </div>)}
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="status">Status:</label>
-                                    <input
-                                        type="text"
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Status:</label>
+                                    <select
                                         id="status"
-                                        className="w-3/4"
                                         name="status"
-                                        value={editingData.status}
-                                        onChange={handleChange}
-                                    />
+                                        className="w-3/4"
+                                        value={selectedStatus}
+                                        onChange={(e) => setSelectedStatus(e.target.value)}
+                                    >
+                                        <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                        {statusList?.map((item, index) => (
+                                            <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                {item.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                                 {checkRole && (<div className="flex flex-row w-full justify-center gap-6">
                                     <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
@@ -682,6 +762,73 @@ const ProfileEmployee = () => {
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                         <button onClick={handleAddDepartmentForEmployee} type="button" className="w-full">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {deleteFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                <div
+                    onClick={() => setDeleteFormState(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Delete User</div>
+                                <div
+                                    onClick={() => setDeleteFormState(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                <span>Are you sure to to delete user {id}?</span>
+                                <div className="flex flex-row gap-3">
+                                    <button onClick={() => setDeleteFormState(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                    <button onClick={() => setChangeStatus(false)} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {changeStatus && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                <div
+                    onClick={() => setChangeStatus(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Make Inactive</div>
+                                <div
+                                    onClick={() => setChangeStatus(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7">
+                                <div
+                                    className="flex flex-col gap-6 w-full justify-center items-center"
+                                >
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader"></div>
+                                    </div>)}
+                                    <div className="flex flex-wrap w-full  items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="email">Inactive Day:</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            className="w-3/4"
+                                            value={inputDateInactive}
+                                            onChange={(e) => setInputDateInactive(e.target.value)}
+                                        />
+                                    </div>
+                                    <div
+                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                        <button onClick={handleChangeStatus} type="button" className="w-full">Change Status</button>
                                     </div>
                                 </div>
                             </div>

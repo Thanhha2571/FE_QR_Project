@@ -138,7 +138,7 @@ function Dashboard() {
         getEmployeeByDateAndShift();
         getAllDepartments();
 
-    }, [currentDate]);
+    }, [currentDate, month,year]);
     // console.log(currentDate);
     // console.log(date);
     console.log('userList', userListToday);

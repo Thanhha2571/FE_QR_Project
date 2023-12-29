@@ -73,3 +73,12 @@ export const shiftType = [
         name:"overtime",
     }
 ]
+
+export const statusList = [
+    {
+        name:"active",
+    },
+    // {
+    //     name:"inactive"
+    // }
+];

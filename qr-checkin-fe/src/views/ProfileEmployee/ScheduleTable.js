@@ -9,7 +9,7 @@ import { shiftType } from "assets/data/data";
 
 const ScheduleTable = (props) => {
     const { id, name, departmentDefined, role } = props
-    console.log(departmentDefined);
+    // console.log(departmentDefined);
     const [selectedYear, setSelectedYear] = useState(new Date());
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [employeeData, setEmployeeData] = useState(null);
@@ -113,7 +113,7 @@ const ScheduleTable = (props) => {
 
         const fetchData = async () => {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?details=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
                 console.log("userData", response.data);
                 setEmployeeData(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));

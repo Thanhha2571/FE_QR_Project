@@ -323,10 +323,10 @@ function Employee() {
 
     const handleExportEmloyeeFile = async () => {
         setLoading(true);
-        try {
-            setLoading(true);
+        if (userObject?.role === "Admin") {
+            try {
+                setLoading(true);
 
-            if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
                     "https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/employee-data",
                     { responseType: "arraybuffer", withCredentials: true }
@@ -341,13 +341,39 @@ function Employee() {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+            } catch (error) {
+                console.error("Error exporting Excel file:", error);
+            } finally {
+                setLoading(false);
+                setExportEmployee(false)
             }
-        } catch (error) {
-            console.error("Error exporting Excel file:", error);
-        } finally {
-            setLoading(false);
-            setExportEmployee(false)
         }
+        if (userObject?.role === "Inhaber") {
+            try {
+                setLoading(true);
+
+                const { data } = await axios.get(
+                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
+                    { responseType: "arraybuffer", withCredentials: true }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "employee_data.xlsx";
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (error) {
+                console.error("Error exporting Excel file:", error);
+            } finally {
+                setLoading(false);
+                setExportEmployee(false)
+            }
+        }
+
     }
     const getAllUsers = async () => {
         setLoading(true);
