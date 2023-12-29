@@ -5,20 +5,20 @@ import IconActice from "../../assets/images/icon-active.png"
 const EmployeeItem = (props) => {
     const { id, name, email, status, department, department_name, role, position } = props
     // const [checkRole, setCheckRole] = useState(false)
-    const [checkAdmin, setCheckAdmin] = useState(false)
+    // const [checkAdmin, setCheckAdmin] = useState(false)
     const [userObject, setUserObject] = useState()
 
-    useEffect(() => {
-        // if (role === "Employee") {
-        //     setCheckRole(true)
-        // }
-        if (userObject?.role !== "Admin") {
-            setCheckAdmin(false)
-        }
-        if (userObject?.role === "Admin") {
-            setCheckAdmin(true)
-        }
-    }, [userObject?.role])
+    // useEffect(() => {
+    //     // if (role === "Employee") {
+    //     //     setCheckRole(true)
+    //     // }
+    //     if (userObject?.role !== "Admin") {
+    //         setCheckAdmin(false)
+    //     }
+    //     if (userObject?.role === "Admin") {
+    //         setCheckAdmin(true)
+    //     }
+    // }, [userObject?.role])
 
     useEffect(() => {
         const userString = localStorage.getItem('user');
@@ -41,28 +41,15 @@ const EmployeeItem = (props) => {
             <td className="p-2">{id}</td>
             <td className="p-2">{email}</td>
             <td className="p-2">{role}</td>
-            {checkAdmin ? (<td className="p-2 flex flex-col gap-2">
+            <td className="p-2 flex flex-col gap-2">
                 {department?.map(({ name, position }) => <div>{name} </div>)}
-            </td>) : (
-                <td className="p-2 flex flex-col gap-2">
-                    {department
-                        ?.filter((item) => item?.name === userObject?.department_name)
-                        ?.map((item, index) => (
-                            <div key={index}>{item?.name}</div>
-                        ))}
-                </td>
-            )}
+            </td>
 
             <td className="p-2"></td>
 
-            {checkAdmin ? (<td className="p-2 flex flex-col gap-2">
+            <td className="p-2 flex flex-col gap-2">
                 {department?.map(({ position }) => <div>{position?.join(", ")} </div>)}
-            </td>) : (<td className="p-2 flex flex-col gap-2">
-                {department
-                    ?.filter((item) => item?.name === userObject?.department_name)
-                    ?.map((item, index) => <div key={index}>{item?.position?.join(", ")} </div>)}
-            </td>)}
-
+            </td>
 
             <td className="p-2"></td>
             <td className="p-2 flex flex-row gap-2 items-center w-full h-full mt-2">

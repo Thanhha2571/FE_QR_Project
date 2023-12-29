@@ -12,8 +12,10 @@ function Employee() {
     const [selectedPosition, setSelectedPosition] = useState("Select Position")
     const [selectedDepartment, setSelectedDepartment] = useState("Select Department")
     const [selectedRole, setSelectedRole] = useState("Select Role")
+    const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState("Select Department")
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+
 
     const [positionMenu, setPositionMenu] = useState(false)
     const [departmentMenu, setDepartmentMenu] = useState(false)
@@ -162,7 +164,7 @@ function Employee() {
         if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
-                    `https://qr-code-checkin.vercel.app/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
                     {
                         id: formData.user.id,
                         name: formData.user.name,
@@ -170,6 +172,7 @@ function Employee() {
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
                         role: "Manager",
+                        position: selectedPositionEmployee,
                     },
                     { withCredentials: true }
                 );
@@ -348,7 +351,7 @@ function Employee() {
         if (userObject.role === 'Inhaber') {
             if (inputSearch === "" && selectedRole !== "Select Role") {
                 try {
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -357,9 +360,9 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
-            if (inputSearch !== "" && selectedRole !== "Select Role") {
+            if (inputSearch !== "" && selectedRole === "Select Role") {
                 try {
-                    const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}&details=${inputSearch}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -472,11 +475,13 @@ function Employee() {
         // }
 
         const getAllDepartments = async () => {
-            try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
-                setDepartmentList(response.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            if (userObject?.role === "Admin") {
+                try {
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                    setDepartmentList(response.data);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
             }
         };
 
@@ -484,10 +489,14 @@ function Employee() {
         getAllDepartments()
     }, [selectedRoleUser, userObject?.role, userObject?.name]);
 
-    // useEffect(() => {
-    //     setUserObject(userObject)
-    //     console.log(userObject);
-    // }, [])
+    useEffect(() => {
+        if (userObject?.role == "Inhaber" || userObject?.role == "Manager") {
+            const arrayFilter = userObject?.department?.map((item => item.name))
+            setDepartmentInhaberOrManager(arrayFilter)
+        }
+    
+        console.log("department",departmentInhaberOrManager);
+    }, [userObject?.role])
 
     useEffect(() => {
         if (userObject?.role === 'Admin') {
@@ -756,6 +765,27 @@ function Employee() {
                                                 </select>
                                             </div>
                                         )}
+                                        {checkInhaber && (<div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                <span className="text-rose-500">*</span>
+                                                <span className="">Department</span>
+                                            </div>
+                                            <select
+                                                id="department"
+                                                name="department"
+                                                className="w-full cursor-pointer"
+                                                value={selectedDepartmentEmployee}
+                                                onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
+                                                required
+                                            >
+                                                <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                {departmentInhaberOrManager?.map((item, index) => (
+                                                    <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                        {item}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>)}
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
