@@ -6,7 +6,7 @@ import "./Salary.css"
 import ProfileIcon from "../../assets/images/icon-profile.png"
 const SalaryEmployee = () => {
     const { employeeId } = useParams()
-    console.log(employeeId);
+    // console.log(employeeId);
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
 
@@ -34,10 +34,10 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-salary/get-all?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${inputYear}&month=${inputMonth}&employeeID=${employeeId}`,
                     { withCredentials: true }
                 );
-                setSalaryListByMonth(data?.salaries)
+                setSalaryListByMonth(data?.message)
                 // console.log(data?.);
             } catch (error) {
                 // Handle error
@@ -51,7 +51,7 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-salary/get-all?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.salaries)
@@ -67,14 +67,14 @@ const SalaryEmployee = () => {
     }
 
 
-    useEffect(() => {
-        if (salaryListByMonth) {
-            const arrayFilter = salaryListByMonth.filter(
-                (item) => item.employee_id === employeeId
-            );
-            setFilterEmployeeById(arrayFilter);
-        }
-    }, [salaryListByMonth, employeeId]);
+    // useEffect(() => {
+    //     if (salaryListByMonth) {
+    //         const arrayFilter = salaryListByMonth.filter(
+    //             (item) => item.employee_id === employeeId
+    //         );
+    //         setFilterEmployeeById(arrayFilter);
+    //     }
+    // }, [salaryListByMonth, employeeId]);
 
     useEffect(() => {
         if (filterEmployeeById) {
@@ -86,7 +86,7 @@ const SalaryEmployee = () => {
         try {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/attendance-data?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/attendance-data?year=${inputYear}&month=${inputMonth}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -161,26 +161,16 @@ const SalaryEmployee = () => {
                 </div>
             </div>
 
-            {filterEmployeeById?.map(({ employee_name, employee_id, email, department_name }) =>
+            {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times,realistic_schedule_times, attendance_total_times }) =>
                 <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                     {salaryInfoState && (<div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                         <div className="flex flex-col justify-center items-center gap-1 mt-4">
                             <img src={ProfileIcon} className="w-32 h-32" />
                             <span className="mt-3 font-bold text-xl">{employee_name}</span>
                             <span className="text-base">Employee's ID: {employee_id}</span>
-                            <div className="w-full flex flex-col justify-center items-center gap-1 mt-3 text-base">
-                                <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Name</span>
-                                    <span className="w-2/3 px-2">{employee_name}</span>
-                                </div>
-                                <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Email</span>
-                                    <span className="w-2/3 px-2">{email}</span>
-                                </div>
-                            </div>
                         </div>
                     </div>)}
-                    {salaryInfoState && checkAdmin ? (<div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                    {/* {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
                         <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                         <div className="flex flex-wrap w-full">
                             {department_name?.map(({ _id, name, attendance_stats }) => (
@@ -196,23 +186,15 @@ const SalaryEmployee = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>) : (
-                        <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
-                            {/* <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
-                            <div className="flex flex-wrap w-full">
-                                <div key={_id} className="flex flex-col w-1/2 py-4 gap-2">
-                                    <div className="text-xl font-semibold leading-6">Department: {name}</div>
-                                    {attendance_stats?.map((stats, index) => (
-                                        <div key={index} className="flex flex-col gap-2">
-                                            <span>Date Late: {stats.date_late}</span>
-                                            <span>Date Missing: {stats.date_missing}</span>
-                                            <span>Date On Time: {stats.date_on_time}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div> */}
+                    </div>} */}
+                    {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                        <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
+                        <div className="flex flex-col gap-3">
+                            <div>Default Working Time: {default_schedule_times}</div>
+                            <div>Rest Working Time: {realistic_schedule_times}</div>
+                            <div> Working Time: {attendance_total_times}</div>
                         </div>
-                    )}
+                    </div>}
                 </div>
             )}
             {exportEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">

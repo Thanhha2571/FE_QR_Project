@@ -21,7 +21,7 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-salary/get?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${inputYear}&month=${inputMonth}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -35,7 +35,7 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-salary/get-all?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get-all?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.salaries)
@@ -57,6 +57,7 @@ const SalarySummarizie = () => {
             b: '',
             c: '',
             d: '0.25',
+            f:''
         },
     });
 
@@ -78,12 +79,13 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
-                        `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
                             c_new: formData.user.c,
                             d_new: formData.user.d,
+                            f_new: formData.user.f
                         },
                         { withCredentials: true }
                     );
@@ -102,6 +104,7 @@ const SalarySummarizie = () => {
                             b: '',
                             c: '',
                             d: '0.25',
+                            f:''
                         },
                     });
                 }
@@ -110,7 +113,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
-                        `https://qr-code-checkin.vercel.app/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}&inhaber_name=${userObject?.name}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}&inhaber_name=${userObject?.name}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -147,7 +150,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/salary-data?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${inputYear}&month=${inputMonth}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -252,7 +255,10 @@ const SalarySummarizie = () => {
                                 <span className="table-title-id">Employee ID</span>
                             </th>
                             <th className="p-2 text-left">
-                                <span className="table-title-status">Hour Normal</span>
+                                <span className="table-title-status">Working Time</span>
+                            </th>
+                            <th className="p-2 text-left">
+                                <span className="table-title-status">Total Working</span>
                             </th>
                             <th className="p-2 text-left">
                                 <span className="table-title-status">Hour Overtine</span>
@@ -270,6 +276,9 @@ const SalarySummarizie = () => {
                                 <span className="table-title-status">d_parameter</span>
                             </th>
                             <th className="p-2 text-left">
+                                <span className="table-title-status">f_parameter</span>
+                            </th>
+                            <th className="p-2 text-left">
                                 <span className="table-title-status">Total Km</span>
                             </th>
                             <th className="p-2 text-left">
@@ -281,7 +290,7 @@ const SalarySummarizie = () => {
                         <div className="no-result-text text-center">NO RESULT</div>
                     ) : (
                         <tbody className="tbody">
-                            {salaryListByMonth?.map(({ employee_id, employee_name, hour_normal }) => (
+                            {salaryListByMonth?.map(({ employee_id, employee_name, hour_normal,total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter, total_km, total_salary }) => (
                                 <tr className="tr-item" key={employee_id}>
                                     <td className="p-2 hover:text-buttonColor2">
                                         <h2 className="text-left">
@@ -290,30 +299,24 @@ const SalarySummarizie = () => {
                                         </h2>
                                     </td>
                                     <td className="p-2">{employee_id}</td>
-                                    {/* <td className="p-2">
+                                    <td className="p-2">
                                         <div className="flex flex-col">
-                                            {salary?.hour_normal?.map(({ department_name, total_hour, total_minutes }) => (
+                                            {hour_normal?.map(({ department_name, total_hour, total_minutes }) => (
                                                 <div className="flex flex-row gap-3">
                                                     <span>{department_name}: {total_hour}h {total_minutes}m</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </td>
-                                    <td className="p-2">
-                                        {salary?.hour_overtime?.length > 0 ?
-                                            salary.hour_overtime.map(({ department_name, total_hour, total_minutes }) => (
-                                                <div>
-                                                    {`${department_name}: ${total_hour}h ${total_minutes}m`}
-                                                </div>
-                                            ))
-                                            : '0'}
-                                    </td>
-                                    <td className="p-2">{salary?.a_parameter}</td>
-                                    <td className="p-2">{salary?.b_parameter}</td>
-                                    <td className="p-2">{salary?.c_parameter}</td>
-                                    <td className="p-2">{salary?.d_parameter}</td>
-                                    <td className="p-2">{salary?.total_km}</td>
-                                    <td className="p-2">{salary?.total_salary}</td> */}
+                                    <td className="p-2">{total_hour_work}</td>
+                                    <td className="p-2">{total_hour_overtime}</td>
+                                    <td className="p-2">{a_parameter}</td>
+                                    <td className="p-2">{b_parameter}</td>
+                                    <td className="p-2">{c_parameter}</td>
+                                    <td className="p-2">{d_parameter}</td>
+                                    <td className="p-2">{f_parameter}</td>
+                                    <td className="p-2">{total_km}</td>
+                                    <td className="p-2">{total_salary}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -324,7 +327,7 @@ const SalarySummarizie = () => {
                 <div
                     onClick={() => setSalaryCountingFormState(false)}
                     className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-auto">
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
@@ -388,7 +391,7 @@ const SalarySummarizie = () => {
                                         <input
                                             type="text"
                                             name="a"
-                                            // required
+                                            required
                                             value={formData.user.a}
                                             onChange={handleChange}
                                         />
@@ -401,7 +404,7 @@ const SalarySummarizie = () => {
                                         <input
                                             type="text"
                                             name="b"
-                                            // required
+                                            required
                                             value={formData.user.b}
                                             onChange={handleChange}
                                         />
@@ -414,7 +417,7 @@ const SalarySummarizie = () => {
                                         <input
                                             type="text"
                                             name="c"
-                                            // required
+                                            required
                                             value={formData.user.c}
                                             onChange={handleChange}
                                         />
@@ -429,6 +432,19 @@ const SalarySummarizie = () => {
                                             name="d"
                                             // required
                                             value={formData.user.d}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="w-full h-auto flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            {/* <span className="text-rose-500">*</span> */}
+                                            <span className="">f_parameter</span>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="f"
+                                            // required
+                                            value={formData.user.f}
                                             onChange={handleChange}
                                         />
                                     </div>

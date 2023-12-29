@@ -114,7 +114,7 @@ const DayOffManagement = () => {
                                                 {/* <Link className="img-table-item-block" to={`viewprofile/${uuid}`}>
                                                 <img className="img-table-item" src={imageUrl} alt="" />
                                             </Link> */}
-                                                <Link to={`/employee/view-profile/${employee_id}`} className="cursor-pointer flex flex-col" >{employee_name}
+                                                <Link to={`/gitemployee/view-profile/${employee_id}`} className="cursor-pointer flex flex-col" >{employee_name}
                                                 </Link>
                                             </h2>
                                         </td>
