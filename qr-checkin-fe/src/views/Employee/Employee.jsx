@@ -83,7 +83,7 @@ function Employee() {
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
-                    "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-employee",
+                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-employee",
                     {
                         id: formData.user.id,
                         name: formData.user.name,
@@ -106,13 +106,25 @@ function Employee() {
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
+
             }
         }
         //CREATE EMPLOYEE BY INHABER
         if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
-                    `https://qr-code-checkin.vercel.app/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
                     {
                         id: formData.user.id,
                         name: formData.user.name,
@@ -132,6 +144,17 @@ function Employee() {
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
             }
         }
 
@@ -158,6 +181,17 @@ function Employee() {
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
             }
         }
 
@@ -165,7 +199,7 @@ function Employee() {
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Inhaber') {
             try {
                 const { data } = await axios.post(
-                    "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-inhaber",
+                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-inhaber",
                     {
                         id: formData.user.id,
                         name: formData.user.name,
@@ -173,7 +207,7 @@ function Employee() {
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
                         role: "Inhaber",
-                        // position: selectedPositionEmployee,
+                        position: selectedPositionEmployee,
                     },
                     { withCredentials: true }
                 );
@@ -185,13 +219,25 @@ function Employee() {
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
+
             }
         }
         //CREATE MANAGER BY ADMIN
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
-                    "https://qr-code-checkin.vercel.app/api/auth/manage-admin/register-manager",
+                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-manager",
                     {
                         id: formData.user.id,
                         name: formData.user.name,
@@ -199,7 +245,7 @@ function Employee() {
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
                         role: "Manager",
-                        // position: selectedPositionEmployee,
+                        position: selectedPositionEmployee,
                     },
                     { withCredentials: true }
                 );
@@ -210,6 +256,17 @@ function Employee() {
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
             }
         }
     };
@@ -328,7 +385,7 @@ function Employee() {
                 setLoading(true);
 
                 const { data } = await axios.get(
-                    "https://qr-code-checkin.vercel.app/api/admin/manage-xlsx/employee-data",
+                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-data",
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -353,7 +410,7 @@ function Employee() {
                 setLoading(true);
 
                 const { data } = await axios.get(
-                    `https://qr-code-checkin.vercel.app/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -379,17 +436,17 @@ function Employee() {
         setLoading(true);
         try {
             if (userObject?.role === 'Admin') {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific', { withCredentials: true });
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject.name}`, { withCredentials: true }
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject.name}`, { withCredentials: true }
                 );
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Manager') {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all', {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all', {
                     manager_name: userObject.name
                 }, { withCredentials: true });
                 setUserList(response.data.message);
@@ -405,18 +462,18 @@ function Employee() {
 
     useEffect(() => {
 
-        if (selectedRoleUser === "Employee") {
+        if (selectedRoleUser === "Employee" || selectedRoleUser === "Inhaber" || selectedRoleUser === "Manager") {
             setPositionFormMenuState(true)
         }
 
-        if (selectedRoleUser !== "Employee") {
-            setPositionFormMenuState(false)
+        // if (selectedRoleUser !== "Employee") {
+        //     setPositionFormMenuState(false)
 
-        }
+        // }
 
         const getAllDepartments = async () => {
             try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-department/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
                 setDepartmentList(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);

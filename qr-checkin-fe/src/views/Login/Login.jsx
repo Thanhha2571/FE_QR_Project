@@ -19,7 +19,7 @@ const Login = () => {
     const [password, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    let baseApiUrl = "https://qr-code-checkin.vercel.app/api/auth/";
+    let baseApiUrl = "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/";
     const [selectedRole, setSelectedRole] = useState('admin');
 
     const handleRoleChange = (event) => {
