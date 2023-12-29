@@ -31,6 +31,22 @@ const DayOffManagement = () => {
         }
     };
 
+    const handleDenyRequest = async () => {
+        try {
+            // Make a PUT request to update the answer_status to "approved"
+            await axios.put(`https://qr-code-checkin.vercel.app/api/admin/manage-request/handle/${requestId}`, 
+            {
+                answer_status: "denied"
+            }, 
+            { withCredentials: true });
+            // After successfully updating, close the modal and fetch the updated data
+            setRequestModal(false);
+            getAllRequestList()
+        } catch (error) {
+            console.error('Error approving request:', error);
+        }
+    };
+
 
     const getAllRequestList = async () => {
         try {
@@ -71,7 +87,7 @@ const DayOffManagement = () => {
                             <thead className="">
                                 <tr className="">
                                     <th className="p-2 text-left">
-                                        <span className="font-bold">Name</span>
+                                        <Link to className="font-bold">Name</Link>
                                     </th>
                                     <th className="p-2 text-left">
                                         <span className="table-title-id">Employee ID</span>
@@ -98,7 +114,7 @@ const DayOffManagement = () => {
                                                 {/* <Link className="img-table-item-block" to={`viewprofile/${uuid}`}>
                                                 <img className="img-table-item" src={imageUrl} alt="" />
                                             </Link> */}
-                                                <Link className="cursor-pointer flex flex-col" >{employee_name}
+                                                <Link to={`/employee/view-profile/${employee_id}`} className="cursor-pointer flex flex-col" >{employee_name}
                                                 </Link>
                                             </h2>
                                         </td>
@@ -122,7 +138,7 @@ const DayOffManagement = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Approve Request</div>
+                                <div className="font-bold text-xl">Handle Request</div>
                                 <div
                                     onClick={() => setRequestModal(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -131,8 +147,8 @@ const DayOffManagement = () => {
                             <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
                                 <span>Are you sure to approve this request?</span>
                                 <div className="flex flex-row gap-3">
-                                    <button onClick={() => setRequestModal(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
-                                    <button onClick={handleApproveRequest} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                    <button onClick={handleDenyRequest} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">Denied</button>
+                                    <button onClick={handleApproveRequest} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Approved</button>
                                 </div>
                             </div>
                         </div>
