@@ -65,6 +65,18 @@ export const roleListForInhaber = [
     }
 ];
 
+export const roleListForManager = [
+    // {
+    //     name: "Inhaber",
+    // },
+    // {
+    //     name:"Manager",
+    // },
+    {
+        name:"Employee"
+    }
+];
+
 export const shiftType = [
     {
         name:"normal",

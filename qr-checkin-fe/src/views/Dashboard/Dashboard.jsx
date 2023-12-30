@@ -7,7 +7,8 @@ function Dashboard() {
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
     const [inputDay, setInputDay] = useState("")
-
+    const [checkAdmin, setCheckAdmin] = useState(false)
+    const [checkManager, setCheckManager] = useState(false)
     const [selectedDepartment, setSelectedDepartment] = useState("Select Department");
     const [departmentList, setDepartmentList] = useState()
     const [departmentMenu, setDepartmentMenu] = useState(false)
@@ -30,74 +31,119 @@ function Dashboard() {
         setSelectedDepartment(item)
     };
 
+    useEffect(() => {
+        if (userObject?.role === "Admin") {
+            setCheckAdmin(true)
+        }
+
+        if (userObject?.role === "Manager") {
+            setCheckManager(true)
+        }
+    }, [userObject?.role])
+
     const handleSeacrh = () => {
         const getEmployeeByManyDateAndShift = async () => {
             setLoading(true)
-            if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
-                if (currentDate) {
-                    try {
-                        const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
-                        setUserListToday(response.data.message);
-                    } catch (error) {
-                        setUserListToday([])
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
-                    } finally {
-                        setLoading(false);
+            if (userObject?.role === "Admin") {
+                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
+                    if (currentDate) {
+                        try {
+                            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                            setUserListToday(response.data.message);
+                        } catch (error) {
+                            setUserListToday([])
+                            setInputDay("")
+                            setInputMonth("")
+                            setInputYear("")
+                        } finally {
+                            setLoading(false);
+                        }
                     }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
-                setSelectedDepartment("Selected Department");
-                setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
-            }
-            if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment !== "Selected Department") {
-                if (currentDate) {
-                    try {
-                        const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}&department_name=${selectedDepartment}`, { withCredentials: true });
-                        setUserListToday(response.data.message);
-                    } catch (error) {
-                        setUserListToday([])
-                    } finally {
-                        setLoading(false)
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
+                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment !== "Selected Department") {
+                    if (currentDate) {
+                        try {
+                            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}&department_name=${selectedDepartment}`, { withCredentials: true });
+                            setUserListToday(response.data.message);
+                        } catch (error) {
+                            setUserListToday([])
+                        } finally {
+                            setLoading(false)
+                            setInputDay("")
+                            setInputMonth("")
+                            setInputYear("")
+                        }
                     }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
-                setSelectedDepartment("Selected Department");
-                setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
-            }
 
-            if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment !== "Selected Department") {
-                if (currentDate) {
-                    try {
-                        const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}&department_name=${selectedDepartment}`, { withCredentials: true });
-                        setUserListToday(response.data.message);
-                    } catch (error) {
-                        console.error('Error fetching employees by date and shift:', error);
-                    } finally {
-                        setLoading(false)
+                if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment !== "Selected Department") {
+                    if (currentDate) {
+                        try {
+                            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}&department_name=${selectedDepartment}`, { withCredentials: true });
+                            setUserListToday(response.data.message);
+                        } catch (error) {
+                            console.error('Error fetching employees by date and shift:', error);
+                        } finally {
+                            setLoading(false)
+                        }
+                    }
+                    setSelectedDepartment("Selected Department");
+                }
+
+                if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
+                    setInputDay("")
+                    setInputMonth("")
+                    setInputYear("")
+                    if (currentDate) {
+                        try {
+                            const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
+                            setUserListToday(response.data.message);
+                        } catch (error) {
+                            console.error('Error fetching employees by date and shift:', error);
+                        } finally {
+                            setLoading(false)
+                        }
                     }
                 }
-                setSelectedDepartment("Selected Department");
             }
-
-            if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
-                setInputDay("")
-                setInputMonth("")
-                setInputYear("")
-                if (currentDate) {
-                    try {
-                        const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
-                        setUserListToday(response.data.message);
-                    } catch (error) {
-                        console.error('Error fetching employees by date and shift:', error);
-                    } finally {
-                        setLoading(false)
+            if (userObject?.role === "Inhaber") {
+                if (inputDay !== "" && inputMonth !== "" && inputYear !== "") {
+                    if (currentDate) {
+                        try {
+                            const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                            setUserListToday(response.data.message);
+                        } catch (error) {
+                            setUserListToday([])
+                            setInputDay("")
+                            setInputMonth("")
+                            setInputYear("")
+                        } finally {
+                            setLoading(false);
+                        }
                     }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
+                // if (inputDay === "" && inputMonth === "" && inputYear === "") {
+                //     setInputDay("")
+                //     setInputMonth("")
+                //     setInputYear("")
+                //     if (currentDate) {
+                //         try {
+                //             const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
+                //             setUserListToday(response.data.message);
+                //         } catch (error) {
+                //             console.error('Error fetching employees by date and shift:', error);
+                //         } finally {
+                //             setLoading(false)
+                //         }
+                //     }
+                // }
             }
-
         };
         getEmployeeByManyDateAndShift()
     }
@@ -151,13 +197,13 @@ function Dashboard() {
         getEmployeeByDateAndShift();
         getAllDepartments();
 
-    }, [currentDate, month,year]);
+    }, [currentDate, month, year]);
     // console.log(currentDate);
     // console.log(date);
     console.log('userList', userListToday);
     return (
         <>
-            <div className="relative ml-[260px] h-auto flex flex-col font-Changa text-textColor gap-5">
+            {checkManager ? (<div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>) : (<div className="relative ml-[260px] h-auto flex flex-col font-Changa text-textColor gap-5">
                 <div className="p-5 flex flex-row items-center justify-between">
                     <div>
                         <h1 className="font-bold text-3xl">Dashboard</h1>
@@ -188,7 +234,7 @@ function Dashboard() {
                                 value={inputYear}
                                 onChange={(e) => setInputYear(e.target.value)}
                             />
-                            <div
+                            {checkAdmin && (<div
                                 onClick={handleDepartmentMenu}
                                 className="w-1/5 h-[50px] text-base cursor-pointer">
                                 <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
@@ -205,7 +251,7 @@ function Dashboard() {
                                         return <div onClick={() => handleChangeSelectedDepartment(name)} className="py-1">{name}</div>
                                     })}
                                 </div>)}
-                            </div>
+                            </div>)}
                             <div
                                 onClick={handleSeacrh}
                                 className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
@@ -262,9 +308,7 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
-
-
+            </div>)}
         </>
     );
 }

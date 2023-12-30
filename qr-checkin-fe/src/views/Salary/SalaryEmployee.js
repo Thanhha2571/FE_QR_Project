@@ -9,7 +9,7 @@ const SalaryEmployee = () => {
     // console.log(employeeId);
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
-
+    const [user, setUser] = useState()
     const [loading, setLoading] = useState(false);
     const [salaryInfoState, setSalaryInfoState] = useState(false);
     const [exportEmployee, setExportEmployee] = useState(false)
@@ -18,6 +18,7 @@ const SalaryEmployee = () => {
     const [userSalarybyMonthInfoState, setUserSalaryByMonthInfoState] = useState(false)
     const [userSalarybyMonth, setUserSalaryByMonth] = useState()
     const [checkAdmin, setCheckAdmin] = useState(false)
+    const [checkManager, setCheckManager] = useState(false)
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -25,6 +26,10 @@ const SalaryEmployee = () => {
     useEffect(() => {
         if (userObject?.role === 'Admin') {
             setCheckAdmin(true)
+        }
+
+        if (userObject?.role === 'Manager') {
+            setCheckManager(true)
         }
 
     }, [userObject?.role]);
@@ -46,16 +51,48 @@ const SalaryEmployee = () => {
                 setLoading(false)
             }
         }
+
+        if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${employeeId}`,
+                    { withCredentials: true }
+                );
+                setUser(data?.message)
+                // console.log(data?.);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false)
+            }
+        }
         setSalaryInfoState(true)
 
         if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}&employeeID=${employeeId}`,
                     { withCredentials: true }
                 );
-                setSalaryListByMonth(data?.salaries)
+                setSalaryListByMonth(data?.message)
                 // console.log(data?.);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${employeeId}`,
+                    { withCredentials: true }
+                );
+                setUser(data?.message)
+                console.log("user", data?.message);
             } catch (error) {
                 // Handle error
                 console.error("Error submitting form:", error);
@@ -76,11 +113,11 @@ const SalaryEmployee = () => {
     //     }
     // }, [salaryListByMonth, employeeId]);
 
-    useEffect(() => {
-        if (filterEmployeeById) {
-            console.log("EmployeeId", filterEmployeeById);
-        }
-    }, [filterEmployeeById]);
+    // useEffect(() => {
+    //     if (filterEmployeeById) {
+    //         console.log("EmployeeId", filterEmployeeById);
+    //     }
+    // }, [filterEmployeeById]);
 
     const handleExportAttendanceStatEmloyeeFile = async () => {
         try {
@@ -100,16 +137,36 @@ const SalaryEmployee = () => {
                 link.click();
                 document.body.removeChild(link);
             }
+
+            if (userObject?.role === "Inhaber") {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/attendance-data?inahber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}`,
+                    { responseType: "arraybuffer", withCredentials: true }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `Employee_Attendance_Data_${inputYear}_${inputMonth}.xlsx`;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
         } catch (error) {
             console.error("Error exporting Excel file:", error);
         } finally {
             setLoading(false);
             setExportEmployee(false)
         }
+
+    
     }
 
     return (
-        <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
+        <div>
+            {checkManager ? (<div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>) : (<div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
             <div className="flex flex-row items-center justify-between">
                 <div>
                     <h1 className="font-bold text-3xl">Salary Employee</h1>
@@ -161,7 +218,7 @@ const SalaryEmployee = () => {
                 </div>
             </div>
 
-            {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times,realistic_schedule_times, attendance_total_times }) =>
+            {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times }) =>
                 <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                     {salaryInfoState && (<div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                         <div className="flex flex-col justify-center items-center gap-1 mt-4">
@@ -170,25 +227,25 @@ const SalaryEmployee = () => {
                             <span className="text-base">Employee's ID: {employee_id}</span>
                         </div>
                     </div>)}
-                    {/* {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                    {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
                         <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                         <div className="flex flex-wrap w-full">
-                            {department_name?.map(({ _id, name, attendance_stats }) => (
+                            {user && user[0]?.department?.map(({ _id, name, attendance_stats }) => (
                                 <div key={_id} className="flex flex-col w-1/2 py-4 gap-2">
                                     <div className="text-xl font-semibold leading-6">Department: {name}</div>
-                                    {attendance_stats?.map((stats, index) => (
-                                        <div key={index} className="flex flex-col gap-2">
-                                            <span>Date Late: {stats.date_late}</span>
-                                            <span>Date Missing: {stats.date_missing}</span>
-                                            <span>Date On Time: {stats.date_on_time}</span>
+                                    {attendance_stats?.filter((item) => item.year === 2024 && item.month === 1)?.map((stats) => (
+                                        <div key={stats?._id} className="flex flex-col gap-2">
+                                            <span>Date Late: {stats?.date_late}</span>
+                                            <span>Date Missing: {stats?.date_missing}</span>
+                                            <span>Date On Time: {stats?.date_on_time}</span>
                                         </div>
                                     ))}
                                 </div>
                             ))}
                         </div>
-                    </div>} */}
+                    </div>}
                     {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
-                        <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
+                        <div className="text-2xl font-semibold leading-6">SUMMARIZE</div>
                         <div className="flex flex-col gap-3">
                             <div>Default Working Time: {default_schedule_times}</div>
                             <div>Rest Working Time: {realistic_schedule_times}</div>
@@ -222,7 +279,9 @@ const SalaryEmployee = () => {
                     </div>
                 </div>
             </div>)}
+        </div>)}
         </div>
+        
     )
 }
 

@@ -11,7 +11,7 @@ const Navigation = () => {
     const [employeeMenu, setEmployeeMenu] = useState(false);
     const [attendanceMenu, setAttendanceMenu] = useState(false);
     const [salaryMenu, setSalaryMenu] = useState(false);
-
+    const [logMenu, setLogMenu] = useState(false);
     // const toggleSidebar = () => setSidebar(!sidebar);
 
     return (
@@ -128,6 +128,43 @@ const Navigation = () => {
                                     </div>
                                 </Link>
                             </li>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setLogMenu(!logMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> */}
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Manage Logs
+                                </h4>
+                            </div>
+                            <div className={logMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {logMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row gap-2 justify-center items-center" to="manage-log">
+                                    {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Manage Logs</div>
+                                    </div>
+                                </Link>
+                            </li>
+                            {/* <li>
+                                <Link className="tags" to="employee/departments">
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Departments</div>
+                                    </div>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link className="tags" to="employee/position">
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Position</div>
+                                    </div>
+                                </Link>
+                            </li> */}
                         </ul>)}
                     </div>
                 </ul>

@@ -28,7 +28,9 @@ const ProfileEmployee = () => {
     const [deleteFormState, setDeleteFormState] = useState(false)
     const [selectedStatus, setSelectedStatus] = useState("active")
     const [changeStatus, setChangeStatus] = useState(false)
-    const [inputDateInactive, setInputDateInactive] = useState()
+    const [inputDateInactive, setInputDateInactive] = useState('')
+    const [exportState, setExportState] = useState(false)
+
     const navigate = useNavigate()
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -40,6 +42,11 @@ const ProfileEmployee = () => {
     const [checkAdmin, setCheckAdmin] = useState(false)
 
 
+    useEffect(() => {
+        if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
+            setExportState(true)
+        }
+    }, [userObject?.role])
     const handleShiftClick = (department) => {
         setSelectedDepartment(department);
     };
@@ -86,7 +93,20 @@ const ProfileEmployee = () => {
         }
         if (userObject?.role === 'Inhaber') {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}`, { withCredentials: true });
+                console.log(response.data.message);
+                setUser(response.data.message);
+                // setDepartmentDefined(response.data.message[0]?.department)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        if (userObject?.role === 'Manager') {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}`, { withCredentials: true });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -321,6 +341,21 @@ const ProfileEmployee = () => {
                 navigate("/employee")
             }
         }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/delete-byId?inhaber_name=${userObject?.name}&employeeID=${id}`,
+                    { withCredentials: true },
+                );
+
+
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                navigate("/employee")
+            }
+        }
     }
     const handleChangeStatus = async () => {
         setLoading(true);
@@ -341,6 +376,31 @@ const ProfileEmployee = () => {
                 console.error("Error submitting form:", error);
             } finally {
                 setLoading(false);
+                setChangeStatus(false);
+                setInputDateInactive('')
+
+            }
+        }
+
+        if (userObject?.role === "Inhaber") {
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/make-inactive?inhaber_name=${userObject?.name}&employeeID=${id}`,
+                    {
+
+                        inactive_day: inputDateInactive,
+                    },
+                    { withCredentials: true },
+                );
+
+
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setChangeStatus(false);
+                setInputDateInactive('')
+
             }
             // setTimeout(() => {
             //     window.location.reload();
@@ -365,12 +425,12 @@ const ProfileEmployee = () => {
                     {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
                     </button>)}
-                    <button onClick={() => setDeleteFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                    {exportState && (<button onClick={() => setDeleteFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                         <img className="w-4 h-4" src={DeleteIcon} />Delete Employee
-                    </button>
-                    <button onClick={() => setChangeStatus(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                    </button>)}
+                    {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                         Make Inactive
-                    </button>
+                    </button>)}
                 </div>
             </div>
             <div className="border border-solid border-t-[#6c757d]"></div>
@@ -549,7 +609,7 @@ const ProfileEmployee = () => {
                                         <label className="w-1/4 text-right p-4">Department:</label>
                                         <div className="flex flex-row gap-4">
                                             {user[0]?.department
-                                                ?.filter((item) => item.name === userObject?.department_name)
+                                                // ?.filter((item) => item.name === userObject?.department_name)
                                                 ?.map((item, index) => (
                                                     <span
                                                         className={`cursor-pointer ${selectedDepartment === item.name
@@ -636,14 +696,14 @@ const ProfileEmployee = () => {
                                         ))}
                                     </select>
                                 </div>
-                                <div className="flex flex-row w-full justify-center gap-6">
+                                {exportState && (<div className="flex flex-row w-full justify-center gap-6">
                                     <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                                         Cancel
                                     </button>
                                     <button type="submit" className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                                         Save Changes
                                     </button>
-                                </div>
+                                </div>)}
                             </form>
                         </div>
                     </div>)

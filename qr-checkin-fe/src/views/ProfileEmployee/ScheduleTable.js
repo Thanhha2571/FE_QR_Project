@@ -35,6 +35,15 @@ const ScheduleTable = (props) => {
     const [selectedCheckInStatus, setSelectedCheckInStatus] = useState("")
     const [selectedCheckOutStatus, setSelectedCheckOutStatus] = useState("")
     const [attendanceId, setAttendanceId] = useState("")
+    const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState("Select Department")
+    const [exportState, setExportState] = useState(false)
+    const userString = localStorage.getItem('user');
+    const userObject = userString ? JSON.parse(userString) : null;
+    useEffect(() => {
+        if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
+            setExportState(true)
+        }
+    }, [userObject?.role])
     // const [userObject, setUserObject] = useState()
 
     const [checkInhaber, setCheckInhaber] = useState(false)
@@ -84,6 +93,16 @@ const ScheduleTable = (props) => {
                 console.error("Error fetching employee data:", error);
             }
         }
+        if (userObject?.role === "Manager") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?employeeID=${id}&manager_name=${userObject?.name}`, { withCredentials: true });
+                console.log("scheduleEmployeeAll", response.data);
+                setScheduleEmployee(response.data);
+                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+            } catch (error) {
+                console.error("Error fetching employee data:", error);
+            }
+        }
     };
 
     const fetchEmployeeStatsByMonth = async () => {
@@ -110,8 +129,15 @@ const ScheduleTable = (props) => {
 
     }
     // useEffect(() => {
-    const userString = localStorage.getItem('user');
-    const userObject = userString ? JSON.parse(userString) : null;
+
+
+    useEffect(() => {
+        if (userObject?.role == "Inhaber" || userObject?.role == "Manager") {
+            const arrayFilter = userObject?.department?.map((item => item.name))
+            setDepartmentInhaberOrManager(arrayFilter)
+        }
+    }, [userObject?.role])
+    console.log("department", departmentInhaberOrManager);
     //     setUserObject(userObject)
     //     console.log(userObject);
     // }, [])
@@ -167,9 +193,16 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === 'Inhaber') {
             setCheckAdmin(false)
-            setSelectedDepartmentEmployee(userObject?.department_name)
+            // setSelectedDepartmentEmployee(userObject?.department_name)
             setCheckInhaber(true)
             setCheckManager(false)
+        }
+
+        if (userObject?.role === 'Manager') {
+            setCheckAdmin(false)
+            // setSelectedDepartmentEmployee(userObject?.department_name)
+            setCheckInhaber(false)
+            setCheckManager(true)
         }
     }, [userObject?.role, userObject?.department_name]);
 
@@ -194,17 +227,39 @@ const ScheduleTable = (props) => {
                     console.error('Error fetching data:', error);
                 }
             }
+            if (userObject?.role === "Manager") {
+                try {
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', { withCredentials: true });
+                    // console.log(response.data.message);
+                    setShiftList(response.data.message);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
         };
         getAllShifts()
 
+
         const fetchData = async () => {
-            try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
-                console.log("userData", response.data);
-                setEmployeeData(response.data);
-                // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
-            } catch (error) {
-                console.error("Error fetching employee data:", error);
+            if (userObject?.role === "Admin") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
+                    console.log("userData", response.data);
+                    setEmployeeData(response.data);
+                    // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+                } catch (error) {
+                    console.error("Error fetching employee data:", error);
+                }
+            }
+            if (userObject?.role === "Inhaber") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}`, { withCredentials: true });
+                    console.log("userData", response.data);
+                    setEmployeeData(response.data);
+                    // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
+                } catch (error) {
+                    console.error("Error fetching employee data:", error);
+                }
             }
         };
         fetchData();
@@ -358,11 +413,44 @@ const ScheduleTable = (props) => {
             try {
                 setLoading(true)
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}&department_name=${selectedDepartmentEmployee}`,
                     {
                         dates: formData.data.dates,
                         shift_code: selectedShiftAddShiftForm,
                         position: selectedPositionEmployee
+
+                    },
+                    { withCredentials: true }
+                );
+                fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 3000);
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setFormState(false)
+                setFormData({
+                    dates: []
+                })
+                setSelectedShiftAddShiftForm("")
+                setSelectedDepartmentEmployee(userObject?.department_name)
+                setSelectedPositionEmployee("")
+            }
+        }
+
+        if (userObject.role === 'Manager') {
+            try {
+                setLoading(true)
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/create-days?manager_name=${userObject?.name}&employeeID=${id}&department_name=${selectedDepartmentEmployee}`,
+                    {
+                        dates: formData.data.dates,
+                        shift_code: selectedShiftAddShiftForm,
+                        position: "Autofahrer"
 
                     },
                     { withCredentials: true }
@@ -445,6 +533,9 @@ const ScheduleTable = (props) => {
             }
         }
     };
+    console.log(selectedDepartmentEmployee);
+    const array = employeeData?.message[0]?.department?.filter((dept) => dept.name === selectedDepartmentEmployee)
+    console.log("array: " + array);
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
             <h2 className="text-2xl font-bold">Schedule Calendar</h2>
@@ -475,12 +566,12 @@ const ScheduleTable = (props) => {
                                             setInforShiftFormState(false)
                                         }}
                                         className={`cursor-pointer font-bold text-xl ${addShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Add Shift</div>
-                                    <div
+                                    {exportState && (<div
                                         onClick={() => {
                                             setAddShiftFormState(false)
                                             setInforShiftFormState(true)
                                         }}
-                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Shift Information</div>
+                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Shift Information</div>)}
                                 </div>
                                 <div
                                     onClick={() => setFormState(false)}
@@ -542,30 +633,148 @@ const ScheduleTable = (props) => {
                                         <div></div>
                                     )}
                                     <div className="w-full flex flex-col gap-2">
+                                        {checkInhaber ? (
+                                            <>
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Department</span>
+                                                </div>
+                                                <select
+                                                    id="department"
+                                                    name="department"
+                                                    className="w-full cursor-pointer"
+                                                    value={selectedDepartmentEmployee}
+                                                    onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    {/* {employeeData?.message[0]?.department
+                                                        ?.filter((item) => departmentInhaberOrManager.includes(item.name))
+                                                        .map((item, index) => (
+                                                            <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                {item.name}
+                                                            </option>
+                                                        ))} */}
+                                                    {departmentInhaberOrManager?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        {checkManager ? (
+                                            <>
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Department</span>
+                                                </div>
+                                                <select
+                                                    id="department"
+                                                    name="department"
+                                                    className="w-full cursor-pointer"
+                                                    value={selectedDepartmentEmployee}
+                                                    onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    {/* {employeeData?.message[0]?.department
+                                                        ?.filter((item) => departmentInhaberOrManager.includes(item.name))
+                                                        .map((item, index) => (
+                                                            <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                {item.name}
+                                                            </option>
+                                                        ))} */}
+                                                    {departmentInhaberOrManager?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </>
+                                        ) : (
+                                            <div></div>
+                                        )}
+                                    </div>
+                                    {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
                                             <span className="">Position</span>
                                         </div>
                                         <select
-                                            id="department"
-                                            name="department"
+                                            id="position"
+                                            name="position"
                                             className="w-full cursor-pointer"
                                             value={selectedPositionEmployee}
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
                                         >
                                             <option value="" disabled className='italic text-sm'>Select Position*</option>
-                                            {employeeData.message[0]?.department
-                                                ?.filter((item) => item.name === selectedDepartmentEmployee)
-                                                .map((dept) =>
-                                                    dept.position.map((item, index) => (
+                                            {employeeData?.message[0]?.department
+                                                ?.filter((dept) => dept.name === selectedDepartmentEmployee)
+                                                ?.map((dept) =>
+                                                    dept?.position?.map((item, index) => (
                                                         <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                             {item}
                                                         </option>
                                                     ))
                                                 )}
                                         </select>
-                                    </div>
+                                    </div>)}
+                                    {checkInhaber && (<div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Position</span>
+                                        </div>
+                                        <select
+                                            id="position"
+                                            name="position"
+                                            className="w-full cursor-pointer"
+                                            value={selectedPositionEmployee}
+                                            onChange={(e) => setSelectedPositionEmployee(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            {employeeData?.message[0]?.department
+                                                ?.filter((dept) => dept.name === selectedDepartmentEmployee)
+                                                ?.map((dept) =>
+                                                    dept?.position?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))
+                                                )}
+                                        </select>
+                                    </div>)}
+                                    {/* {checkManager && (<div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Position</span>
+                                        </div>
+                                        <select
+                                            id="position"
+                                            name="position"
+                                            className="w-full cursor-pointer"
+                                            value={selectedPositionEmployee}
+                                            onChange={(e) => setSelectedPositionEmployee(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            {employeeData?.message[0]?.department
+                                                ?.filter((dept) => dept.name === "C4")
+                                                ?.map((dept) =>
+                                                    dept?.position?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))
+                                                )}
+                                        </select>
+                                    </div>)} */}
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
@@ -609,7 +818,7 @@ const ScheduleTable = (props) => {
                                 </form>
                             </div>)}
                             {/* //----------------------------------------------------------------  SHIFT INFORMATION ----------------------------------------------------------------// */}
-                            {inforShiftFormState && (<div className="flex flex-col px-8 w-full mt-7 gap-2 font-Changa text-textColor">
+                            {exportState && (inforShiftFormState && (<div className="flex flex-col px-8 w-full mt-7 gap-2 font-Changa text-textColor">
                                 <div className="font-bold text-2xl">Shift Information</div>
                                 <div className="flex flex-row gap-3">
                                     {scheduleDataByDate?.length === 0 ? (
@@ -822,7 +1031,7 @@ const ScheduleTable = (props) => {
                                             ))}
                                     </div>
                                 )}
-                            </div>)}
+                            </div>))}
                         </div>
                     </div>
                 </div>

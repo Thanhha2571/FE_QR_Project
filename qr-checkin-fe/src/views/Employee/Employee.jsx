@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { positionList } from "assets/data/data";
-import { roleList, roleListForInhaber } from "assets/data/data";
+import { roleList, roleListForInhaber, roleListForManager } from "assets/data/data";
 import EmployeeItem from "./EmployeeItem";
 import "./Employee.css"
 import axios, { all } from "axios";
@@ -15,7 +15,7 @@ function Employee() {
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState("Select Department")
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
-
+    const [exportState, setExportState] = useState(false)
 
     const [positionMenu, setPositionMenu] = useState(false)
     const [departmentMenu, setDepartmentMenu] = useState(false)
@@ -159,7 +159,43 @@ function Employee() {
                 setPositionFormMenuState(false)
             }
         }
+        //CREATE EMPLOYEE BY MANAGER
+        if (userObject?.role === 'Manager' && selectedRoleUser === 'Employee') {
+            try {
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-manager/register-employee?manager_name=${userObject?.name}`,
+                    {
+                        id: formData.user.id,
+                        name: formData.user.name,
+                        password: formData.user.password,
+                        email: formData.user.email,
+                        department_name: selectedDepartmentEmployee,
+                        role: "Employee",
+                        position: selectedPositionEmployee,
+                    },
+                    { withCredentials: true }
+                );
 
+                getAllUsers()
+            } catch (error) {
+                // Handle error
+                console.error("Error submitting form:", error);
+            } finally {
+                setLoading(false);
+                setAddEmployee(false)
+                setFormData({
+                    user: {
+                        id: '',
+                        name: '',
+                        password: '',
+                        email: '',
+                    },
+                })
+                setSelectedPositionEmployee("")
+                setSelectedDepartmentEmployee("")
+                setPositionFormMenuState(false)
+            }
+        }
         //CREATE MANAGER BY INHABER
         if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Manager') {
             try {
@@ -379,6 +415,26 @@ function Employee() {
                 setSelectedPosition("Select Position")
             }, 2000);
         }
+        if (userObject.role === 'Manager') {
+            if (inputSearch !== "") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
+                    // console.log(query);
+                    setUserList(response.data.message);
+                } catch (error) {
+                    // if(error.)
+                    setUserList([])
+                    // console.error('Error fetching data:', error);
+                }
+            }
+            if (inputSearch === "") {
+                getAllUsers()
+            }
+            setTimeout(() => {
+                setSelectedRole("Select Role")
+                setSelectedPosition("Select Position")
+            }, 2000);
+        }
     }
 
     const handleExportEmloyeeFile = async () => {
@@ -444,14 +500,12 @@ function Employee() {
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject.name}`, { withCredentials: true }
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, { withCredentials: true }
                 );
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Manager') {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all', {
-                    manager_name: userObject.name
-                }, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, { withCredentials: true });
                 setUserList(response.data.message);
             }
 
@@ -513,6 +567,15 @@ function Employee() {
             setCheckManager(false)
         }
 
+        if (userObject?.role === 'Manager') {
+            setCheckRole(false)
+            setCheckAdmin(false)
+            setCheckInhaber(false)
+            setCheckManager(true)
+        }
+        if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
+            setExportState(true)
+        }
         if (userObject?.role === 'Inhaber' || userObject?.role === 'Admin') {
             setCheckAdminAndInhaber(true)
         }
@@ -533,10 +596,10 @@ function Employee() {
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Add Employee
                         </button>
-                        <button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        {exportState && (<button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Export File
-                        </button>
+                        </button>)}
                     </div>
                 </div>
                 <div className="border border-solid border-t-[#6c757d]"></div>
@@ -786,6 +849,27 @@ function Employee() {
                                                 ))}
                                             </select>
                                         </div>)}
+                                        {checkManager && (<div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                <span className="text-rose-500">*</span>
+                                                <span className="">Department</span>
+                                            </div>
+                                            <select
+                                                id="department"
+                                                name="department"
+                                                className="w-full cursor-pointer"
+                                                value={selectedDepartmentEmployee}
+                                                onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
+                                                required
+                                            >
+                                                <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                {departmentInhaberOrManager?.map((item, index) => (
+                                                    <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                        {item}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>)}
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
@@ -822,6 +906,27 @@ function Employee() {
                                             >
                                                 <option value="" disabled className='italic text-sm'>Select Role*</option>
                                                 {roleListForInhaber?.map((item, index) => (
+                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                        {item.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>)}
+                                        {checkManager && (<div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                <span className="text-rose-500">*</span>
+                                                <span className="">Role</span>
+                                            </div>
+                                            <select
+                                                id="role"
+                                                name="role"
+                                                className="w-full cursor-pointer"
+                                                value={selectedRoleUser}
+                                                onChange={(e) => setSelectedRoleUser(e.target.value)}
+                                                required
+                                            >
+                                                <option value="" disabled className='italic text-sm'>Select Role*</option>
+                                                {roleListForManager?.map((item, index) => (
                                                     <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                         {item.name}
                                                     </option>

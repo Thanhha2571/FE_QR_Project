@@ -9,14 +9,21 @@ const WorkingSchedule = () => {
     const [shiftManageState, setShiftManageState] = useState(true)
     const [createShiftFormState, setCreateShiftFormState] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [exportState, setExportState] = useState(false)
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
+    useEffect(() => {
+        if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
+            setExportState(true)
+        }
+    }, [userObject?.role])
+
     const getAllShifts = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/admin/manage-shift/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', { withCredentials: true });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
             } catch (error) {
@@ -26,7 +33,16 @@ const WorkingSchedule = () => {
 
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                // console.log(response.data.message);
+                setShiftList(response.data.message);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        if (userObject?.role === "Manager") {
+            try {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', { withCredentials: true });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
             } catch (error) {
@@ -74,9 +90,11 @@ const WorkingSchedule = () => {
             let response;
 
             if (userObject?.role === "Admin") {
-                response = await axios.post('https://qr-code-checkin.vercel.app/api/admin/manage-shift/create', shiftData, { withCredentials: true });
-            } else if (userObject?.role === "Inhaber") {
-                response = await axios.post('https://qr-code-checkin.vercel.app/api/inhaber/manage-shift/create', shiftData, { withCredentials: true });
+                response = await axios.post('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/create', shiftData, { withCredentials: true });
+            }
+            
+            if (userObject?.role === "Inhaber") {
+                response = await axios.post('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/create', shiftData, { withCredentials: true });
             }
 
             // Fetch the updated list of shifts after creating a new shift
@@ -113,12 +131,12 @@ const WorkingSchedule = () => {
                         <span className="text-[#6c757d] font-xl">/ Working Schedule</span>
                     </div>
                 </div>
-                <div className="flex flex-row px-4 gap-4">
+                {exportState && (<div className="flex flex-row px-4 gap-4">
                     <button onClick={() => setCreateShiftFormState(!createShiftFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                         Create Shift
                     </button>
-                </div>
+                </div>)}
             </div>
             <div className="text-xl font-semibold leading-6">Working Schedule Management</div>
             <div className="flex flex-row gap-4 text-xl">
