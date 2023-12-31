@@ -12,9 +12,7 @@ function Employee() {
     const [selectedPosition, setSelectedPosition] = useState("Select Position")
     const [selectedDepartment, setSelectedDepartment] = useState("Select Department")
     const [selectedRole, setSelectedRole] = useState("Select Role")
-    const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState("Select Department")
-    const userString = localStorage.getItem('user');
-    const userObject = userString ? JSON.parse(userString) : null;
+    const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [exportState, setExportState] = useState(false)
 
     const [positionMenu, setPositionMenu] = useState(false)
@@ -26,7 +24,7 @@ function Employee() {
 
     const [loading, setLoading] = useState(false);
     const [userList, setUserList] = useState()
-    // const [userObject, setUserObject] = useState()
+    const [userObject, setUserObject] = useState()
 
     const [departmentList, setDepartmentList] = useState()
 
@@ -50,6 +48,13 @@ function Employee() {
     const currentUsers = userList?.slice(indexOfFirstItem, indexOfLastItem);
 
     const totalPages = Math.ceil(userList?.length / PAGE_SIZE);
+
+    useEffect(() => {
+        const userString = localStorage.getItem('user');
+        const userObject = userString ? JSON.parse(userString) : null;
+        setUserObject(userObject)
+        console.log(userObject);
+    },[])
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -102,9 +107,8 @@ function Employee() {
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -118,6 +122,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
 
             }
@@ -140,9 +145,8 @@ function Employee() {
                 );
 
                 getAllUsers()
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -156,6 +160,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
             }
         }
@@ -177,9 +182,8 @@ function Employee() {
                 );
 
                 getAllUsers()
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -193,6 +197,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
             }
         }
@@ -214,9 +219,8 @@ function Employee() {
                 );
 
                 getAllUsers()
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -230,6 +234,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
             }
         }
@@ -252,9 +257,8 @@ function Employee() {
                 );
 
                 getAllUsers()
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -268,6 +272,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
 
             }
@@ -289,9 +294,8 @@ function Employee() {
                     { withCredentials: true }
                 );
                 getAllUsers()
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setAddEmployee(false)
@@ -305,6 +309,7 @@ function Employee() {
                 })
                 setSelectedPositionEmployee("")
                 setSelectedDepartmentEmployee("")
+                setSelectedRoleUser("")
                 setPositionFormMenuState(false)
             }
         }
@@ -345,7 +350,7 @@ function Employee() {
         //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
         if (userObject.role === 'Admin') {
             try {
-                const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, { withCredentials: true });
                 // console.log(query);
                 setUserList(response.data.message);
             } catch (error) {
@@ -457,8 +462,8 @@ function Employee() {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            } catch (error) {
-                console.error("Error exporting Excel file:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setExportEmployee(false)
@@ -482,8 +487,8 @@ function Employee() {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-            } catch (error) {
-                console.error("Error exporting Excel file:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setExportEmployee(false)
@@ -509,8 +514,8 @@ function Employee() {
                 setUserList(response.data.message);
             }
 
-        } catch (error) {
-            console.log("Error: " + error);
+        } catch (err) {
+            alert(err.response?.data?.message)
         }
         finally {
             setLoading(false);
@@ -533,8 +538,8 @@ function Employee() {
                 try {
                     const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
                     setDepartmentList(response.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                } catch (err) {
+                    alert(err.response?.data?.message)
                 }
             }
         };
@@ -543,14 +548,6 @@ function Employee() {
         getAllDepartments()
     }, [selectedRoleUser, userObject?.role, userObject?.name]);
 
-    useEffect(() => {
-        if (userObject?.role == "Inhaber" || userObject?.role == "Manager") {
-            const arrayFilter = userObject?.department?.map((item => item.name))
-            setDepartmentInhaberOrManager(arrayFilter)
-        }
-    
-        console.log("department",departmentInhaberOrManager);
-    }, [userObject?.role])
 
     useEffect(() => {
         if (userObject?.role === 'Admin') {
@@ -578,6 +575,11 @@ function Employee() {
         }
         if (userObject?.role === 'Inhaber' || userObject?.role === 'Admin') {
             setCheckAdminAndInhaber(true)
+        }
+        if (userObject?.role == "Inhaber" || userObject?.role == "Manager") {
+            const arrayFilter = userObject?.department?.map((item => item.name))
+            setDepartmentInhaberOrManager(arrayFilter)
+            console.log("arrayFilter", departmentInhaberOrManager);
         }
     }, [userList, userObject?.role])
     return (
@@ -732,21 +734,21 @@ function Employee() {
                     )}
                 </div>
                 {/* add Employee */}
-                {addEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                {addEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                     <div
                         onClick={() => setAddEmployee(false)}
                         className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                    <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                    <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-aut">
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
-                                    <div className="font-bold text-xl">Crete Employee</div>
+                                    <div className="font-bold text-xl">Create Employee</div>
                                     <div
                                         onClick={() => setAddEmployee(false)}
                                         className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
-                                <div className="flex flex-col px-8 w-full mt-7">
+                                <div className="flex flex-col px-8 w-full mt-7o">
                                     <form
                                         className="flex flex-col gap-6 w-full justify-center items-center"
                                         onSubmit={handleSubmit}>
@@ -805,70 +807,173 @@ function Employee() {
                                                 onChange={handleChange}
                                             />
                                         </div>
-                                        {checkAdmin && (
-                                            <div className="w-full flex flex-col gap-2">
-                                                <div className="flex flex-row gap-2">
-                                                    <span className="text-rose-500">*</span>
-                                                    <span className="">Department</span>
-                                                </div>
-                                                <select
-                                                    id="department"
-                                                    name="department"
-                                                    className="w-full cursor-pointer"
-                                                    value={selectedDepartmentEmployee}
-                                                    onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
-                                                    required
-                                                >
-                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
-                                                    {departmentList?.map((item, index) => (
-                                                        <option className='text-sm text-textColor w-full' key={index} value={item.name}>
-                                                            {item.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                        {checkAdmin && (<div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                <span className="text-rose-500">*</span>
+                                                <span className="">Department</span>
                                             </div>
-                                        )}
+                                            <div className="w-full flex flex-row gap-8 justify-between">
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentList?.slice(0, Math.ceil(departmentList.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item.name}
+                                                                checked={selectedDepartmentEmployee.includes(item.name)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevDepartments) =>
+                                                                        isChecked
+                                                                            ? [...prevDepartments, item.name]
+                                                                            : prevDepartments.filter((pos) => pos !== item.name)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                                {item.name}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentList?.slice(Math.ceil(departmentList.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item.name}
+                                                                checked={selectedDepartmentEmployee.includes(item.name)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevDepartments) =>
+                                                                        isChecked
+                                                                            ? [...prevDepartments, item.name]
+                                                                            : prevDepartments.filter((pos) => pos !== item.name)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                                {item.name}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>)}
                                         {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
                                                 <span className="">Department</span>
                                             </div>
-                                            <select
-                                                id="department"
-                                                name="department"
-                                                className="w-full cursor-pointer"
-                                                value={selectedDepartmentEmployee}
-                                                onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
-                                                required
-                                            >
-                                                <option value="" disabled className='italic text-sm'>Select Department*</option>
-                                                {departmentInhaberOrManager?.map((item, index) => (
-                                                    <option className='text-sm text-textColor w-full' key={index} value={item}>
-                                                        {item}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <div className="w-full flex flex-row gap-8 justify-between">
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentInhaberOrManager?.slice(0, Math.ceil(departmentInhaberOrManager.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item}
+                                                                checked={selectedDepartmentEmployee.includes(item)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevDepartments) =>
+                                                                        isChecked
+                                                                            ? [...prevDepartments, item]
+                                                                            : prevDepartments.filter((pos) => pos !== item)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`department_${index}`} className="text-sm text-textColor">
+                                                                {item}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentInhaberOrManager?.slice(Math.ceil(departmentInhaberOrManager.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item}
+                                                                checked={selectedDepartmentEmployee.includes(item)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevDepartments) =>
+                                                                        isChecked
+                                                                            ? [...prevDepartments, item]
+                                                                            : prevDepartments.filter((pos) => pos !== item)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`department_${index}`} className="text-sm text-textColor">
+                                                                {item}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>)}
                                         {checkManager && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
                                                 <span className="">Department</span>
                                             </div>
-                                            <select
-                                                id="department"
-                                                name="department"
-                                                className="w-full cursor-pointer"
-                                                value={selectedDepartmentEmployee}
-                                                onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
-                                                required
-                                            >
-                                                <option value="" disabled className='italic text-sm'>Select Department*</option>
-                                                {departmentInhaberOrManager?.map((item, index) => (
-                                                    <option className='text-sm text-textColor w-full' key={index} value={item}>
-                                                        {item}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <div className="w-full flex flex-row gap-8 justify-between">
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentInhaberOrManager?.slice(0, Math.ceil(departmentInhaberOrManager.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item}
+                                                                checked={selectedDepartmentEmployee.includes(item)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevPositions) =>
+                                                                        isChecked
+                                                                            ? [...prevPositions, item]
+                                                                            : prevPositions.filter((pos) => pos !== item)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                                {item}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="flex flex-col gap-2">
+                                                    {departmentInhaberOrManager?.slice(Math.ceil(departmentInhaberOrManager.length / 2)).map((item, index) => (
+                                                        <div key={index} className="flex items-center gap-2">
+                                                            <input
+                                                                type="checkbox"
+                                                                id={`department${index}`}
+                                                                name={`department${index}`}
+                                                                value={item}
+                                                                checked={selectedDepartmentEmployee.includes(item)}
+                                                                onChange={(e) => {
+                                                                    const isChecked = e.target.checked;
+                                                                    setSelectedDepartmentEmployee((prevPositions) =>
+                                                                        isChecked
+                                                                            ? [...prevPositions, item]
+                                                                            : prevPositions.filter((pos) => pos !== item)
+                                                                    );
+                                                                }}
+                                                            />
+                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                                {item}
+                                                            </label>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </div>)}
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">

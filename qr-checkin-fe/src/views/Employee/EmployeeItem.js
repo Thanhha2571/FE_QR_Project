@@ -24,7 +24,7 @@ const EmployeeItem = (props) => {
         const userString = localStorage.getItem('user');
         const userObject = userString ? JSON.parse(userString) : null;
         setUserObject(userObject)
-        console.log(userObject);
+        // console.log(userObject);
     }, [])
     return (
         <tr className="tr-item">

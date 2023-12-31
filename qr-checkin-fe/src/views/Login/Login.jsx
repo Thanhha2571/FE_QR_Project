@@ -60,17 +60,7 @@ const Login = () => {
             setPwd('');
             navigate(from, { replace: true });
         } catch (err) {
-            console.log(err);
-            if (!err?.res) {
-                setErrMsg('No Server Response');
-            } else if (err.res?.status === 400) {
-                setErrMsg('Missing Username or Password');
-            } else if (err.res?.status === 401) {
-                setErrMsg('Unauthorized');
-            } else {
-                setErrMsg('Login Failed');
-            }
-            // errRef.current.focus();
+            alert(err.response?.data?.message)
         }
     };
 

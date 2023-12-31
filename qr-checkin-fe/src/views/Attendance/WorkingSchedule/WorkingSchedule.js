@@ -26,8 +26,8 @@ const WorkingSchedule = () => {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', { withCredentials: true });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             }
         }
 
@@ -36,8 +36,8 @@ const WorkingSchedule = () => {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', { withCredentials: true });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             }
         }
         if (userObject?.role === "Manager") {
@@ -45,8 +45,8 @@ const WorkingSchedule = () => {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', { withCredentials: true });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             }
         }
     };
@@ -111,9 +111,8 @@ const WorkingSchedule = () => {
             // setTimeout(() => {
             //     window.location.reload();
             // }, 3000);
-        } catch (error) {
-            // Handle error
-            console.error("Error submitting form:", error);
+        } catch (err) {
+            alert(err.response?.data?.message)
         } finally {
             setLoading(false);
             setCreateShiftFormState(false);

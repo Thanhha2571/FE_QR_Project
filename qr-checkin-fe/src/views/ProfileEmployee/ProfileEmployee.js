@@ -64,9 +64,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 getUser();
@@ -85,8 +84,8 @@ const ProfileEmployee = () => {
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
             }
@@ -97,8 +96,8 @@ const ProfileEmployee = () => {
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
             }
@@ -110,8 +109,8 @@ const ProfileEmployee = () => {
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
-            } catch (error) {
-                console.error('Error fetching data:', error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
             }
@@ -148,8 +147,8 @@ const ProfileEmployee = () => {
                 try {
                     const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
                     setDepartmentList(response.data);
-                } catch (error) {
-                    console.error('Error fetching data:', error);
+                }catch (err) {
+                    alert(err.response?.data?.message)
                 }
             }
         }
@@ -277,9 +276,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 getUser()
@@ -310,9 +308,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 getUser()
@@ -333,9 +330,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 navigate("/employee")
@@ -348,9 +344,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 navigate("/employee")
@@ -371,9 +366,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setChangeStatus(false);
@@ -393,9 +387,8 @@ const ProfileEmployee = () => {
                 );
 
 
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
                 setChangeStatus(false);

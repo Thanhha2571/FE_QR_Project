@@ -33,11 +33,10 @@ const SalarySummarizie = () => {
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
-                console.log("data", data?.message);
+                // console.log("data", data?.message);
                 // console.log(data?.);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert("No salary recorded")
             }
         }
         if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
@@ -47,11 +46,10 @@ const SalarySummarizie = () => {
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
-                console.log("data", data?.message);
+                // console.log("data", data?.message);
                 // console.log(data?.);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert("No salary recorded")
             }
         }
     }
@@ -97,9 +95,8 @@ const SalarySummarizie = () => {
                         },
                         { withCredentials: true }
                     );
-                } catch (error) {
-                    // Handle error
-                    console.error("Error submitting form:", error);
+                } catch (err) {
+                    alert(err.response?.data?.message)
                 } finally {
                     handleSeacrh()
                     setLoading(false);

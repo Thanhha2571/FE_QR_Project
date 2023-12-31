@@ -31,7 +31,7 @@ const DayOffManagement = () => {
         if (userObject?.role === "Admin") {
             try {
                 // Make a PUT request to update the answer_status to "approved"
-                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com//api/admin/manage-request/handle/${requestId}`,
+                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/handle/${requestId}`,
                     {
                         answer_status: "approved"
                     },

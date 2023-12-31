@@ -44,9 +44,8 @@ const SalaryEmployee = () => {
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log(data?.);
-            } catch (error) {
-                // Handle error
-                console.error("Error submitting form:", error);
+            } catch (err) {
+                alert(err.response?.data?.message)
             } finally {
                 setLoading(false)
             }
