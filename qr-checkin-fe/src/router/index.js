@@ -18,6 +18,7 @@ import DayOffManagement from "views/Attendance/DayOffManagement/DayOffManagement
 import SalarySummarize from "views/Salary/SalarySummarize";
 import SalaryEmployee from "views/Salary/SalaryEmployee";
 import ManageLog from "views/Attendance/MangeLog/ManageLog";
+import Car from "views/Car/Car";
 
 const titles = {
     '/': 'QR Checkin',
@@ -59,6 +60,7 @@ const Router = () => {
                     <Route path="salary/summarize" element={<SalarySummarize />} />
                     <Route path="salary/sumarize/:employeeId" element={<SalaryEmployee />} />
                     <Route path="manage-log" element={<ManageLog />} />
+                    <Route path="manage-car" element={<Car />} />
                     {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 

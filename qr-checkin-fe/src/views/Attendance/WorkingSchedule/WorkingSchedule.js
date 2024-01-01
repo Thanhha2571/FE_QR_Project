@@ -55,9 +55,9 @@ const WorkingSchedule = () => {
         getAllShifts();
     }, []);
 
-    if (shiftList) {
-        console.log(shiftList);
-    }
+    // if (shiftList) {
+    //     console.log(shiftList);
+    // }
 
     const [formData, setFormData] = useState({
         code: '',

@@ -831,7 +831,7 @@ function Employee() {
                                                                     );
                                                                 }}
                                                             />
-                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                            <label htmlFor={`department_${index}`} className="text-sm text-textColor">
                                                                 {item.name}
                                                             </label>
                                                         </div>
@@ -855,7 +855,7 @@ function Employee() {
                                                                     );
                                                                 }}
                                                             />
-                                                            <label htmlFor={`position_${index}`} className="text-sm text-textColor">
+                                                            <label htmlFor={`department_${index}`} className="text-sm text-textColor">
                                                                 {item.name}
                                                             </label>
                                                         </div>
