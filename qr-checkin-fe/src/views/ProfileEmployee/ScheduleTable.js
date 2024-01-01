@@ -138,6 +138,38 @@ const ScheduleTable = (props) => {
             }
         }
 
+        if (userObject?.role === "Manager" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&manager_name=${userObject?.name}`, { withCredentials: true });
+                setEmployeeStats(response.data.message);
+                // console.log("attendance stats", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setEmployeeStats([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+
+        if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                setEmployeeStats(response.data.message);
+                // console.log("attendance stats", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setEmployeeStats([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+
     }
     // useEffect(() => {
 
