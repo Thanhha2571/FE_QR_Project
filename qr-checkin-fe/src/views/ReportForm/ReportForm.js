@@ -30,6 +30,15 @@ const ReportForm = () => {
                 alert(err.response?.data?.message)
             }
         }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?year=2024&month=1&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                // console.log(response.data.message);
+                setFormList(response?.data?.message);
+            } catch (err) {
+                alert(err.response?.data?.message)
+            }
+        }
     };
 
     useEffect(() => {
@@ -106,7 +115,7 @@ const ReportForm = () => {
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {formList?.map(({ date, employee_id,employee_name, position, car_info, check_in_km, check_out_km, bar,kredit_karte, kassen_schniff,gesamt_ligerbude,gesamt_liegerando,gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
+                                    {formList?.map(({ date, employee_id,employee_name, position, car_info, check_in_km, check_out_km, bar,kredit_karte, kassen_schniff,gesamt_ligerbude,results,gesamt_liegerando,gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}

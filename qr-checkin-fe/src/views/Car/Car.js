@@ -11,6 +11,7 @@ const Car = () => {
     const [departmentList, setDepartmentList] = useState()
     const [selectedDepartmentCar, setSelectedDepartmentCar] = useState('');
 
+    const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
 
@@ -20,6 +21,11 @@ const Car = () => {
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
             setExportState(true)
+        }
+        if (userObject?.role == "Inhaber") {
+            const arrayFilter = userObject?.department?.map((item => item.name))
+            setDepartmentInhaberOrManager(arrayFilter)
+            console.log("arrayFilter", departmentInhaberOrManager);
         }
     }, [userObject?.role])
 
@@ -33,15 +39,15 @@ const Car = () => {
                 alert(err.response?.data?.message)
             }
         }
-        // if (userObject?.role === "Inhaber") {
-        //     try {
-        //         const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get', { withCredentials: true });
-        //         // console.log(response.data.message);
-        //         setCarList(response?.data?.message);
-        //     } catch (err) {
-        //         alert(err.response?.data?.message)
-        //     }
-        // }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                // console.log(response.data.message);
+                setCarList(response?.data?.message);
+            } catch (err) {
+                alert(err.response?.data?.message)
+            }
+        }
     };
 
     const getAllDepartments = async () => {
@@ -102,6 +108,36 @@ const Car = () => {
             try {
                 const { data } = await axios.post(
                     "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/create",
+                    {
+                        car_name: formData.car.car_name,
+                        car_number: formData.car.car_number,
+                        register_date: formData.car.register_date,
+                        department_name: selectedDepartmentCar
+                    },
+                    { withCredentials: true }
+                );
+
+                getAllCars()
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setCreateCarFormState(false)
+                setFormData({
+                    car: {
+                        car_name: '',
+                        car_number: '',
+                        register_date: '',
+                    },
+                })
+                setSelectedDepartmentCar("")
+
+            }
+        }
+        if (userObject?.role === 'Inhaber') {
+            try {
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/create?inhaber_name=${userObject?.name}`,
                     {
                         car_name: formData.car.car_name,
                         car_number: formData.car.car_number,
@@ -266,6 +302,62 @@ const Car = () => {
                                                                 />
                                                                 <label htmlFor={`department_${index}`} className="text-sm text-textColor">
                                                                     {item.name}
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </div>)}
+                                            {checkInhaber && (<div className="w-full flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Department</span>
+                                                </div>
+                                                <div className="w-full flex flex-row gap-8 justify-between">
+                                                    <div className="flex flex-col gap-2">
+                                                        {departmentInhaberOrManager?.slice(0, Math.ceil(departmentInhaberOrManager?.length / 2)).map((item, index) => (
+                                                            <div key={index} className="flex items-center gap-2">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={`department${index}`}
+                                                                    name={`department${index}`}
+                                                                    value={item}
+                                                                    checked={selectedDepartmentCar.includes(item)}
+                                                                    onChange={(e) => {
+                                                                        const isChecked = e.target.checked;
+                                                                        setSelectedDepartmentCar((prevDepartments) =>
+                                                                            isChecked
+                                                                                ? [...prevDepartments, item]
+                                                                                : prevDepartments.filter((dept) => dept !== item)
+                                                                        );
+                                                                    }}
+                                                                />
+                                                                <label htmlFor={`department_${index}`} className="text-sm text-textColor">
+                                                                    {item}
+                                                                </label>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                    <div className="flex flex-col gap-2">
+                                                        {departmentInhaberOrManager?.slice(Math.ceil(departmentInhaberOrManager?.length / 2)).map((item, index) => (
+                                                            <div key={index} className="flex items-center gap-2">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    id={`department${index}`}
+                                                                    name={`department${index}`}
+                                                                    value={item}
+                                                                    checked={selectedDepartmentCar.includes(item)}
+                                                                    onChange={(e) => {
+                                                                        const isChecked = e.target.checked;
+                                                                        setSelectedDepartmentCar((prevDepartments) =>
+                                                                            isChecked
+                                                                                ? [...prevDepartments, item]
+                                                                                : prevDepartments.filter((dept) => dept !== item)
+                                                                        );
+                                                                    }}
+                                                                />
+                                                                <label htmlFor={`department_${index}`} className="text-sm text-textColor">
+                                                                    {item}
                                                                 </label>
                                                             </div>
                                                         ))}
