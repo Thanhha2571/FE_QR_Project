@@ -106,7 +106,7 @@ const ReportForm = () => {
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {formList?.map(({ date, employee_id,employee_name, position, car_info, check_in_km, check_out_km, bar,kredit_karte, kassen_schniff,gesamt_ligerbude,gesamt_liegerando }) => (
+                                    {formList?.map(({ date, employee_id,employee_name, position, car_info, check_in_km, check_out_km, bar,kredit_karte, kassen_schniff,gesamt_ligerbude,gesamt_liegerando,gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}
@@ -120,6 +120,11 @@ const ReportForm = () => {
                                             kassen_schniff={kassen_schniff}
                                             gesamt_ligerbude={gesamt_ligerbude}
                                             gesamt_liegerando={gesamt_liegerando}
+                                            results={results}
+                                            gesamt={gesamt}
+                                            trinked_ec={trinked_ec}
+                                            trink_geld={trink_geld}
+                                            auf_rechnung={auf_rechnung}
                                         />
                                     ))}
                                 </tbody>

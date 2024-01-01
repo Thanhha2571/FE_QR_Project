@@ -1,5 +1,5 @@
 const ReportFormItem = (props) => {
-    const { date, employee_id, position, car_info, employee_name, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, gesamt_liegerando } = props;
+    const { date, employee_id, position, car_info, employee_name, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung } = props;
     const inputDateString = date;
     const inputDate = new Date(inputDateString);
 
@@ -48,10 +48,10 @@ const ReportFormItem = (props) => {
                 (<td className="p-4 text-left">
                     <div className="flex flex-col">
                         <span>Bar: {bar}</span>
-                        <span>Kreditkarte: {kredit_karte}</span>
-                        <span>Kassen-Schniff: {kassen_schniff}</span>
-                        <span>Gesamt Liegerbude: {gesamt_ligerbude}</span>
-                        <span>Gesamt Lieferando: {gesamt_liegerando}</span>
+                        <span>gesamt: {gesamt}</span>
+                        <span>trinked_ec: {trinked_ec}</span>
+                        <span>trink_geld: {trink_geld}</span>
+                        <span>auf_rechnung: {auf_rechnung}</span>
                     </div>
                 </td>
             )}
