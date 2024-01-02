@@ -41,7 +41,7 @@ function Employee() {
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkAdminAndInhaber, setCheckAdminAndInhaber] = useState(false)
 
-    const PAGE_SIZE = 8
+    const PAGE_SIZE = 10
     const [currentPage, setCurrentPage] = useState(1);
     const indexOfLastItem = currentPage * PAGE_SIZE;
     const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;

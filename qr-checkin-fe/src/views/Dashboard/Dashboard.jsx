@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import EmployeeTodayItem from "./EmployeeTodayItem";
+import EmployeeAttendItem from "./EmployeeAttendItem";
 import "./Dashboard.css"
 function Dashboard() {
     document.title = "Dashboard";
@@ -22,6 +23,7 @@ function Dashboard() {
     const [loading, setLoading] = useState(false);
 
     const [userListToday, setUserListToday] = useState()
+    const [userAttendListToday, setUserAttendListToday] = useState()
     const handleDepartmentMenu = () => {
         setDepartmentMenu(!departmentMenu)
     }
@@ -74,19 +76,6 @@ function Dashboard() {
                     setSelectedDepartment("Selected Department");
                     setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
-
-                // if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment !== "Selected Department") {
-                //     try {
-                //         const response = await axios.get(`https://qr-code-checkin.vercel.app/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}&department_name=${selectedDepartment}`, { withCredentials: true });
-                //         setUserListToday(response.data.message);
-                //     } catch (error) {
-                //         console.error('Error fetching employees by date and shift:', error);
-                //     } finally {
-                //         setLoading(false)
-                //     }
-                //     setSelectedDepartment("Selected Department");
-                // }
-
                 if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
@@ -101,56 +90,77 @@ function Dashboard() {
             if (userObject?.role === "Inhaber") {
                 if (inputDay !== "" && inputMonth !== "" && inputYear !== "") {
                     // if (currentDate) {
-                        try {
-                            const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
-                            setUserListToday(response.data.message);
-                        } catch (error) {
-                            setUserListToday([])
-                            setInputDay("")
-                            setInputMonth("")
-                            setInputYear("")
-                        } finally {
-                            setLoading(false);
-                        }
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        setUserListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+                        setInputDay("")
+                        setInputMonth("")
+                        setInputYear("")
+                    } finally {
+                        setLoading(false);
+                    }
                     // }
                     setSelectedDepartment("Selected Department");
                     setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
                 if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
                     // if (currentDate) {
-                        try {
-                            const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
-                            setUserListToday(response.data.message);
-                        } catch (error) {
-                            setUserListToday([])
-                            setInputDay("")
-                            setInputMonth("")
-                            setInputYear("")
-                        } finally {
-                            setLoading(false);
-                        }
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        setUserListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+                        setInputDay("")
+                        setInputMonth("")
+                        setInputYear("")
+                    } finally {
+                        setLoading(false);
+                    }
                     // }
                     setSelectedDepartment("Selected Department");
                     setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
                 }
-                // if (inputDay === "" && inputMonth === "" && inputYear === "") {
-                //     setInputDay("")
-                //     setInputMonth("")
-                //     setInputYear("")
-                //     if (currentDate) {
-                //         try {
-                //             const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
-                //             setUserListToday(response.data.message);
-                //         } catch (error) {
-                //             console.error('Error fetching employees by date and shift:', error);
-                //         } finally {
-                //             setLoading(false)
-                //         }
-                //     }
-                // }
+            }
+        };
+        const getAttendanceEmployeeByManyDateAndShift = async () => {
+            // setLoading(true)
+            if (userObject?.role === "Admin") {
+                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        setUserAttendListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+                        setInputDay("")
+                        setInputMonth("")
+                        setInputYear("")
+                    } finally {
+                        setLoading(false);
+                    }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                }
+                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment !== "Selected Department") {
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}&department_name=${selectedDepartment}`, { withCredentials: true });
+                        setUserAttendListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+                    } finally {
+                        setLoading(false)
+                        setInputDay("")
+                        setInputMonth("")
+                        setInputYear("")
+                    }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                }
             }
         };
         getEmployeeByManyDateAndShift()
+        getAttendanceEmployeeByManyDateAndShift()
     }
 
     // useEffect(() => {
@@ -273,7 +283,9 @@ function Dashboard() {
                             {Array.isArray(userListToday) && userListToday?.length === 0 ? (
                                 <div className="font-bold text-2xl text-textColor mb-8">No Employee is working</div>
                             ) : (
-                                <div className="font-bold text-2xl text-textColor mb-8">Employee is working</div>)}
+                                <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Employee is working
+                                    <span className="text-xl italic font-normal">Total Employee Working: {userListToday?.length} </span>
+                                </div>)}
                             <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                                 <table className="w-full table">
                                     <thead className="">
@@ -305,6 +317,51 @@ function Dashboard() {
                                                 shift_code={shift_code}
                                                 department_name={department_name}
                                                 time_slot={time_slot}
+                                            />
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
+                        <div className="bg-white w-full h-auto p-10">
+                            <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
+                            {Array.isArray(userAttendListToday) && userAttendListToday?.length === 0 ? (
+                                <div className="font-bold text-2xl text-textColor mb-8">No Attendance Checking</div>
+                            ) : (
+                                <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Attendance Checking
+                                    <span className="text-xl italic font-normal">Total Employee Attendance Checking: {userAttendListToday?.length} </span></div>)}
+                            <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
+                                <table className="w-full table">
+                                    <thead className="">
+                                        <tr className="">
+                                            <th className="p-2 text-left">
+                                                <span className="font-bold">Name</span>
+                                            </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Department</span>
+                                            </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Position</span>
+                                            </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Shift Code</span>
+                                            </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Check in information</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="tbody">
+                                        {userAttendListToday?.map(({ _id, employee_name, employee_id, position, department_name, shift_info }) => (
+                                            <EmployeeAttendItem
+                                                key={_id}
+                                                employee_id={employee_id}
+                                                employee_name={employee_name}
+                                                position={position}
+                                                department_name={department_name}
+                                                shift_info={shift_info}
                                             />
                                         ))}
                                     </tbody>

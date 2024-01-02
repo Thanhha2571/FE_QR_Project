@@ -68,9 +68,10 @@ const ManageLog = () => {
                             <th className="p-4 text-left">
                                 <span className="table-title-role">Shift Date</span>
                             </th>
-                            {/* <th className="p-4 text-left">
-                                <span className="table-title-role">Detail Update</span>
-                            </th> */}
+                            <th className="p-4 text-left">
+                                <span className="table-title-role">Before Update</span>
+                            </th>
+                            <th></th>
                             <th className="p-4 text-left">
                                 <span className="table-title-role">After Update</span>
                             </th>
@@ -80,7 +81,7 @@ const ManageLog = () => {
                         <div className="no-result-text">NO RESULT</div>
                     ) : (
                         <tbody className="tbody">
-                            {logList?.map(({ date, _id, editor_name, editor_role, edited_name, edited_role, detail_update, object_update }) => (
+                            {logList?.map(({ date, _id, editor_name, editor_role, edited_name, edited_role, before_update, after_update }) => (
                                 <LogItem
                                     key={_id}
                                     date={date}
@@ -88,9 +89,8 @@ const ManageLog = () => {
                                     editor_role={editor_role}
                                     edited_name={edited_name}
                                     edited_role={edited_role}
-                                    detail_update={detail_update}
-                                    // detail_check_in_time={detail_update?.shift_info?.time_slot?.check_in_time}
-                                    object_update={object_update}
+                                    before_update={before_update}
+                                    after_update={after_update}
                                 />
                             ))}
                         </tbody>

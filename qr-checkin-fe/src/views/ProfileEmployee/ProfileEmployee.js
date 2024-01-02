@@ -266,10 +266,10 @@ const ProfileEmployee = () => {
                         dob: editingData.dob,
                         address: editingData.address,
                         gender: editingData.gender,
-                        default_day_off: editingData.default_day_off,
+                        default_day_off: Number(editingData.default_day_off),
                         house_rent_money: editingData.house_rent_money,
-                        realistic_day_off: editingData.realistic_day_off,
-                        total_time_per_month: editingData.total_time_per_month,
+                        realistic_day_off: Number(editingData.realistic_day_off),
+                        total_time_per_month: Number(editingData.total_time_per_month),
                         // inactive_day: editingData.inactive_day,
                     },
                     { withCredentials: true },
@@ -299,10 +299,10 @@ const ProfileEmployee = () => {
                         dob: editingData.dob,
                         address: editingData.address,
                         gender: editingData.gender,
-                        default_day_off: editingData.default_day_off,
+                        default_day_off: Number(editingData.default_day_off),
                         house_rent_money: editingData.house_rent_money,
-                        realistic_day_off: editingData.realistic_day_off,
-                        total_time_per_month: editingData.total_time_per_month
+                        realistic_day_off: Number(editingData.realistic_day_off),
+                        total_time_per_month: Number(editingData.total_time_per_month)
                     },
                     { withCredentials: true },
                 );
@@ -875,6 +875,7 @@ const ProfileEmployee = () => {
                                             className="w-3/4"
                                             value={inputDateInactive}
                                             onChange={(e) => setInputDateInactive(e.target.value)}
+                                            placeholder="MM/DD/YYYY"
                                         />
                                     </div>
                                     <div

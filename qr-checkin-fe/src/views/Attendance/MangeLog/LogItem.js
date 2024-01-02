@@ -1,7 +1,6 @@
 const LogItem = (props) => {
-    const { date, _id, editor_name, editor_role, edited_name, edited_role, detail_update, object_update, detail_check_in_time } = props
-    const inputDateString = object_update?.date;
-    console.log(detail_update);
+    const { date, _id, editor_name, editor_role, edited_name, edited_role, before_update, after_update } = props
+    const inputDateString = before_update?.date;
     // Create a Date object from the input string
     const inputDate = new Date(inputDateString);
 
@@ -28,19 +27,20 @@ const LogItem = (props) => {
             <td className="p-4 text-left">{editor_role}</td>
             <td className="p-4 text-left">{edited_name}</td>
             <td className="p-4 text-left">{edited_role}</td>
-            <td className="p-4 text-left">{object_update?.shift_info?.shift_code}</td>
+            <td className="p-4 text-left">{before_update?.shift_info?.shift_code}</td>
             <td className="p-4 text-left">{formattedDateString}</td>
-            {/* <td className="p-4 flex flex-col gap-2">
-                <div>{detail_update?.shift_info?.time_slot?.check_in_time}</div>
-                <div>{detail_update?.shift_info?.time_slot?.check_in_status}</div>
-                <div>{detail_update?.shift_info?.time_slot?.check_out_time}</div>
-                <div>{detail_update?.shift_info?.time_slot?.check_out_status}</div>
-            </td> */}
             <td className="p-4 flex flex-col gap-2">
-                <div>{object_update.shift_info.time_slot?.check_in_time}</div>
-                <div>{object_update.shift_info.time_slot?.check_in_status}</div>
-                <div>{object_update.shift_info.time_slot?.check_out_time}</div>
-                <div>{object_update.shift_info.time_slot?.check_out_status}</div>
+                <div>{before_update?.shift_info.time_slot?.check_in_time}</div>
+                <div>{before_update?.shift_info.time_slot?.check_in_status}</div>
+                <div>{before_update?.shift_info.time_slot?.check_out_time}</div>
+                <div>{before_update?.shift_info.time_slot?.check_out_status}</div>
+            </td>
+            <td></td>
+            <td className="p-4 flex flex-col gap-2">
+                <div>{after_update?.shift_info.time_slot?.check_in_time}</div>
+                <div>{after_update?.shift_info.time_slot?.check_in_status}</div>
+                <div>{after_update?.shift_info.time_slot?.check_out_time}</div>
+                <div>{after_update?.shift_info.time_slot?.check_out_status}</div>
             </td>
         </tr>
     );
