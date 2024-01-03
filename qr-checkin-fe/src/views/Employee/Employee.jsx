@@ -738,7 +738,7 @@ function Employee() {
                     <div
                         onClick={() => setAddEmployee(false)}
                         className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                    <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-aut">
+                    <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-auto">
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
@@ -1095,7 +1095,7 @@ function Employee() {
                                             </div>
                                         </div>)}
                                         <div
-                                            className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                            className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center mb-7 border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                             <button type="submit" className="w-full">Add</button>
                                         </div>
                                     </form>
