@@ -70,6 +70,7 @@ const ProfileEmployee = () => {
                 setLoading(false);
                 getUser();
                 setFormAddDepartmentState(false)
+                setSelectedDepartmentEmployee('')
             }
             // setTimeout(() => {
             //     window.location.reload();
@@ -720,7 +721,7 @@ const ProfileEmployee = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Crete Employee</div>
+                                <div className="font-bold text-xl">Add Department</div>
                                 <div
                                     onClick={() => setFormAddDepartmentState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
