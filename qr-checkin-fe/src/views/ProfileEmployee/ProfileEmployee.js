@@ -30,10 +30,10 @@ const ProfileEmployee = () => {
     const [changeStatus, setChangeStatus] = useState(false)
     const [inputDateInactive, setInputDateInactive] = useState('')
     const [exportState, setExportState] = useState(false)
-
     const navigate = useNavigate()
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+    const [inactive, setInactive] = useState()
 
     // const [userObject, setUserObject] = useState()
 
@@ -148,7 +148,7 @@ const ProfileEmployee = () => {
                 try {
                     const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
                     setDepartmentList(response.data);
-                }catch (err) {
+                } catch (err) {
                     alert(err.response?.data?.message)
                 }
             }
@@ -194,7 +194,6 @@ const ProfileEmployee = () => {
         house_rent_money: '',
         realistic_day_off: '',
         total_time_per_month: '',
-        // inactive_day:''
     });
 
     const handleCancel = () => {
@@ -238,6 +237,26 @@ const ProfileEmployee = () => {
                 inactive_day: user[0]?.inactive_day || '',
                 total_time_per_month: user[0]?.total_time_per_month || '',
             });
+        }
+        if (user) {
+            const inputDateString = user[0]?.inactive_day;
+            const inputDate = new Date(inputDateString);
+
+            // Get the date components
+            const year = inputDate.getFullYear();
+            const month = String(inputDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            const day = String(inputDate.getDate()).padStart(2, '0');
+            const hours = String(inputDate.getHours()).padStart(2, '0');
+            const minutes = String(inputDate.getMinutes()).padStart(2, '0');
+            const seconds = String(inputDate.getSeconds()).padStart(2, '0');
+            const timezoneOffset = inputDate.getTimezoneOffset();
+            const timezoneOffsetHours = Math.floor(Math.abs(timezoneOffset) / 60);
+            const timezoneOffsetMinutes = Math.abs(timezoneOffset) % 60;
+            const timezoneOffsetString = `${timezoneOffset < 0 ? '+' : '-'}${String(timezoneOffsetHours).padStart(2, '0')}:${String(timezoneOffsetMinutes).padStart(2, '0')}`;
+
+            // Create the formatted date string
+            const formattedDateString = `${year}-${month}-${day}`;
+            setInactive(formattedDateString)
         }
     }, [user]);
 
@@ -675,21 +694,28 @@ const ProfileEmployee = () => {
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="department">Status:</label>
-                                    <select
+                                    <input
+                                        type="text"
                                         id="status"
                                         name="status"
                                         className="w-3/4"
-                                        value={selectedStatus}
-                                        onChange={(e) => setSelectedStatus(e.target.value)}
-                                    >
-                                        <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                        {statusList?.map((item, index) => (
-                                            <option className='text-sm text-textColor w-full' key={index} value={item.name}>
-                                                {item.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                        value={editingData.status}
+                                        readOnly
+                                    // onChange={handleChange}
+                                    />
                                 </div>
+                                {editingData.status === "inactive" && (<div className="flex flex-wrap w-[600px] items-center">
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Inactive Day:</label>
+                                    <input
+                                        type="text"
+                                        id="inactive_day"
+                                        name="inactive_day"
+                                        className="w-3/4"
+                                        value={inactive}
+                                        readOnly
+                                    // onChange={handleChange}
+                                    />
+                                </div>)}
                                 {exportState && (<div className="flex flex-row w-full justify-center gap-6">
                                     <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                                         Cancel

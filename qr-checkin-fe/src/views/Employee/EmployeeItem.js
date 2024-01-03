@@ -2,6 +2,7 @@ import "./EmployeeItem.css"
 import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import IconActice from "../../assets/images/icon-active.png"
+import IconInactive from "../../assets/images/icon-inactive.png"
 const EmployeeItem = (props) => {
     const { id, name, email, status, department, department_name, role, position } = props
     // const [checkRole, setCheckRole] = useState(false)
@@ -53,8 +54,9 @@ const EmployeeItem = (props) => {
 
             <td className="p-2"></td>
             <td className="p-2 flex flex-row gap-2 items-center w-full h-full mt-2">
-                <img className="w-4 h-4" src={IconActice} />
-                <span className="text-buttonColor2">{status}</span>
+                {status === "active" &&(<img className="w-4 h-4" src={IconActice} />)}
+                {status === "inactive" &&(<img className="w-4 h-4" src={IconInactive} />)}
+                <span className={`${status === "active" ? "text-buttonColor2" : "text-red-600"}`}>{status}</span>
             </td>
         </tr>
     )
