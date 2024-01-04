@@ -210,7 +210,7 @@ const SalarySummarizie = () => {
                 link.click();
                 document.body.removeChild(link);
             } catch (error) {
-                console.error("Error exporting Excel file:", error);
+                // console.error("Error exporting Excel file:", error);
             } finally {
                 setLoading(false);
                 setExportEmployee(false)
