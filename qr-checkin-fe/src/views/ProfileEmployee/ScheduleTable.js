@@ -40,6 +40,12 @@ const ScheduleTable = (props) => {
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState("")
     const [exportState, setExportState] = useState(false)
     const [userObject, setUserObject] = useState()
+    const [createAttendanceFormState, setCreateAttendanceFormState] = useState(false)
+    const [selectedCheckInStatusCreate, setSelectedCheckInStatusCreate] = useState("")
+    const [selectedCheckOutStatusCreate, setSelectedCheckOutStatusCreate] = useState("")
+    const [attendanceDateCreate, setAttendanceDateCreate] = useState("")
+    //const [shiftCodeCreate, setShiftCodeCreate] = useState("")
+
     const [arrayDepartment, setArrayDepartment] = useState()
     // const userString = localStorage.getItem('user');
     // const userObject = userString ? JSON.parse(userString) : null;
@@ -68,6 +74,13 @@ const ScheduleTable = (props) => {
         },
     });
 
+    const [attendanceDataCreate, setAttendanceDataCreate] = useState({
+        data: {
+            check_in_time: '',
+            check_out_time: '',
+        },
+    });
+
     const handleChangeAttendanceData = (e) => {
         const { name, value } = e.target;
         setAttendanceData((prevData) => ({
@@ -78,6 +91,15 @@ const ScheduleTable = (props) => {
         }));
     };
 
+    const handleChangeAttendanceDataCreate = (e) => {
+        const { name, value } = e.target;
+        setAttendanceDataCreate((prevData) => ({
+            data: {
+                ...prevData.data,
+                [name]: value,
+            },
+        }));
+    };
     const handleShiftClick = (shift) => {
         setSelectedShift(shift);
         // console.log(shift);
@@ -261,6 +283,53 @@ const ScheduleTable = (props) => {
 
     }, [userObject?.role, userObject?.department_name]);
 
+    const fetchScheduleDataByDate = async () => {
+        const year = selectedDate.substring(0, 4);
+        const month = selectedDate.substring(5, 7);
+        const day = selectedDate.substring(8, 10)
+        const date = `${month}/${day}/${year}`
+
+        if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                setScheduleDataByDate(response.data.message);
+                // console.log("schedule", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        // console.log("No shift designs found for the specified criteria.");
+                        setScheduleDataByDate([]);
+                    } else {
+                        console.error("Error fetching schedule data. Status:", error.response.status, "Message:", error.response.data.message);
+                    }
+                } else {
+                    console.error("Unexpected error:", error.message);
+                }
+            }
+        }
+
+        if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+
+                setScheduleDataByDate(response.data.message);
+                // console.log("schedule", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setScheduleDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
+    };
+
     useEffect(() => {
         const getAllShifts = async () => {
             if (userObject?.role === "Admin") {
@@ -332,52 +401,6 @@ const ScheduleTable = (props) => {
         fetchScheduleEmployyee();
         fetchAttendanceDataByDate();
 
-        const fetchScheduleDataByDate = async () => {
-            const year = selectedDate.substring(0, 4);
-            const month = selectedDate.substring(5, 7);
-            const day = selectedDate.substring(8, 10)
-            const date = `${month}/${day}/${year}`
-
-            if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
-                try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
-                    setScheduleDataByDate(response.data.message);
-                    // console.log("schedule", response.data.message);
-                } catch (error) {
-                    if (error.response && error.response.status) {
-                        if (error.response.status === 404) {
-                            // console.log("No shift designs found for the specified criteria.");
-                            setScheduleDataByDate([]);
-                        } else {
-                            console.error("Error fetching schedule data. Status:", error.response.status, "Message:", error.response.data.message);
-                        }
-                    } else {
-                        console.error("Unexpected error:", error.message);
-                    }
-                }
-            }
-
-            if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
-                try {
-                    const year = selectedDate.substring(0, 4);
-                    const month = selectedDate.substring(5, 7);
-                    const day = selectedDate.substring(8, 10)
-                    const date = `${month}/${day}/${year}`
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
-
-                    setScheduleDataByDate(response.data.message);
-                    // console.log("schedule", response.data.message);
-                } catch (error) {
-                    if (error.response && error.response.status) {
-                        if (error.response.status === 404) {
-                            setScheduleDataByDate([])
-                        }
-                    } else {
-                        console.error("Error fetching schedule data:", error.message);
-                    }
-                }
-            }
-        };
         fetchScheduleDataByDate();
         fetchEmployeeStatsByMonth()
     }, [id, selectedDate, dateFormDb, role, userObject?.role]);
@@ -453,6 +476,7 @@ const ScheduleTable = (props) => {
                 );
                 fetchScheduleEmployyee()
                 fetchEmployeeStatsByMonth()
+                fetchScheduleDataByDate()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -646,6 +670,48 @@ const ScheduleTable = (props) => {
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
+            }
+        }
+
+
+    };
+
+    const handleSubmitCreateAttendanceInfo = async (e) => {
+        const year = selectedDate.substring(0, 4);
+        const month = selectedDate.substring(5, 7);
+        const day = selectedDate.substring(8, 10)
+        const date = `${month}/${day}/${year}`
+        e.preventDefault();
+
+        setLoading(true);
+
+        if (userObject?.role === 'Admin') {
+            try {
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
+                    {
+                        "check_in_time": attendanceDataCreate.data.check_in_time,
+                        "check_out_time": attendanceDataCreate.data.check_out_time,
+                        "check_in_status": selectedCheckInStatusCreate,
+                        "check_out_status": selectedCheckOutStatusCreate,
+                    },
+                    { withCredentials: true }
+                );
+
+                fetchAttendanceDataByDate();
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceDataCreate({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+                setSelectedCheckInStatusCreate("")
+                setSelectedCheckOutStatusCreate("")
             }
         }
 
@@ -936,161 +1002,265 @@ const ScheduleTable = (props) => {
                                 </div>
                                 {selectedShift && (
                                     <div>
-                                        {attendanceDataByDate
-                                            ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
-                                            .map((filteredItem) => (
-                                                <div className="flex flex-col gap-4" key={filteredItem._id}>
-                                                    {filteredItem?.status === "missing" ? (
-                                                        <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: MISSING</div>
-                                                    ) : (
-                                                        <div className="flex flex-col gap-4">
-                                                            <div className="flex flex-row justify-between mt-5">
-                                                                <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
-                                                                    <div>CHECKIN TIME</div>
-                                                                    <div>{filteredItem?.shift_info?.time_slot?.check_in_time}</div>
-                                                                    <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_in_status}</div>
-                                                                </div>
-                                                                <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                    <div>WORKING TIME</div>
-                                                                    <div>{`${filteredItem?.shift_info?.total_hour}h ${filteredItem?.shift_info?.total_minutes}m`}</div>
-                                                                </div>
-                                                                <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
-                                                                    <div>CHECKOUT TIME</div>
-                                                                    <div>{filteredItem?.shift_info?.time_slot?.check_out_time}</div>
-                                                                    <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_out_status}</div>
-                                                                </div>
+                                        {attendanceDataByDate?.length === 0 ? (
+                                            <div className="flex flex-col gap-3">
+                                                <div className="text-center font-bold text-gray-600 text-xl mt-4">No attendance data available</div>
+                                                <div className="flex flex-col">
+                                                    <button onClick={() => {
+                                                        setCreateAttendanceFormState(!createAttendanceFormState)
+                                                    }
+                                                    } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                                        Create Attendance Information
+                                                    </button>
+                                                    {createAttendanceFormState && (<div className="w-full h-full">
+                                                        <div className="flex flex-col mt-8">
+                                                            <div className="flex flex-row justify-between px-8 items-center">
+                                                                <div className="font-bold text-xl">Create Attendance Information</div>
                                                             </div>
-                                                            {filteredItem?.position === "Autofahrer" ? (<div className="flex flex-row justify-between mt-5">
-                                                                <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
-                                                                    <div>CHECKIN KM</div>
-                                                                    <div>{filteredItem?.check_in_km}</div>
-                                                                </div>
-                                                                <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                    <div>TOTAL KM TIME</div>
-                                                                    <div>{filteredItem?.total_km}</div>
-                                                                </div>
-                                                                <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
-                                                                    <div>CHECKOUT KM</div>
-                                                                    <div>{filteredItem?.check_out_km}</div>
-                                                                </div>
-                                                            </div>) : (<div></div>)}
+                                                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                                            <div className="flex flex-col px-8 w-full mt-7">
+                                                                <form
+                                                                    className="flex flex-col gap-6 w-full justify-center items-center"
+                                                                    onSubmit={handleSubmitCreateAttendanceInfo}>
+                                                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                                        <div className="loader"></div>
+                                                                    </div>)}
+                                                                    <div className="w-full h-auto flex flex-col gap-2">
+                                                                        <div className="flex flex-row gap-2">
+                                                                            <span className="text-rose-500">*</span>
+                                                                            <span className="">Check_in_time</span>
+                                                                        </div>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="check_in_time"
+                                                                            // required
+                                                                            value={attendanceDataCreate.data.check_in_time}
+                                                                            onChange={handleChangeAttendanceDataCreate}
+                                                                            placeholder="eg:11:40:00 PM"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="w-full flex flex-col gap-2">
+                                                                        <div className="flex flex-row gap-2">
+                                                                            <span className="text-rose-500">*</span>
+                                                                            <span className="">Check_in_status</span>
+                                                                        </div>
+                                                                        <select
+                                                                            id="department"
+                                                                            name="department"
+                                                                            className="w-full cursor-pointer"
+                                                                            value={selectedCheckInStatusCreate}
+                                                                            onChange={(e) => setSelectedCheckInStatusCreate(e.target.value)}
+                                                                        // required
+                                                                        >
+                                                                            <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                            {statusAttendance?.map((item, index) => (
+                                                                                <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                    {item.name}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="w-full h-auto flex flex-col gap-2">
+                                                                        <div className="flex flex-row gap-2">
+                                                                            <span className="text-rose-500">*</span>
+                                                                            <span className="">Check_out_time</span>
+                                                                        </div>
+                                                                        <input
+                                                                            type="text"
+                                                                            name="check_out_time"
+                                                                            // required
+                                                                            value={attendanceDataCreate.data.check_out_time}
+                                                                            onChange={handleChangeAttendanceDataCreate}
+                                                                            placeholder="eg:11:20:00 PM"
+                                                                        />
+                                                                    </div>
+                                                                    <div className="w-full flex flex-col gap-2">
+                                                                        <div className="flex flex-row gap-2">
+                                                                            <span className="text-rose-500">*</span>
+                                                                            <span className="">Check_out_status</span>
+                                                                        </div>
+                                                                        <select
+                                                                            id="department"
+                                                                            name="department"
+                                                                            className="w-full cursor-pointer"
+                                                                            value={selectedCheckOutStatusCreate}
+                                                                            onChange={(e) => setSelectedCheckOutStatusCreate(e.target.value)}
+                                                                        // required
+                                                                        >
+                                                                            <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                            {statusAttendance?.map((item, index) => (
+                                                                                <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                    {item.name}
+                                                                                </option>
+                                                                            ))}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div
+                                                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                                                        <button type="submit" className="w-full">Create Attendance</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
                                                         </div>
-                                                    )}
-                                                    <div className="flex flex-col">
-                                                        <button onClick={() => {
-                                                            setAttendanceId(filteredItem?._id)
-                                                            setChangeAttendanceFormState(!changeAttendanceFormState)
-                                                        }
-                                                        } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                                                            Change Attendance Information
-                                                        </button>
-                                                        {changeAttendanceFormState && (<div className="w-full h-full">
-                                                            <div className="flex flex-col mt-8">
-                                                                <div className="flex flex-row justify-between px-8 items-center">
-                                                                    <div className="font-bold text-xl">Change Attendance Information</div>
-                                                                </div>
-                                                                <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
-                                                                <div className="flex flex-col px-8 w-full mt-7">
-                                                                    <form
-                                                                        className="flex flex-col gap-6 w-full justify-center items-center"
-                                                                        onSubmit={handleSubmitChangeAttendancInfo}>
-                                                                        {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                                            <div className="loader"></div>
-                                                                        </div>)}
-                                                                        <div className="w-full h-auto flex flex-col gap-2">
-                                                                            <div className="flex flex-row gap-2">
-                                                                                <span className="text-rose-500">*</span>
-                                                                                <span className="">Attendance ID</span>
-                                                                            </div>
-                                                                            <input
-                                                                                type="text"
-                                                                                name="id"
-                                                                                value={attendanceId}
-                                                                                // onChange={(e) => setAttendanceId(e.target.value)}
-                                                                                readOnly={true}
-                                                                            />
-                                                                        </div>
-                                                                        <div className="w-full h-auto flex flex-col gap-2">
-                                                                            <div className="flex flex-row gap-2">
-                                                                                <span className="text-rose-500">*</span>
-                                                                                <span className="">Check_in_time</span>
-                                                                            </div>
-                                                                            <input
-                                                                                type="text"
-                                                                                name="check_in_time"
-                                                                                // required
-                                                                                value={attendanceData.data.check_in_time}
-                                                                                onChange={handleChangeAttendanceData}
-                                                                            />
-                                                                        </div>
-                                                                        <div className="w-full flex flex-col gap-2">
-                                                                            <div className="flex flex-row gap-2">
-                                                                                <span className="text-rose-500">*</span>
-                                                                                <span className="">Check_in_status</span>
-                                                                            </div>
-                                                                            <select
-                                                                                id="department"
-                                                                                name="department"
-                                                                                className="w-full cursor-pointer"
-                                                                                value={selectedCheckInStatus}
-                                                                                onChange={(e) => setSelectedCheckInStatus(e.target.value)}
-                                                                            // required
-                                                                            >
-                                                                                <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                                {statusAttendance?.map((item, index) => (
-                                                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
-                                                                                        {item.name}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </select>
-                                                                        </div>
-                                                                        <div className="w-full h-auto flex flex-col gap-2">
-                                                                            <div className="flex flex-row gap-2">
-                                                                                <span className="text-rose-500">*</span>
-                                                                                <span className="">Check_out_time</span>
-                                                                            </div>
-                                                                            <input
-                                                                                type="text"
-                                                                                name="check_out_time"
-                                                                                // required
-                                                                                value={attendanceData.data.check_out_time}
-                                                                                onChange={handleChangeAttendanceData}
-                                                                            />
-                                                                        </div>
-                                                                        <div className="w-full flex flex-col gap-2">
-                                                                            <div className="flex flex-row gap-2">
-                                                                                <span className="text-rose-500">*</span>
-                                                                                <span className="">Check_out_status</span>
-                                                                            </div>
-                                                                            <select
-                                                                                id="department"
-                                                                                name="department"
-                                                                                className="w-full cursor-pointer"
-                                                                                value={selectedCheckOutStatus}
-                                                                                onChange={(e) => setSelectedCheckOutStatus(e.target.value)}
-                                                                            // required
-                                                                            >
-                                                                                <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                                {statusAttendance?.map((item, index) => (
-                                                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
-                                                                                        {item.name}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </select>
-                                                                        </div>
-                                                                        <div
-                                                                            className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                                                            <button type="submit" className="w-full">Save Changes</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>)}
-                                                    </div>
+                                                    </div>)}
                                                 </div>
-                                                //     </div>
-                                                // </div>
-                                            ))}
+                                            </div>
+
+                                        ) : (
+                                            attendanceDataByDate?.filter((item) => item?.shift_info?.shift_code === selectedShift)
+                                                .map((filteredItem) => (
+                                                    <div className="flex flex-col gap-4" key={filteredItem._id}>
+                                                        {filteredItem?.status === "missing" ? (
+                                                            <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: MISSING</div>
+                                                        ) : (
+                                                            <div className="flex flex-col gap-4">
+                                                                <div className="flex flex-row justify-between mt-5">
+                                                                    <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
+                                                                        <div>CHECKIN TIME</div>
+                                                                        <div>{filteredItem?.shift_info?.time_slot?.check_in_time}</div>
+                                                                        <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_in_status}</div>
+                                                                    </div>
+                                                                    <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
+                                                                        <div>WORKING TIME</div>
+                                                                        <div>{`${filteredItem?.shift_info?.total_hour}h ${filteredItem?.shift_info?.total_minutes}m`}</div>
+                                                                    </div>
+                                                                    <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
+                                                                        <div>CHECKOUT TIME</div>
+                                                                        <div>{filteredItem?.shift_info?.time_slot?.check_out_time}</div>
+                                                                        <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_out_status}</div>
+                                                                    </div>
+                                                                </div>
+                                                                {filteredItem?.position === "Autofahrer" ? (<div className="flex flex-row justify-between mt-5">
+                                                                    <div className="flex flex-col justify-center items-center text-buttonColor2 font-bold text-xl">
+                                                                        <div>CHECKIN KM</div>
+                                                                        <div>{filteredItem?.check_in_km}</div>
+                                                                    </div>
+                                                                    <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
+                                                                        <div>TOTAL KM TIME</div>
+                                                                        <div>{filteredItem?.total_km}</div>
+                                                                    </div>
+                                                                    <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
+                                                                        <div>CHECKOUT KM</div>
+                                                                        <div>{filteredItem?.check_out_km}</div>
+                                                                    </div>
+                                                                </div>) : (<div></div>)}
+                                                            </div>
+                                                        )}
+                                                        <div className="flex flex-col">
+                                                            <button onClick={() => {
+                                                                setAttendanceId(filteredItem?._id)
+                                                                setChangeAttendanceFormState(!changeAttendanceFormState)
+                                                            }
+                                                            } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                                                Change Attendance Information
+                                                            </button>
+                                                            {changeAttendanceFormState && (<div className="w-full h-full">
+                                                                <div className="flex flex-col mt-8">
+                                                                    <div className="flex flex-row justify-between px-8 items-center">
+                                                                        <div className="font-bold text-xl">Change Attendance Information</div>
+                                                                    </div>
+                                                                    <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                                                    <div className="flex flex-col px-8 w-full mt-7">
+                                                                        <form
+                                                                            className="flex flex-col gap-6 w-full justify-center items-center"
+                                                                            onSubmit={handleSubmitChangeAttendancInfo}>
+                                                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                                                <div className="loader"></div>
+                                                                            </div>)}
+                                                                            <div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Attendance ID</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="id"
+                                                                                    value={attendanceId}
+                                                                                    // onChange={(e) => setAttendanceId(e.target.value)}
+                                                                                    readOnly={true}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check_in_time</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="check_in_time"
+                                                                                    // required
+                                                                                    value={attendanceData.data.check_in_time}
+                                                                                    onChange={handleChangeAttendanceData}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="w-full flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check_in_status</span>
+                                                                                </div>
+                                                                                <select
+                                                                                    id="department"
+                                                                                    name="department"
+                                                                                    className="w-full cursor-pointer"
+                                                                                    value={selectedCheckInStatus}
+                                                                                    onChange={(e) => setSelectedCheckInStatus(e.target.value)}
+                                                                                // required
+                                                                                >
+                                                                                    <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                    {statusAttendance?.map((item, index) => (
+                                                                                        <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                            {item.name}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            </div>
+                                                                            <div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check_out_time</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="check_out_time"
+                                                                                    // required
+                                                                                    value={attendanceData.data.check_out_time}
+                                                                                    onChange={handleChangeAttendanceData}
+                                                                                />
+                                                                            </div>
+                                                                            <div className="w-full flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check_out_status</span>
+                                                                                </div>
+                                                                                <select
+                                                                                    id="department"
+                                                                                    name="department"
+                                                                                    className="w-full cursor-pointer"
+                                                                                    value={selectedCheckOutStatus}
+                                                                                    onChange={(e) => setSelectedCheckOutStatus(e.target.value)}
+                                                                                // required
+                                                                                >
+                                                                                    <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                    {statusAttendance?.map((item, index) => (
+                                                                                        <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                                                            {item.name}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            </div>
+                                                                            <div
+                                                                                className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                                                                <button type="submit" className="w-full">Save Changes</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>)}
+                                                        </div>
+                                                    </div>
+                                                    //     </div>
+                                                    // </div>
+                                                )))}
                                     </div>
                                 )}
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>
