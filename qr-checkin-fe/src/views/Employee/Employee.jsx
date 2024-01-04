@@ -92,8 +92,8 @@ function Employee() {
                 const { data } = await axios.post(
                     "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-employee",
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
@@ -133,8 +133,8 @@ function Employee() {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
@@ -170,8 +170,8 @@ function Employee() {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-manager/register-employee?manager_name=${userObject?.name}`,
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
@@ -207,8 +207,8 @@ function Employee() {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
@@ -245,8 +245,8 @@ function Employee() {
                 const { data } = await axios.post(
                     "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-inhaber",
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,
@@ -283,8 +283,8 @@ function Employee() {
                 const { data } = await axios.post(
                     "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-manager",
                     {
-                        id: formData.user.id,
-                        name: formData.user.name,
+                        id: formData.user.id.trim(),
+                        name: formData.user.name.trim(),
                         password: formData.user.password,
                         email: formData.user.email,
                         department_name: selectedDepartmentEmployee,

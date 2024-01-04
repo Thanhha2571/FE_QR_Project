@@ -3,8 +3,10 @@ import { Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import IconActice from "../../assets/images/icon-active.png"
 import IconInactive from "../../assets/images/icon-inactive.png"
+import { useNavigate } from "react-router-dom"
 const EmployeeItem = (props) => {
     const { id, name, email, status, department, department_name, role, position } = props
+    // console.log(props);
     // const [checkRole, setCheckRole] = useState(false)
     // const [checkAdmin, setCheckAdmin] = useState(false)
     const [userObject, setUserObject] = useState()
@@ -37,6 +39,9 @@ const EmployeeItem = (props) => {
                     <Link className="cursor-pointer flex flex-col" to={`view-profile/${id}/${name}`}>{name}
                         <span className="text-xs text-neutral-400">{role}</span>
                     </Link>
+                    {/* <div className="cursor-pointer flex flex-col" onClick={handleProfile}>{name}
+                        <span className="text-xs text-neutral-400">{role}</span>
+                    </div> */}
                 </h2>
             </td>
             <td className="p-2">{id}</td>
