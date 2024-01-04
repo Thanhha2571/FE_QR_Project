@@ -12,7 +12,8 @@ import ScheduleTable from "./ScheduleTable"
 import { statusList } from "assets/data/data"
 import { useNavigate } from "react-router-dom"
 const ProfileEmployee = () => {
-    const { id } = useParams();
+    const { id, name } = useParams();
+    // console.log("Name:"+name+"fsdfd");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
     const [profileState, setProfileState] = useState(true);
@@ -81,7 +82,7 @@ const ProfileEmployee = () => {
     const getUser = async () => {
         if (userObject?.role === 'Admin') {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, { withCredentials: true });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)

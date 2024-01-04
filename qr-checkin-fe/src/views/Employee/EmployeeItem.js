@@ -34,7 +34,7 @@ const EmployeeItem = (props) => {
                     {/* <Link className="img-table-item-block" to={`viewprofile/${uuid}`}>
                         <img className="img-table-item" src={imageUrl} alt="" />
                     </Link> */}
-                    <Link className="cursor-pointer flex flex-col" to={`view-profile/${id}`}>{name}
+                    <Link className="cursor-pointer flex flex-col" to={`view-profile/${id}/${name}`}>{name}
                         <span className="text-xs text-neutral-400">{role}</span>
                     </Link>
                 </h2>
