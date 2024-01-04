@@ -17,6 +17,8 @@ const SalarySummarizie = () => {
     const [loading, setLoading] = useState(false);
     const [exportEmployee, setExportEmployee] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
+    const [selectedUserName, setSelectedUserName] = useState("")
+    const [userList, setUserList] = useState()
 
     useEffect(() => {
         if (userObject?.role === 'Manager') {
@@ -24,6 +26,7 @@ const SalarySummarizie = () => {
         }
 
     }, [userObject?.role]);
+
 
     const handleSeacrh = async () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
@@ -67,6 +70,38 @@ const SalarySummarizie = () => {
         },
     });
 
+    useEffect(() => {
+        const getUserList = async () => {
+            if (userObject.role === 'Admin', formData?.user?.id !== "") {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${formData?.user?.id}`,
+                        { withCredentials: true }
+                    );
+                    setUserList(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
+                }
+            }
+            if (userObject.role === 'Inhaber', formData?.user?.id !== "") {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${formData?.user?.id}`,
+                        { withCredentials: true }
+                    );
+                    setUserList(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
+                }
+            }
+        }
+        getUserList()
+    }, [formData?.user?.id]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -85,7 +120,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${formData.user.year}&month=${formData.user.month}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -95,10 +130,6 @@ const SalarySummarizie = () => {
                         },
                         { withCredentials: true }
                     );
-                } catch (err) {
-                    alert(err.response?.data?.message)
-                } finally {
-                    handleSeacrh()
                     setLoading(false);
                     setFormData({
                         user: {
@@ -112,13 +143,19 @@ const SalarySummarizie = () => {
                             f: ''
                         },
                     });
+                    setSelectedUserName("")
+                    setSalaryCountingFormState(false)
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    handleSeacrh()
                 }
             }
 
             if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?year=${formData.user.year}&month=${formData.user.month}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${formData.user.year}&month=${formData.user.month}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -128,11 +165,6 @@ const SalarySummarizie = () => {
                         },
                         { withCredentials: true }
                     );
-                } catch (error) {
-                    // Handle error
-                    console.error("Error submitting form:", error);
-                } finally {
-                    handleSeacrh()
                     setLoading(false);
                     setFormData({
                         user: {
@@ -146,6 +178,13 @@ const SalarySummarizie = () => {
                             f: ''
                         },
                     });
+                    setSelectedUserName("")
+                    setSalaryCountingFormState(false)
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    handleSeacrh()
                 }
             }
         };
@@ -364,6 +403,27 @@ const SalarySummarizie = () => {
                                                 value={formData.user.id}
                                                 onChange={handleChange}
                                             />
+                                        </div>
+                                        <div className="w-full flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                <span className="text-rose-500">*</span>
+                                                <span className="">Employee's Name</span>
+                                            </div>
+                                            <select
+                                                id="name"
+                                                name="name"
+                                                className="w-full cursor-pointer"
+                                                value={selectedUserName}
+                                                onChange={(e) => setSelectedUserName(e.target.value)}
+                                            // required
+                                            >
+                                                <option value="" disabled className='italic text-sm'>Select Employee Name*</option>
+                                                {userList?.map((item, index) => (
+                                                    <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                        {item.name}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
