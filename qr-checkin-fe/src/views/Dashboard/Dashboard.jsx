@@ -3,11 +3,21 @@ import axios from "axios";
 import EmployeeTodayItem from "./EmployeeTodayItem";
 import EmployeeAttendItem from "./EmployeeAttendItem";
 import "./Dashboard.css"
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DatePicker, Space } from 'antd';
+dayjs.extend(customParseFormat);
+const dateFormat = 'MM/DD/YYYY';
+
+
+/** Manually entering any of the following formats will perform date parsing */
+const dateFormatList = ['MM/DD/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
+
 function Dashboard() {
     document.title = "Dashboard";
-    const [inputMonth, setInputMonth] = useState("")
-    const [inputYear, setInputYear] = useState("")
-    const [inputDay, setInputDay] = useState("")
+    // const [inputMonth, setInputMonth] = useState("")
+    // const [inputYear, setInputYear] = useState("")
+    // const [inputDay, setInputDay] = useState("")
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
     const [selectedDepartment, setSelectedDepartment] = useState("Selected Department");
@@ -17,13 +27,19 @@ function Dashboard() {
     const userObject = userString ? JSON.parse(userString) : null;
 
     const [currentDate, setCurrentDate] = useState("");
-    const [year, setYear] = useState()
-    const [month, setMonth] = useState()
-
+    // const [year, setYear] = useState()
+    // const [month, setMonth] = useState()
+    const [datePicker, setDatePicker] = useState("")
     const [loading, setLoading] = useState(false);
 
     const [userListToday, setUserListToday] = useState()
     const [userAttendListToday, setUserAttendListToday] = useState()
+
+    const handleDateChange = (date, dateString) => {
+        console.log('Selected Date:', dateString);
+        setDatePicker(dateString)
+    };
+
     const handleDepartmentMenu = () => {
         setDepartmentMenu(!departmentMenu)
     }
@@ -46,116 +62,117 @@ function Dashboard() {
         const getEmployeeByManyDateAndShift = async () => {
             // setLoading(true)
             if (userObject?.role === "Admin") {
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Selected Department") {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
                     } finally {
                         setLoading(false);
                     }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                    setCurrentDate(`${datePicker}`)
                 }
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Selected Department") {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}&department_name=${selectedDepartment}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
                     } finally {
                         setLoading(false)
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
                     }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
-                }
-                if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
-                    try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
-                        setUserListToday(response.data.message);
-                    } catch (error) {
-                        console.error('Error fetching employees by date and shift:', error);
-                    } finally {
-                        setLoading(false)
-                    }
+                    setCurrentDate(`${datePicker}`)
                 }
             }
             if (userObject?.role === "Inhaber") {
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "") {
+                if (selectedDepartment === "Selected Department") {
                     // if (currentDate) {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
                     } finally {
                         setLoading(false);
                     }
                     // }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                    setCurrentDate(`${datePicker}`)
                 }
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
+                if (selectedDepartment !== "Selected Department") {
                     // if (currentDate) {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
                     } finally {
                         setLoading(false);
                     }
                     // }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                    setCurrentDate(`${datePicker}`)
                 }
             }
         };
         const getAttendanceEmployeeByManyDateAndShift = async () => {
             // setLoading(true)
             if (userObject?.role === "Admin") {
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Selected Department") {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
+
                     } finally {
                         setLoading(false);
                     }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                    setCurrentDate(`${datePicker}`)
                 }
-                if (inputDay !== "" && inputMonth !== "" && inputYear !== "" && selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Selected Department") {
                     try {
-                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${inputYear}&month=${inputMonth}&date=${`${inputMonth}/${inputDay}/${inputYear}`}&department_name=${selectedDepartment}`, { withCredentials: true });
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
                     } catch (error) {
                         setUserListToday([])
                     } finally {
                         setLoading(false)
-                        setInputDay("")
-                        setInputMonth("")
-                        setInputYear("")
                     }
                     setSelectedDepartment("Selected Department");
-                    setCurrentDate(`${inputMonth}/${inputDay}/${inputYear}`)
+                    setCurrentDate(`${datePicker}`)
+                }
+            }
+
+            if (userObject?.role === "Inhaber") {
+                if (selectedDepartment === "Selected Department") {
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
+                        setUserAttendListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+
+                    } finally {
+                        setLoading(false);
+                    }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${datePicker}`)
+                }
+                if (selectedDepartment !== "Selected Department") {
+                    try {
+                        const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
+                        setUserAttendListToday(response.data.message);
+                    } catch (error) {
+                        setUserListToday([])
+                    } finally {
+                        setLoading(false)
+                    }
+                    setSelectedDepartment("Selected Department");
+                    setCurrentDate(`${datePicker}`)
                 }
             }
         };
@@ -212,7 +229,7 @@ function Dashboard() {
         // getEmployeeByDateAndShift();
         getAllDepartments();
 
-    }, [currentDate, month, year]);
+    }, [currentDate, datePicker]);
     // console.log(currentDate);
     // console.log(date);
     console.log('userList', userListToday);
@@ -225,34 +242,21 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="border border-solid border-t-[#6c757d]"></div>
+                {/* <div className="p-5 w-full flex flex-col gap-10">
+                    <Space direction="vertical" size={12}>
+                        <DatePicker onChange={handleDateChange} className="w-1/6 h-10 " format={dateFormat} />
+                    </Space>
+                </div> */}
                 <div className="p-5 w-full flex flex-col gap-10">
-                    <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
+                    <div className="z-10 flex flex-row mt-10 justify-between h-[50px] gap-8">
+                        <Space className="w-1/5" direction="vertical" size={12}>
+                            <DatePicker onChange={handleDateChange} className="w-full h-[50px] text-base text-placeholderTextColor" format={dateFormat} />
+                        </Space>
                         <div className="flex flex-row gap-20 w-full">
-                            <input
-                                className="w-1/5 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
-                                type="text"
-                                placeholder="Enter day"
-                                value={inputDay}
-                                onChange={(e) => setInputDay(e.target.value)}
-                            />
-                            <input
-                                className="w-1/5 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
-                                type="text"
-                                placeholder="Enter month"
-                                value={inputMonth}
-                                onChange={(e) => setInputMonth(e.target.value)}
-                            />
-                            <input
-                                className="w-1/5 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
-                                type="text"
-                                placeholder="Enter year"
-                                value={inputYear}
-                                onChange={(e) => setInputYear(e.target.value)}
-                            />
                             {checkAdmin && (<div
                                 onClick={handleDepartmentMenu}
                                 className="w-1/5 h-[50px] text-base cursor-pointer">
-                                <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
+                                <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px]">
                                     <div className="flex flex-row items-center justify-around w-full">
                                         <div className="ml-4">{selectedDepartment}</div>
                                         <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
@@ -261,7 +265,7 @@ function Dashboard() {
                                     </div>
                                 </div>
 
-                                {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
+                                {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-[#d9d9d9] flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
                                     {departmentList.map(({ index, name }) => {
                                         return <div onClick={() => handleChangeSelectedDepartment(name)} className="py-1">{name}</div>
                                     })}
