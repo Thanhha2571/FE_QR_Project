@@ -80,7 +80,7 @@ const Navigation = () => {
                             </li> */}
                         </ul>)}
                     </div>
-                    <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
+                    <div onClick={() => setScheduleMenu(!scheduleMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={WorkingIcon} className='w-6 h-6' />
