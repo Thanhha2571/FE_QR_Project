@@ -32,7 +32,7 @@ const ScheduleTable = (props) => {
     const [selectedPositionEmployee, setSelectedPositionEmployee] = useState('');
     const [selectedShiftType, setSelectedShiftType] = useState()
     const [shiftList, setShiftList] = useState()
-    const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState()
+    const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState("")
     const [changeAttendanceFormState, setChangeAttendanceFormState] = useState(false)
     const [selectedCheckInStatus, setSelectedCheckInStatus] = useState("")
     const [selectedCheckOutStatus, setSelectedCheckOutStatus] = useState("")
@@ -775,17 +775,17 @@ const ScheduleTable = (props) => {
                                             <span className="">Shift Code</span>
                                         </div>
                                         <select
-                                            id="department"
-                                            name="department"
+                                            id="shift_code"
+                                            name="shift_code"
                                             className="w-full cursor-pointer"
                                             value={selectedShiftAddShiftForm}
                                             onChange={(e) => setSelectedShiftAddShiftForm(e.target.value)}
                                             required
                                         >
                                             <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
-                                            {shiftList?.map(({ code }, index) => (
-                                                <option className='text-sm text-textColor w-full' key={index} value={code}>
-                                                    {code}
+                                            {shiftList?.map((item, index) => (
+                                                <option className='text-sm text-textColor w-full' key={index} value={item.code}>
+                                                    {item.code}
                                                 </option>
                                             ))}
                                         </select>

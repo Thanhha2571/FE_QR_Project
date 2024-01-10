@@ -5,7 +5,7 @@ import axios from "axios"
 import "./Salary.css"
 import ProfileIcon from "../../assets/images/icon-profile.png"
 const SalaryEmployee = () => {
-    const { employeeId } = useParams()
+    const { employeeId, employeeName } = useParams()
     // console.log(employeeId);
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
@@ -39,7 +39,7 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${inputYear}&month=${inputMonth}&employeeID=${employeeId}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${inputYear}&month=${inputMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -54,7 +54,7 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${employeeId}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${employeeId}&employeeName=${employeeName}`,
                     { withCredentials: true }
                 );
                 setUser(data?.message)

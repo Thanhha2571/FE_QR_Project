@@ -341,7 +341,7 @@ const SalarySummarizie = () => {
                                     <tr className="tr-item" key={employee_id}>
                                         <td className="p-2 hover:text-buttonColor2">
                                             <h2 className="text-left">
-                                                <Link className="cursor-pointer flex flex-col" to={`/salary/sumarize/${employee_id}`}>{employee_name}
+                                                <Link className="cursor-pointer flex flex-col" to={`/salary/sumarize/${employee_id}/${employee_name}`}>{employee_name}
                                                 </Link>
                                             </h2>
                                         </td>

@@ -15,6 +15,7 @@ const Navigation = () => {
     const [logMenu, setLogMenu] = useState(false);
     const [carMenu, setCarMenu] = useState(false);
     const [reportMenu, setReportMenu] = useState(false);
+    const [scheduleMenu, setScheduleMenu] = useState(false);
     // const toggleSidebar = () => setSidebar(!sidebar);
 
     return (
@@ -79,7 +80,7 @@ const Navigation = () => {
                             </li> */}
                         </ul>)}
                     </div>
-                    <div onClick={() => setAttendanceMenu(!attendanceMenu)}>
+                    <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={WorkingIcon} className='w-6 h-6' />
@@ -87,11 +88,11 @@ const Navigation = () => {
                                     Work Management
                                 </h4>
                             </div>
-                            <div className={attendanceMenu ? "rotate-90" : ""}>
+                            <div className={scheduleMenu ? "rotate-90" : ""}>
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                             </div>
                         </li>
-                        {attendanceMenu && (<ul className="flex flex-col gap-3 list-none">
+                        {scheduleMenu && (<ul className="flex flex-col gap-3 list-none">
                             <li className='px-8 py-2'>
                                 <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
                                     <img src={DotIcon} alt="" className='w-3 h-3' />
@@ -128,6 +129,67 @@ const Navigation = () => {
                                     <img src={DotIcon} alt="" className='w-3 h-3' />
                                     <div className="item-sub-menu">
                                         <div className="item-title">Salary Summarize</div>
+                                    </div>
+                                </Link>
+                            </li>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                <img src={WorkingIcon} className='w-6 h-6' />
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Work Management
+                                </h4>
+                            </div>
+                            <div className={scheduleMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {scheduleMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
+                                    <img src={DotIcon} alt="" className='w-3 h-3' />
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Working Schedule</div>
+                                    </div>
+                                </Link>
+                            </li>
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule/day-off-management">
+                                    <img src={DotIcon} alt="" className='w-3 h-3' />
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Day Off</div>
+                                    </div>
+                                </Link>
+                            </li>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setAttendanceMenu(!attendanceMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Attendance Management
+                                </h4>
+                            </div>
+                            <div className={attendanceMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {attendanceMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
+                                    <img src={DotIcon} alt="" className='w-3 h-3' />
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Summarize</div>
+                                    </div>
+                                </Link>
+                            </li>
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule/day-off-management">
+                                    <img src={DotIcon} alt="" className='w-3 h-3' />
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">Attendance Stats</div>
                                     </div>
                                 </Link>
                             </li>

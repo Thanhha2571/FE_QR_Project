@@ -19,7 +19,7 @@ import SalarySummarize from "views/Salary/SalarySummarize";
 import SalaryEmployee from "views/Salary/SalaryEmployee";
 import ManageLog from "views/Attendance/MangeLog/ManageLog";
 import Car from "views/Car/Car";
-import HistoryAdded from "views/Salary/HistoryAdded";
+import AttendanceHistory from "views/Salary/AttendanceHistory";
 import ReportForm from "views/ReportForm/ReportForm";
 
 const titles = {
@@ -60,10 +60,11 @@ const Router = () => {
                     <Route path="working-schedule" element={<WorkingSchedule />} />
                     <Route path="working-schedule/day-off-management" element={<DayOffManagement />} />
                     <Route path="salary/summarize" element={<SalarySummarize />} />
-                    <Route path="salary/sumarize/:employeeId" element={<SalaryEmployee />} />
+                    <Route path="salary/sumarize/:employeeId/:employeeName" element={<SalaryEmployee />} />
                     <Route path="manage-log" element={<ManageLog />} />
                     <Route path="manage-car" element={<Car />} />
                     <Route path="manage-report-form" element={<ReportForm />} />
+                    <Route path="attendance/summarize" element={<AttendanceHistory />} />
                     {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 
