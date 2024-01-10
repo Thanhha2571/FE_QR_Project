@@ -134,7 +134,7 @@ const Navigation = () => {
                             </li>
                         </ul>)}
                     </div>
-                    <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
+                    {/* <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={WorkingIcon} className='w-6 h-6' />
@@ -164,8 +164,8 @@ const Navigation = () => {
                                 </Link>
                             </li>
                         </ul>)}
-                    </div>
-                    <div onClick={() => setAttendanceMenu(!attendanceMenu)}>
+                    </div> */}
+                    {/* <div onClick={() => setAttendanceMenu(!attendanceMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
@@ -194,7 +194,7 @@ const Navigation = () => {
                                 </Link>
                             </li>
                         </ul>)}
-                    </div>
+                    </div> */}
                     <div onClick={() => setLogMenu(!logMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
