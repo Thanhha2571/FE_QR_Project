@@ -21,7 +21,7 @@ import ManageLog from "views/Attendance/MangeLog/ManageLog";
 import Car from "views/Car/Car";
 import AttendanceHistory from "views/Salary/AttendanceHistory";
 import ReportForm from "views/ReportForm/ReportForm";
-
+import GenerateQR from "views/GenerateQR/GenerateQR";
 const titles = {
     '/': 'QR Checkin',
     '/attendance': 'Attendance',
@@ -65,6 +65,8 @@ const Router = () => {
                     <Route path="manage-car" element={<Car />} />
                     <Route path="manage-report-form" element={<ReportForm />} />
                     <Route path="attendance/summarize" element={<AttendanceHistory />} />
+                    <Route path="generate_qr" element={<GenerateQR />} />
+
                     {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 
