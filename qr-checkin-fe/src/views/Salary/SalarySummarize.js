@@ -3,11 +3,20 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import "./Salary.css"
 import * as XLSX from "xlsx";
+import { message } from "antd";
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DatePicker, Space } from 'antd';
+dayjs.extend(customParseFormat);
+const monthFormat = 'MM/YYYY';
 
 const SalarySummarizie = () => {
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
+    const [inputId, setInputId] = useState("")
+    const [inputName, setInputName] = useState("")
     const [salaryListByMonth, setSalaryListByMonth] = useState()
+    const [monthPicker, setMonthPicker] = useState("")
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -19,6 +28,12 @@ const SalarySummarizie = () => {
     const [checkManager, setCheckManager] = useState(false)
     const [selectedUserName, setSelectedUserName] = useState("")
     const [userList, setUserList] = useState()
+    const [userListSearch, setUserListSearch] = useState()
+
+    const handleMonthChange = (date, dateString) => {
+        console.log('Selected Date:', dateString);
+        setMonthPicker(dateString)
+    };
 
     useEffect(() => {
         if (userObject?.role === 'Manager') {
@@ -29,10 +44,40 @@ const SalarySummarizie = () => {
 
 
     const handleSeacrh = async () => {
-        if (userObject.role === 'Admin' && inputMonth !== "" && inputYear !== "") {
+        if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}`,
+                    { withCredentials: true }
+                );
+                setSalaryListByMonth(data?.message)
+                console.log(data?.message);
+                // setInputMonth("")
+                // setInputYear("")
+                // console.log("data", data?.message);
+                // console.log(data?.);
+            } catch (err) {
+                alert("No salary recorded")
+            }
+        }
+        if (userObject.role === 'Admin' && monthPicker !== "" && inputId !== "" && inputName !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
+                    { withCredentials: true }
+                );
+                setSalaryListByMonth(data?.message)
+                console.log(data?.message);
+                // console.log("data", data?.message);
+                // console.log(data?.);
+            } catch (err) {
+                alert("No salary recorded")
+            }
+        }
+        if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId === "" && inputName === "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -42,10 +87,10 @@ const SalarySummarizie = () => {
                 alert("No salary recorded")
             }
         }
-        if (userObject.role === 'Inhaber' && inputMonth !== "" && inputYear !== "") {
+        if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId !== "" && inputName !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${inputYear}&month=${inputMonth}&inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -99,8 +144,37 @@ const SalarySummarizie = () => {
                 }
             }
         }
+        const getUserListSearch = async () => {
+            if (userObject.role === 'Admin', inputId !== "") {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
+                        { withCredentials: true }
+                    );
+                    setUserListSearch(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
+                }
+            }
+            if (userObject.role === 'Inhaber', inputId !== "") {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
+                        { withCredentials: true }
+                    );
+                    setUserListSearch(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
+                }
+            }
+        }
         getUserList()
-    }, [formData?.user?.id]);
+        getUserListSearch()
+    }, [formData?.user?.id, inputId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -196,7 +270,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0,2)}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -204,7 +278,7 @@ const SalarySummarizie = () => {
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Salary_Data_${inputYear}_${inputMonth}.xlsx`;
+                link.download = `Employee_Salary_Data_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -220,7 +294,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${inputYear}&month=${inputMonth}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0,2)}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -228,7 +302,7 @@ const SalarySummarizie = () => {
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Salary_Data_${inputYear}_${inputMonth}.xlsx`;
+                link.download = `Employee_Salary_Data_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -269,20 +343,33 @@ const SalarySummarizie = () => {
 
                 <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
                     <div className="flex flex-row gap-20 w-3/5">
+                        <Space className="w-1/3 text-[#6c757d]" direction="vertical" size={12}>
+                            <DatePicker onChange={handleMonthChange} className="w-full h-[50px] text-base text-placeholderTextColor" format={monthFormat} picker="month" />
+                        </Space>
                         <input
-                            className="w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
+                            className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
                             type="text"
-                            placeholder="Enter month"
-                            value={inputMonth}
-                            onChange={(e) => setInputMonth(e.target.value)}
+                            placeholder="Enter ID"
+                            value={inputId}
+                            onChange={(e) => setInputId(e.target.value)}
                         />
-                        <input
-                            className="w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
-                            type="text"
-                            placeholder="Enter year"
-                            value={inputYear}
-                            onChange={(e) => setInputYear(e.target.value)}
-                        />
+                        <div className="w-2/3 flex flex-col gap-2 h-[50px]">
+                            <select
+                                id="name_search"
+                                name="name_search"
+                                className="w-full cursor-pointer h-[50px] border-[#d9d9d9] rounded-[6px] text-[#6c757d]"
+                                value={inputName}
+                                onChange={(e) => setInputName(e.target.value)}
+                            // required
+                            >
+                                <option value="" disabled className='italic text-sm'>Select Employee Name*</option>
+                                {userListSearch?.map((item, index) => (
+                                    <option className='text-sm text-[#6c757d] w-full' key={index} value={item.name}>
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                     <div
                         onClick={handleSeacrh}
@@ -541,7 +628,7 @@ const SalarySummarizie = () => {
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Do you want to export Employee_Salary_Data_{inputYear}_{inputMonth}.xlsx?</span>
+                                    <span>Do you want to export Employee_Salary_Data_{monthPicker.substring(0,2)}_{monthPicker.substring(3,7)}.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>

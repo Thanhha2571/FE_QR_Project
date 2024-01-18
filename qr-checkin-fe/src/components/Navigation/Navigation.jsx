@@ -143,6 +143,14 @@ const Navigation = () => {
                                     </div>
                                 </Link>
                             </li>
+                            <li className='px-8 py-2'>
+                                <Link className="flex flex-row justify-center items-center gap-4" to="salary/history_counting">
+                                    <img src={DotIcon} alt="" className='w-3 h-3' />
+                                    <div className="item-sub-menu">
+                                        <div className="item-title">History</div>
+                                    </div>
+                                </Link>
+                            </li>
                         </ul>)}
                     </div>
                     {/* <div onClick={() => setAttendanceMenu(!scheduleMenu)}>

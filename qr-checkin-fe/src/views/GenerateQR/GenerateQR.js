@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const GenerateQR = () => {
     const [selectedDepartment, setSelectedDepartment] = useState('');
-    const [qrData, setQRData] = useState(`QR code for department`);
+    const [qrData, setQRData] = useState(`QR code for department - ${Date.now()}`);
     const [departmentList, setDepartmentList] = useState()
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -16,7 +16,7 @@ const GenerateQR = () => {
     useEffect(() => {
         const updateQRCode = () => {
             const timestamp = new Date().toISOString();
-            setQRData(`QR code for department ${selectedDepartment}`);
+            setQRData(`QR code for department ${selectedDepartment} - ${timestamp}`);
         };
 
         updateQRCode();

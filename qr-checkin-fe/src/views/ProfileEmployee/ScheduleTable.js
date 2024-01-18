@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
@@ -6,7 +6,7 @@ import axios from "axios";
 import "date-fns-tz";
 import { format } from "date-fns-tz";
 import { shiftType } from "assets/data/data";
-import { statusAttendance } from "assets/data/data";
+import { attendanceStatus } from "assets/data/data";
 import { useRef } from "react";
 
 const ScheduleTable = (props) => {
@@ -44,6 +44,8 @@ const ScheduleTable = (props) => {
     const [selectedCheckInStatusCreate, setSelectedCheckInStatusCreate] = useState("")
     const [selectedCheckOutStatusCreate, setSelectedCheckOutStatusCreate] = useState("")
     const [attendanceDateCreate, setAttendanceDateCreate] = useState("")
+    const [statusMissing, setStatusMissing] = useState(false)
+    const [statusAttendance, setStatusAttendance] = useState("")
     //const [shiftCodeCreate, setShiftCodeCreate] = useState("")
 
     const [arrayDepartment, setArrayDepartment] = useState()
@@ -118,7 +120,7 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&inhaber_name=${userObject?.name}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -128,7 +130,7 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Manager") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?employeeID=${id}&manager_name=${userObject?.name}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -220,7 +222,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
 
                 setAttendanceDataByDate(response.data.message);
                 console.log("attendance", response.data);
@@ -240,7 +242,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${dateFormDb}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
 
                 setAttendanceDataByDate(response.data.message);
                 console.log("attendance", response.data);
@@ -314,7 +316,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
 
                 setScheduleDataByDate(response.data.message);
                 // console.log("schedule", response.data.message);
@@ -672,7 +674,152 @@ const ScheduleTable = (props) => {
                 }
             }
         }
+        if (userObject?.role === 'Admin' && statusAttendance === "missing") {
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                    {
+                        "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                        "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                        "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        status: "checked"
+                    },
+                    { withCredentials: true }
+                );
 
+                fetchAttendanceDataByDate();
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceData({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+                setSelectedCheckInStatus("")
+                setSelectedCheckOutStatus("")
+            }
+        }
+
+        if (userObject?.role === 'Inhaber') {
+            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        { withCredentials: true }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setAttendanceData({
+                        data: {
+                            check_in_time: '',
+                            check_out_time: '',
+                        },
+                    });
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time === "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        },
+                        { withCredentials: true }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setAttendanceData({
+                        data: {
+                            check_in_time: '',
+                            check_out_time: '',
+                        },
+                    });
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (attendanceData.data.check_in_time === "" && attendanceData.data.check_out_time !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        { withCredentials: true }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setAttendanceData({
+                        data: {
+                            check_in_time: '',
+                            check_out_time: '',
+                        },
+                    });
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+        }
+        if (userObject?.role === 'Inhaber' && statusAttendance === "missing") {
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                    {
+                        "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                        "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                        "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        status: "checked"
+                    },
+                    { withCredentials: true }
+                );
+
+                fetchAttendanceDataByDate();
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceData({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+                setSelectedCheckInStatus("")
+                setSelectedCheckOutStatus("")
+            }
+        }
 
     };
 
@@ -689,6 +836,36 @@ const ScheduleTable = (props) => {
             try {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
+                    {
+                        "check_in_time": attendanceDataCreate.data.check_in_time,
+                        "check_out_time": attendanceDataCreate.data.check_out_time,
+                        "check_in_status": selectedCheckInStatusCreate,
+                        "check_out_status": selectedCheckOutStatusCreate,
+                    },
+                    { withCredentials: true }
+                );
+
+                fetchAttendanceDataByDate();
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceDataCreate({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+                setSelectedCheckInStatusCreate("")
+                setSelectedCheckOutStatusCreate("")
+            }
+        }
+
+        if (userObject?.role === 'Inhaber') {
+            try {
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
                     {
                         "check_in_time": attendanceDataCreate.data.check_in_time,
                         "check_out_time": attendanceDataCreate.data.check_out_time,
@@ -1053,7 +1230,7 @@ const ScheduleTable = (props) => {
                                                                         // required
                                                                         >
                                                                             <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                            {statusAttendance?.map((item, index) => (
+                                                                            {attendanceStatus?.map((item, index) => (
                                                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                     {item.name}
                                                                                 </option>
@@ -1088,7 +1265,7 @@ const ScheduleTable = (props) => {
                                                                         // required
                                                                         >
                                                                             <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                            {statusAttendance?.map((item, index) => (
+                                                                            {attendanceStatus?.map((item, index) => (
                                                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                     {item.name}
                                                                                 </option>
@@ -1150,6 +1327,7 @@ const ScheduleTable = (props) => {
                                                             <button onClick={() => {
                                                                 setAttendanceId(filteredItem?._id)
                                                                 setChangeAttendanceFormState(!changeAttendanceFormState)
+                                                                setStatusAttendance(filteredItem?.status)
                                                             }
                                                             } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                                                                 Change Attendance Information
@@ -1180,6 +1358,19 @@ const ScheduleTable = (props) => {
                                                                                     readOnly={true}
                                                                                 />
                                                                             </div>
+                                                                            {filteredItem?.status === "missing" && (<div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Status</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="status"
+                                                                                    value={"checked"}
+                                                                                    // onChange={(e) => setAttendanceId(e.target.value)}
+                                                                                    readOnly={true}
+                                                                                />
+                                                                            </div>)}
                                                                             <div className="w-full h-auto flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
@@ -1207,7 +1398,7 @@ const ScheduleTable = (props) => {
                                                                                 // required
                                                                                 >
                                                                                     <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                                    {statusAttendance?.map((item, index) => (
+                                                                                    {attendanceStatus?.map((item, index) => (
                                                                                         <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                             {item.name}
                                                                                         </option>
@@ -1241,7 +1432,7 @@ const ScheduleTable = (props) => {
                                                                                 // required
                                                                                 >
                                                                                     <option value="" disabled className='italic text-sm'>Select Status*</option>
-                                                                                    {statusAttendance?.map((item, index) => (
+                                                                                    {attendanceStatus?.map((item, index) => (
                                                                                         <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                             {item.name}
                                                                                         </option>

@@ -92,15 +92,11 @@ export const statusList = [
     // }
 ];
 
-export const statusAttendance = [
+export const attendanceStatus = [
     {
-        name:"on time",
+        name: "on time"
     },
-
     {
-        name:"late",
+        name:"late"
     }
-    // {
-    //     name:"inactive"
-    // }
-];
+]
