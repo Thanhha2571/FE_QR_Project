@@ -23,6 +23,7 @@ import AttendanceHistory from "views/Salary/AttendanceHistory";
 import ReportForm from "views/ReportForm/ReportForm";
 import GenerateQR from "views/GenerateQR/GenerateQR";
 import History from "views/Salary/History";
+import QrLink from "views/GenerateQR/QrLink";
 const titles = {
     '/': 'QR Checkin',
     '/attendance': 'Attendance',
@@ -52,24 +53,25 @@ const Router = () => {
 
                 {/* protected routes */}
                 {/* <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Inhaber]}/>} > */}
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="attendance" element={<Attendance />} />
-                    <Route path="employee" element={<Employee />} />
-                    <Route path="employee/departments" element={<Department />} />
-                    <Route path="employee/position" element={<Position />} />
-                    <Route path="employee/view-profile/:id/:name" element={<ProfileEmployee />} />
-                    <Route path="working-schedule" element={<WorkingSchedule />} />
-                    <Route path="working-schedule/day-off-management" element={<DayOffManagement />} />
-                    <Route path="salary/summarize" element={<SalarySummarize />} />
-                    <Route path="salary/history_counting" element={<History />} />
-                    <Route path="salary/sumarize/:employeeId/:employeeName" element={<SalaryEmployee />} />
-                    <Route path="manage-log" element={<ManageLog />} />
-                    <Route path="manage-car" element={<Car />} />
-                    <Route path="manage-report-form" element={<ReportForm />} />
-                    <Route path="attendance/summarize" element={<AttendanceHistory />} />
-                    <Route path="generate_qr" element={<GenerateQR />} />
+                <Route path="/" element={<Dashboard />} />
+                <Route path="attendance" element={<Attendance />} />
+                <Route path="employee" element={<Employee />} />
+                <Route path="employee/departments" element={<Department />} />
+                <Route path="employee/position" element={<Position />} />
+                <Route path="employee/view-profile/:id/:name" element={<ProfileEmployee />} />
+                <Route path="working-schedule" element={<WorkingSchedule />} />
+                <Route path="working-schedule/day-off-management" element={<DayOffManagement />} />
+                <Route path="salary/summarize" element={<SalarySummarize />} />
+                <Route path="salary/history_counting" element={<History />} />
+                <Route path="salary/sumarize/:employeeId/:employeeName" element={<SalaryEmployee />} />
+                <Route path="manage-log" element={<ManageLog />} />
+                <Route path="manage-car" element={<Car />} />
+                <Route path="manage-report-form" element={<ReportForm />} />
+                <Route path="attendance/summarize" element={<AttendanceHistory />} />
+                <Route path="generate_qr" element={<GenerateQR />} />
+                <Route path="Qr_link/:selectedDepartment" element={<QrLink />} />
 
-                    {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
+                {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 
                 {/* missing route */}

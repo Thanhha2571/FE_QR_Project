@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const GenerateQR = () => {
     const [selectedDepartment, setSelectedDepartment] = useState('');
@@ -35,22 +36,22 @@ const GenerateQR = () => {
             setCheckManager(false)
         }
 
-        if (userObject?.role === 'Inhaber') {
-            setCheckAdmin(false)
-            setCheckInhaber(true)
-            setCheckManager(false)
-        }
+        // if (userObject?.role === 'Inhaber') {
+        //     setCheckAdmin(false)
+        //     setCheckInhaber(true)
+        //     setCheckManager(false)
+        // }
 
-        if (userObject?.role === 'Manager') {
+        if (userObject?.role === 'Manager' || userObject?.role === 'Inhaber') {
             setCheckAdmin(false)
             setCheckInhaber(false)
             setCheckManager(true)
         }
-        if (userObject?.role == "Inhaber") {
-            const arrayFilter = userObject?.department?.map((item => item.name))
-            setDepartmentInhaberOrManager(arrayFilter)
-            console.log("arrayFilter", departmentInhaberOrManager);
-        }
+        // if (userObject?.role == "Inhaber") {
+        //     const arrayFilter = userObject?.department?.map((item => item.name))
+        //     setDepartmentInhaberOrManager(arrayFilter)
+        //     console.log("arrayFilter", departmentInhaberOrManager);
+        // }
     }, [userObject?.role])
 
     useEffect(() => {
@@ -87,8 +88,12 @@ const GenerateQR = () => {
                             ))}
                         </select>
                         {qrData && <QRCode value={qrData} className="qr-code" />}
+                        <Link target="_blank" to={`/Qr_link/${selectedDepartment}`} className="w-[250px] mt-3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                            <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                            Create Link
+                        </Link>
                     </div>)}
-                    {checkInhaber && (<div className="ml-[260px] p-5">
+                    {/* {checkInhaber && (<div className="ml-[260px] p-5">
                         <label htmlFor="department">Choose a department:</label>
                         <select id="department" value={selectedDepartment} onChange={handleDepartmentChange}>
                             <option value="" disabled className='italic text-sm'>Select Department*</option>
@@ -99,7 +104,7 @@ const GenerateQR = () => {
                             ))}
                         </select>
                         {qrData && <QRCode value={qrData} className="qr-code" />}
-                    </div>)}
+                    </div>)} */}
                 </div>)}
         </div>
     );
