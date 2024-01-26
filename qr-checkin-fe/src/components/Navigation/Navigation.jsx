@@ -57,14 +57,16 @@ const Navigation = () => {
                             </div>
                         </li>
                         {employeeMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row gap-2 justify-center items-center" to="employee">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">All employees</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="employee">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">All employees</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
                             {/* <li>
                                 <Link className="tags" to="employee/departments">
                                     <div className="item-sub-menu">
@@ -104,22 +106,26 @@ const Navigation = () => {
                             </div>
                         </li>
                         {scheduleMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Working Schedule</div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule/day-off-management">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Day Off</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="working-schedule">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row justify-center items-center gap-4">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Working Schedule</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
+                            <Link to="working-schedule/day-off-management">
+                                <li className='px-8 py-2'>
+                                    <Link className="flex flex-row justify-center items-center gap-4">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Day Off</div>
+                                        </div>
+                                    </Link>
+                                </li>
+                            </Link>
                         </ul>)}
                     </div>
                     <div onClick={() => setSalaryMenu(!salaryMenu)}>
@@ -135,85 +141,28 @@ const Navigation = () => {
                             </div>
                         </li>
                         {salaryMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="salary/summarize">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Salary Summarize</div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="salary/history_counting">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">History</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="salary/summarize">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row justify-center items-center gap-4">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Salary Summarize</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
+                            <Link to="salary/history_counting">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row justify-center items-center gap-4">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">History</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
                         </ul>)}
                     </div>
-                    {/* <div onClick={() => setAttendanceMenu(!scheduleMenu)}>
-                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
-                            <div className='flex flex-row justify-center items-center gap-4'>
-                                <img src={WorkingIcon} className='w-6 h-6' />
-                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Work Management
-                                </h4>
-                            </div>
-                            <div className={scheduleMenu ? "rotate-90" : ""}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            </div>
-                        </li>
-                        {scheduleMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Working Schedule</div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule/day-off-management">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Day Off</div>
-                                    </div>
-                                </Link>
-                            </li>
-                        </ul>)}
-                    </div> */}
-                    {/* <div onClick={() => setAttendanceMenu(!attendanceMenu)}>
-                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
-                            <div className='flex flex-row justify-center items-center gap-4'>
-                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Attendance Management
-                                </h4>
-                            </div>
-                            <div className={attendanceMenu ? "rotate-90" : ""}>
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                            </div>
-                        </li>
-                        {attendanceMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Summarize</div>
-                                    </div>
-                                </Link>
-                            </li>
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row justify-center items-center gap-4" to="working-schedule/day-off-management">
-                                    <img src={DotIcon} alt="" className='w-3 h-3' />
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Attendance Stats</div>
-                                    </div>
-                                </Link>
-                            </li>
-                        </ul>)}
-                    </div> */}
                     <div onClick={() => setLogMenu(!logMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
@@ -227,14 +176,16 @@ const Navigation = () => {
                             </div>
                         </li>
                         {logMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row gap-2 justify-center items-center" to="manage-log">
-                                    {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Manage Logs</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="manage-log">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center" to="manage-log">
+                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Logs</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
                         </ul>)}
                     </div>
                     <div onClick={() => setCarMenu(!carMenu)}>
@@ -251,14 +202,16 @@ const Navigation = () => {
                             </div>
                         </li>
                         {carMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row gap-2 justify-center items-center" to="manage-car">
-                                    {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Manage Cars</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="manage-car">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Cars</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
                         </ul>)}
                     </div>
                     <div onClick={() => setReportMenu(!reportMenu)}>
@@ -275,14 +228,16 @@ const Navigation = () => {
                             </div>
                         </li>
                         {reportMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <li className='px-8 py-2'>
-                                <Link className="flex flex-row gap-2 justify-center items-center" to="manage-report-form">
-                                    {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
-                                    <div className="item-sub-menu">
-                                        <div className="item-title">Manage Report Form</div>
-                                    </div>
-                                </Link>
-                            </li>
+                            <Link to="manage-report-form">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Report Form</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
                         </ul>)}
                     </div>
                 </ul>

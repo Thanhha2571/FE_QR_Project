@@ -432,7 +432,7 @@ const WorkingSchedule = () => {
                                         <select
                                             id="shift_code"
                                             name="shift_code"
-                                            className="w-full cursor-pointer"
+                                            className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                             value={selectedShiftDelete}
                                             onChange={(e) => setSelectedShiftDelete(e.target.value)}
                                             required
