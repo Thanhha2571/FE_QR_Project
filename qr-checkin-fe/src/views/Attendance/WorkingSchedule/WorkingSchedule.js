@@ -3,6 +3,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import ShiftItem from "./ShiftItem";
 import "./WorkingSchedule.css"
+import dayjs, { Dayjs } from 'dayjs';
+import { TimePicker } from 'antd';
+
+const format = 'HH:mm';
 
 const WorkingSchedule = () => {
     const [shiftList, setShiftList] = useState()
@@ -13,7 +17,10 @@ const WorkingSchedule = () => {
     const [editShiftFormState, setEditShiftFormState] = useState(false)
     const [selectedShiftDelete, setSelectedShiftDelete] = useState("")
     const [selectedShiftEdit, setSelectedShiftEdit] = useState("")
-
+    const [timeStartCreate, setTimeStartCreate] = useState("")
+    const [timeEndCreate, setTimeEndCreate] = useState("")
+    const [timeStartEdit, setTimeStartEdit] = useState("")
+    const [timeEndEdit, setTimeEndEdit] = useState("")
     const [loading, setLoading] = useState(false);
     const [exportState, setExportState] = useState(false)
 
@@ -61,6 +68,18 @@ const WorkingSchedule = () => {
         getAllShifts();
     }, []);
 
+    const handleTimeStartCreateShift = (time) => {
+        setTimeStartCreate(time.format('HH:mm'))
+    }
+    const handleTimeEndCreateShift = (time) => {
+        setTimeEndCreate(time.format('HH:mm'))
+    }
+    const handleTimeStartEditShift = (time) => {
+        setTimeStartEdit(time.format('HH:mm'))
+    }
+    const handleTimeEndEditShift = (time) => {
+        setTimeEndEdit(time.format('HH:mm'))
+    }
     // if (shiftList) {
     //     console.log(shiftList);
     // }
@@ -68,14 +87,12 @@ const WorkingSchedule = () => {
     const [formData, setFormData] = useState({
         code: '',
         name: '',
-        start_time: '',
-        end_time: '',
+        // start_time: '',
+        // end_time: '',
     });
 
     const [formEdit, setFormEdit] = useState({
         name_edit: '',
-        start_time_edit: '',
-        end_time_edit: '',
     });
 
     const handleInputChange = (e) => {
@@ -100,8 +117,8 @@ const WorkingSchedule = () => {
             code: formData.code,
             name: formData.name,
             time_slot: {
-                start_time: formData.start_time,
-                end_time: formData.end_time,
+                start_time: timeStartCreate,
+                end_time: timeEndCreate,
             },
         };
         setLoading(true);
@@ -124,10 +141,9 @@ const WorkingSchedule = () => {
             setFormData({
                 code: '',
                 name: '',
-                start_time: '',
-                end_time: '',
             });
-
+            setTimeEndCreate("")
+            setTimeStartCreate("")
             // setTimeout(() => {
             //     window.location.reload();
             // }, 3000);
@@ -189,22 +205,22 @@ const WorkingSchedule = () => {
             if (userObject?.role === "Admin" && formEdit.name_edit === "" && formEdit.start_time_edit !== "" && formEdit.end_time_edit !== "") {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/update?code=${selectedShiftEdit}`, {
                     time_slot: {
-                        start_time: formEdit.start_time_edit,
-                        end_time: formEdit.end_time_edit
+                        start_time: timeStartEdit,
+                        end_time: timeEndEdit
                     },
                 }, { withCredentials: true });
-                
+
             }
 
             if (userObject?.role === "Admin" && formEdit.name_edit !== "" && formEdit.start_time_edit !== "" && formEdit.end_time_edit !== "") {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/update?code=${selectedShiftEdit}`, {
                     name: formEdit.name_edit,
                     time_slot: {
-                        start_time: formEdit.start_time_edit,
-                        end_time: formEdit.end_time_edit
+                        start_time: timeStartEdit,
+                        end_time: timeEndEdit
                     },
                 }, { withCredentials: true });
-                
+
             }
 
             if (userObject?.role === "Inhaber" && formEdit.name_edit !== "" && formEdit.start_time_edit === "" && formEdit.end_time_edit === "") {
@@ -217,22 +233,22 @@ const WorkingSchedule = () => {
             if (userObject?.role === "Inhaber" && formEdit.name_edit === "" && formEdit.start_time_edit !== "" && formEdit.end_time_edit !== "") {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/update?code=${selectedShiftEdit}`, {
                     time_slot: {
-                        start_time: formEdit.start_time_edit,
-                        end_time: formEdit.end_time_edit
+                        start_time: timeStartEdit,
+                        end_time: timeEndEdit
                     },
                 }, { withCredentials: true });
-                
+
             }
 
             if (userObject?.role === "Inhaber" && formEdit.name_edit !== "" && formEdit.start_time_edit !== "" && formEdit.end_time_edit !== "") {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/update?code=${selectedShiftEdit}`, {
                     name: formEdit.name_edit,
                     time_slot: {
-                        start_time: formEdit.start_time_edit,
-                        end_time: formEdit.end_time_edit
+                        start_time: timeStartEdit,
+                        end_time: timeEndEdit
                     },
                 }, { withCredentials: true });
-                
+
             }
 
             // Fetch the updated list of shifts after creating a new shift
@@ -241,10 +257,9 @@ const WorkingSchedule = () => {
             // Optionally, you can clear the form data or close the form
             setFormEdit({
                 name_edit: '',
-                start_time_edit: '',
-                end_time_edit: '',
             });
-
+            setTimeStartEdit("")
+            setTimeEndEdit("")
             // setTimeout(() => {
             //     window.location.reload();
             // }, 3000);
@@ -275,13 +290,13 @@ const WorkingSchedule = () => {
                         </button>
                     </div>)}
                     {exportState && (<div className="flex flex-row px-4 gap-4">
-                        <button onClick={() => setEditShiftFormState(!editShiftFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <button onClick={() => setEditShiftFormState(!editShiftFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Edit Shift
                         </button>
                     </div>)}
                     {exportState && (<div className="flex flex-row px-4 gap-4">
-                        <button onClick={() => setDeleteShiftFormState(!deleteShiftFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <button onClick={() => setDeleteShiftFormState(!deleteShiftFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Delete Shift
                         </button>
@@ -303,7 +318,7 @@ const WorkingSchedule = () => {
                 <div
                     onClick={() => setCreateShiftFormState(false)}
                     className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                <div className="absolute w-[750px] top-0 right-0 bottom-0 z-30 bg-white">
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
@@ -330,6 +345,7 @@ const WorkingSchedule = () => {
                                             value={formData.code}
                                             onChange={handleInputChange}
                                             required
+                                            className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                         />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
@@ -344,6 +360,7 @@ const WorkingSchedule = () => {
                                             value={formData.name}
                                             onChange={handleInputChange}
                                             required
+                                            className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                         />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
@@ -351,7 +368,7 @@ const WorkingSchedule = () => {
                                             <span className="text-rose-500">*</span>
                                             <span className="">Start Time</span>
                                         </div>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             id="start_time"
                                             name="start_time"
@@ -359,14 +376,15 @@ const WorkingSchedule = () => {
                                             onChange={handleInputChange}
                                             placeholder="e.g., 20:00"
                                             required
-                                        />
+                                        /> */}
+                                        <TimePicker onChange={handleTimeStartCreateShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
                                             <span className="">End Time</span>
                                         </div>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             id="end_time"
                                             name="end_time"
@@ -374,9 +392,10 @@ const WorkingSchedule = () => {
                                             onChange={handleInputChange}
                                             placeholder="e.g., 22:00"
                                             required
-                                        />
+                                        /> */}
+                                        <TimePicker onChange={handleTimeEndCreateShift} className="w-full h-[42px]" format={format} />
                                     </div>
-                                    <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full" type="submit" onClick={handleSubmit}>
+                                    <button className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-800 w-full" type="submit" onClick={handleSubmit}>
                                         Create Shift
                                     </button>
                                 </form>
@@ -463,10 +482,11 @@ const WorkingSchedule = () => {
                                         <select
                                             id="shift_code_edit"
                                             name="shift_code_edit"
-                                            className="w-full cursor-pointer"
+                                            // className="w-full cursor-pointer"
                                             value={selectedShiftEdit}
                                             onChange={(e) => setSelectedShiftEdit(e.target.value)}
                                             required
+                                            className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                         >
                                             <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
                                             {shiftList?.map(({ code }, index) => (
@@ -487,6 +507,7 @@ const WorkingSchedule = () => {
                                             name="name_edit"
                                             value={formEdit.name_edit}
                                             onChange={handleEditInputChange}
+                                            className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                         // required
                                         />
                                     </div>
@@ -495,32 +516,16 @@ const WorkingSchedule = () => {
                                             <span className="text-rose-500">*</span>
                                             <span className="">Start Time</span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            id="start_time_edit"
-                                            name="start_time_edit"
-                                            value={formEdit.start_time_edit}
-                                            onChange={handleEditInputChange}
-                                            placeholder="e.g., 20:00"
-                                        // required
-                                        />
+                                        <TimePicker onChange={handleTimeStartEditShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
                                             <span className="">End Time</span>
                                         </div>
-                                        <input
-                                            type="text"
-                                            id="end_time_edit"
-                                            name="end_time_edit"
-                                            value={formEdit.end_time_edit}
-                                            onChange={handleEditInputChange}
-                                            placeholder="e.g., 22:00"
-                                        // required
-                                        />
+                                        <TimePicker onChange={handleTimeEndEditShift} className="w-full h-[42px]" format={format} />
                                     </div>
-                                    <button className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-900 w-full" type="submit" onClick={handleEditShiftSubmit}>
+                                    <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full" type="submit" onClick={handleEditShiftSubmit}>
                                         Edit Shift
                                     </button>
                                 </form>
