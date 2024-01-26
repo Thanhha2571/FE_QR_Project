@@ -23,6 +23,7 @@
         transform: rotate(360deg);
     }
 }
+
 :where(.css-dev-only-do-not-override-dkbvqv).ant-btn-primary {
     color: black;
     background: #1677ff;

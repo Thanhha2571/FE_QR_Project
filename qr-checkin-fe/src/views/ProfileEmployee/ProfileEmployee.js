@@ -11,6 +11,15 @@ import { genderList } from "assets/data/data"
 import ScheduleTable from "./ScheduleTable"
 import { statusList } from "assets/data/data"
 import { useNavigate } from "react-router-dom"
+import { TimePicker } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { DatePicker, Space } from 'antd';
+dayjs.extend(customParseFormat);
+
+const dateFormat = 'MM/DD/YYYY';
+const format = 'HH:mm';
+
 const ProfileEmployee = () => {
     const { id, name } = useParams();
     // console.log("Name:"+name+"fsdfd");
@@ -42,6 +51,16 @@ const ProfileEmployee = () => {
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
 
+    const [timeInactive, setTimeInactive] = useState("")
+    const [dateInactive, setDateInactive] = useState("")
+
+    const handleTimeInactive = (time) => {
+        setTimeInactive(time.format('HH:mm'))
+    }
+    const handleDateChange = (date, dateString) => {
+        console.log('Selected Date:', dateString);
+        setDateInactive(dateString)
+    };
 
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
@@ -59,7 +78,7 @@ const ProfileEmployee = () => {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/add-member/${selectedDepartmentEmployee}`,
                     {
                         employeeID: id,
-                        employeeName:name,
+                        employeeName: name,
                         position: selectedPositionEmployee,
                     },
                     { withCredentials: true },
@@ -382,7 +401,7 @@ const ProfileEmployee = () => {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/make-inactive?employeeID=${id}&employeeName=${name}`,
                     {
 
-                        inactive_day: inputDateInactive,
+                        inactive_day: `${dateInactive} ${timeInactive}`,
                     },
                     { withCredentials: true },
                 );
@@ -393,7 +412,8 @@ const ProfileEmployee = () => {
             } finally {
                 setLoading(false);
                 setChangeStatus(false);
-                setInputDateInactive('')
+                setTimeInactive("")
+                setDateInactive("")
 
             }
         }
@@ -403,7 +423,7 @@ const ProfileEmployee = () => {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/make-inactive?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`,
                     {
 
-                        inactive_day: inputDateInactive,
+                        inactive_day: `${dateInactive} ${timeInactive}`,
                     },
                     { withCredentials: true },
                 );
@@ -414,7 +434,8 @@ const ProfileEmployee = () => {
             } finally {
                 setLoading(false);
                 setChangeStatus(false);
-                setInputDateInactive('')
+                setTimeInactive("")
+                setDateInactive("")
 
             }
             // setTimeout(() => {
@@ -440,11 +461,11 @@ const ProfileEmployee = () => {
                     {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
                     </button>)}
+                    {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        Make Inactive
+                    </button>)}
                     {exportState && (<button onClick={() => setDeleteFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                         <img className="w-4 h-4" src={DeleteIcon} />Delete Employee
-                    </button>)}
-                    {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                        Make Inactive
                     </button>)}
                 </div>
             </div>
@@ -888,27 +909,33 @@ const ProfileEmployee = () => {
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                             </div>
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
-                            <div className="flex flex-col px-8 w-full mt-7">
-                                <div
-                                    className="flex flex-col gap-6 w-full justify-center items-center"
-                                >
+                            <div className="flex flex-col px-8 w-full mt-7 items-center justify-center">
+                                <div className="flex flex-col gap-6 w-full">
                                     {loading && (<div className="absolute flex w-full h-full items-center justify-center">
                                         <div className="loader"></div>
                                     </div>)}
-                                    <div className="flex flex-wrap w-full  items-center">
-                                        <label className="w-1/4 text-right p-4" htmlFor="email">Inactive Day:</label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            name="email"
-                                            className="w-3/4"
-                                            value={inputDateInactive}
-                                            onChange={(e) => setInputDateInactive(e.target.value)}
-                                            placeholder="MM/DD/YYYY"
+                                    <div className=" flex flex-row gap-3 items-center">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Day</span>
+                                        </div>
+                                        <Space className="w-full" direction="vertical" size={12}>
+                                            <DatePicker onChange={handleDateChange} className="w-full h-[42px] text-base text-placeholderTextColor" format={dateFormat} />
+                                        </Space>
+                                    </div>
+                                    <div className=" flex flex-row gap-2 items-center">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Time</span>
+                                        </div>
+                                        <TimePicker
+                                            className="w-full h-[42px]"
+                                            onChange={handleTimeInactive}
+                                            format={format}
                                         />
                                     </div>
                                     <div
-                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                        className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-700 w-full">
                                         <button onClick={handleChangeStatus} type="button" className="w-full">Change Status</button>
                                     </div>
                                 </div>

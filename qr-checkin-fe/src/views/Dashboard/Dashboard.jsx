@@ -9,10 +9,6 @@ import { DatePicker, Space } from 'antd';
 dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
-
-/** Manually entering any of the following formats will perform date parsing */
-const dateFormatList = ['MM/DD/YYYY', 'DD/MM/YY', 'DD-MM-YYYY', 'DD-MM-YY'];
-
 function Dashboard() {
     document.title = "Dashboard";
     // const [inputMonth, setInputMonth] = useState("")

@@ -627,9 +627,9 @@ function Employee() {
                             </div>
                         </div>
 
-                        {roleMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
+                        {roleMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
                             {roleList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedRole(name)} className="py-1">{name}</div>
+                                return <div onClick={() => handleChangeSelectedRole(name)} className="w-full text-center">{name}</div>
                             })}
                         </div>)}
                     </div>)}
@@ -648,7 +648,7 @@ function Employee() {
 
                         {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
                             {departmentList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedDepartment(name)} className="py-1">{name}</div>
+                                return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center">{name}</div>
                             })}
                         </div>)}
                     </div>)}

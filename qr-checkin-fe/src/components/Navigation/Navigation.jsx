@@ -5,6 +5,8 @@ import WorkingIcon from "../../assets/images/work-icon.png"
 import SalaryIcon from "../../assets/images/salary-icon.png"
 import DotIcon from "../../assets/images/dot-icon.png"
 import CarIcon from "../../assets/images/car.png"
+import FormIcon from "../../assets/images/form-icon.png"
+import QrIcon from "../../assets/images/qr-icon.png"
 import './Navigation.css';
 
 const Navigation = () => {
@@ -86,7 +88,7 @@ const Navigation = () => {
                     <Link to="/generate_qr">
                         <li className="nav-item mb-3 p-2 rounded">
                             <div className='flex flex-row justify-center items-center gap-4'>
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 7V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V7C3 4 4.5 2 8 2H16C19.5 2 21 4 21 7Z" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14.5 4.5V6.5C14.5 7.6 15.4 8.5 16.5 8.5H18.5" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 13H12" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path><path d="M8 17H16" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                                <img src={QrIcon} className='w-6 h-6' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
                                     GenerateQR
                                 </h4>
@@ -179,7 +181,7 @@ const Navigation = () => {
                             <Link to="manage-log">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center" to="manage-log">
-                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
                                             <div className="item-title">Manage Logs</div>
                                         </div>
@@ -205,7 +207,7 @@ const Navigation = () => {
                             <Link to="manage-car">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
-                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
                                             <div className="item-title">Manage Cars</div>
                                         </div>
@@ -217,8 +219,7 @@ const Navigation = () => {
                     <div onClick={() => setReportMenu(!reportMenu)}>
                         <li className="nav-item mb-3 p-2 rounded flex justify-between">
                             <div className='flex flex-row justify-center items-center gap-4'>
-                                {/* <img src={CarIcon} className='w-6 h-6' /> */}
-                                {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> */}
+                                <img src={FormIcon} className='w-6 h-auto' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
                                     Manage Forms
                                 </h4>
@@ -231,7 +232,7 @@ const Navigation = () => {
                             <Link to="manage-report-form">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
-                                        {/* <img src={DotIcon} alt="" className='w-3 h-3' /> */}
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
                                             <div className="item-title">Manage Report Form</div>
                                         </div>

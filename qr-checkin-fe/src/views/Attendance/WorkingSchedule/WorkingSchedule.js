@@ -284,13 +284,13 @@ const WorkingSchedule = () => {
                 </div>
                 <div className="flex gap-3">
                     {exportState && (<div className="flex flex-row px-4 gap-4">
-                        <button onClick={() => setCreateShiftFormState(!createShiftFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <button onClick={() => setCreateShiftFormState(!createShiftFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Create Shift
                         </button>
                     </div>)}
                     {exportState && (<div className="flex flex-row px-4 gap-4">
-                        <button onClick={() => setEditShiftFormState(!editShiftFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
+                        <button onClick={() => setEditShiftFormState(!editShiftFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Edit Shift
                         </button>
@@ -395,7 +395,7 @@ const WorkingSchedule = () => {
                                         /> */}
                                         <TimePicker onChange={handleTimeEndCreateShift} className="w-full h-[42px]" format={format} />
                                     </div>
-                                    <button className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-800 w-full" type="submit" onClick={handleSubmit}>
+                                    <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-800 w-full" type="submit" onClick={handleSubmit}>
                                         Create Shift
                                     </button>
                                 </form>
@@ -525,7 +525,7 @@ const WorkingSchedule = () => {
                                         </div>
                                         <TimePicker onChange={handleTimeEndEditShift} className="w-full h-[42px]" format={format} />
                                     </div>
-                                    <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full" type="submit" onClick={handleEditShiftSubmit}>
+                                    <button className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-700 w-full" type="submit" onClick={handleEditShiftSubmit}>
                                         Edit Shift
                                     </button>
                                 </form>
