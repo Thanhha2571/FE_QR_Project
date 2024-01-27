@@ -131,7 +131,7 @@ const DayOffManagement = () => {
                         <div>
                             <h1 className="font-bold text-3xl mb-2">Day Off Management</h1>
                             <div className="flex flex-row">
-                                <Link className="text-xl font-semibold leading-6 hover:underline" to="/">Dashboard</Link>
+                                <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
                                 <div className="text-base font-semibold leading-6 text-[#6c757d]">/ Work Management</div>
                                 <span className="text-[#6c757d] font-xl">/ Day Off</span>
                             </div>

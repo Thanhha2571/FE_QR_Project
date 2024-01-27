@@ -213,7 +213,7 @@ const SalaryEmployee = () => {
                     <div>
                         <h1 className="font-bold text-3xl">Salary Employee</h1>
                         <div className="flex flex-row">
-                            <Link className="text-xl font-semibold leading-6 hover:underline" to="/">Dashboard</Link>
+                            <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
                             <span className="text-[#6c757d] font-xl">/ Salary</span>
                             <Link className="text-[#6c757d] font-xl leading-6 hover:underline" to="/salary/summarize">/ Salary Summarize</Link>
                             <span className="text-[#6c757d] font-xl leading-6">/ Salary Employee</span>

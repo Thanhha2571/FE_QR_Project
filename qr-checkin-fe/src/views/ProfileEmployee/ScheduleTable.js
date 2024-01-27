@@ -8,6 +8,8 @@ import { format } from "date-fns-tz";
 import { shiftType } from "assets/data/data";
 import { attendanceStatus } from "assets/data/data";
 import { useRef } from "react";
+import DatePicker from "react-multi-date-picker"
+
 
 const ScheduleTable = (props) => {
     const { id, name, departmentDefined, role } = props
@@ -47,6 +49,10 @@ const ScheduleTable = (props) => {
     const [statusMissing, setStatusMissing] = useState(false)
     const [statusAttendance, setStatusAttendance] = useState("")
     //const [shiftCodeCreate, setShiftCodeCreate] = useState("")
+    // const today = new Date()
+    // const tomorrow = new Date()
+    // tomorrow.setDate(tomorrow.getDate() + 1)
+    const [datePicker, setDatePicker] = useState("Select Date")
 
     const [arrayDepartment, setArrayDepartment] = useState()
     // const userString = localStorage.getItem('user');
@@ -440,36 +446,41 @@ const ScheduleTable = (props) => {
         setSelectedMonth(date);
     };
 
-    const [formData, setFormData] = useState({
-        data: {
-            dates: [],
-        },
-    });
+    // const [formData, setFormData] = useState({
+    //     data: {
+    //         dates: [],
+    //     },
+    // });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
 
-        // If the field is 'dates', split the input into an array
-        const updatedValue = name === "dates" ? value.split(",") : value;
+    //     // If the field is 'dates', split the input into an array
+    //     const updatedValue = name === "dates" ? value.split(",") : value;
 
-        setFormData((prevData) => ({
-            data: {
-                ...prevData.data,
-                [name]: updatedValue,
-            },
-        }));
+    //     setFormData((prevData) => ({
+    //         data: {
+    //             ...prevData.data,
+    //             [name]: updatedValue,
+    //         },
+    //     }));
+    // };
+
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString("en-US");
     };
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (userObject.role === 'Admin') {
             try {
                 setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}&employeeName=${name}`,
                     {
-                        dates: formData.data.dates,
+                        dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
                         position: selectedPositionEmployee
 
@@ -487,9 +498,10 @@ const ScheduleTable = (props) => {
             } finally {
                 setLoading(false);
                 setFormState(false)
-                setFormData({
-                    dates: []
-                })
+                setDatePicker("")
+                // setFormData({
+                //     dates: []
+                // })
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
@@ -498,10 +510,11 @@ const ScheduleTable = (props) => {
         if (userObject.role === 'Inhaber') {
             try {
                 setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
                     {
-                        dates: formData.data.dates,
+                        dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
                         position: selectedPositionEmployee
 
@@ -518,9 +531,10 @@ const ScheduleTable = (props) => {
             } finally {
                 setLoading(false);
                 setFormState(false)
-                setFormData({
-                    dates: []
-                })
+                setDatePicker("")
+                // setFormData({
+                //     dates: []
+                // })
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
@@ -530,12 +544,13 @@ const ScheduleTable = (props) => {
         if (userObject.role === 'Manager') {
             try {
                 setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/create-days?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
                     {
-                        dates: formData.data.dates,
+                        dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
-                        position: "Autofahrer"
+                        position: selectedPositionEmployee
 
                     },
                     { withCredentials: true }
@@ -550,9 +565,10 @@ const ScheduleTable = (props) => {
             } finally {
                 setLoading(false);
                 setFormState(false)
-                setFormData({
-                    dates: []
-                })
+                setDatePicker("")
+                // setFormData({
+                //     dates: []
+                // })
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
@@ -954,7 +970,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="shift_code"
                                             name="shift_code"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedShiftAddShiftForm}
                                             onChange={(e) => setSelectedShiftAddShiftForm(e.target.value)}
                                             required
@@ -975,7 +991,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="department"
                                             name="department"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedDepartmentEmployee}
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
@@ -996,7 +1012,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="position"
                                             name="position"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedPositionEmployee}
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
@@ -1021,7 +1037,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="department"
                                             name="department"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedDepartmentEmployee}
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
@@ -1049,7 +1065,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="position"
                                             name="position"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedPositionEmployee}
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
@@ -1074,7 +1090,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="department"
                                             name="department"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedDepartmentEmployee}
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
@@ -1102,7 +1118,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="position"
                                             name="position"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedPositionEmployee}
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
@@ -1124,13 +1140,25 @@ const ScheduleTable = (props) => {
                                             <span className="text-rose-500">*</span>
                                             <span className="">Dates</span>
                                         </div>
-                                        <input
+                                        {/* <input
                                             type="text"
                                             name="dates"
                                             required
                                             value={formData.data?.dates?.join(",")}
                                             onChange={handleChange}
                                             placeholder="Enter date (format: MM/DD/YYYY) and separate by commas ..."
+                                        /> */}
+                                        <DatePicker
+                                            style={{
+                                                height: '42px',
+                                                width: '100%',
+                                                border: '1px solid #d9d9d9',
+                                                borderRadius: '6px',
+                                            }}
+                                            format="MM/DD/YYYY"
+                                            multiple
+                                            value={datePicker}
+                                            onChange={setDatePicker}
                                         />
                                     </div>
                                     <div className="w-full flex flex-col gap-2">

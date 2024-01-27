@@ -10,7 +10,7 @@ const Login = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from?.pathname || "/";
+    const from = location.state?.from?.pathname || "/dashboard";
 
     const userRef = useRef();
     const errRef = useRef();
@@ -66,7 +66,7 @@ const Login = () => {
 
     return (
         <>
-            <div className="relative flex flex-col justify-center min-h-screen overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 bottom-0 bg-white flex flex-col justify-center min-h-screen overflow-hidden">
                 <div className="w-full p-6 m-auto bg-white rounded-md shadow-md lg:max-w-xl">
                     <h1 className="text-3xl font-semibold text-center text-purple-700 underline">
                     Sign in
@@ -104,12 +104,12 @@ const Login = () => {
                                 className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
                             />
                         </div>
-                        <a
+                        {/* <a
                             href="#"
                             className="text-xs text-purple-600 hover:underline"
                         >
                             Forget Password?
-                        </a>
+                        </a> */}
                         <div className="mb-2">
                             <input id="admin" name="role" value="admin"
                                 type="radio" className="text-purple-500 m-2"
@@ -144,16 +144,16 @@ const Login = () => {
                                 Manager
                             </label>
 
-                            <input id="employee" name="role" value="employee"
+                            {/* <input id="employee" name="role" value="employee"
                                 type="radio" className="text-purple-500 m-2" 
                                 checked={selectedRole === 'employee'} 
                                 onChange={handleRoleChange}
-                            />
-                            <label htmlFor="employee"
+                            /> */}
+                            {/* <label htmlFor="employee"
                                 className="text-sm font-semibold text-gray-800"
                             >
                                 Employee
-                            </label>
+                            </label> */}
                         </div>
                         <div className="mt-6">
                             <button

@@ -24,6 +24,7 @@ import ReportForm from "views/ReportForm/ReportForm";
 import GenerateQR from "views/GenerateQR/GenerateQR";
 import History from "views/Salary/History";
 import QrLink from "views/GenerateQR/QrLink";
+import LoadingLayout from "views/LoadingLayout/LoadingLayout";
 const titles = {
     '/': 'QR Checkin',
     '/attendance': 'Attendance',
@@ -50,10 +51,10 @@ const Router = () => {
                 {/* public routes */}
                 <Route path="login" element={<Login />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
-
+        
                 {/* protected routes */}
                 {/* <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.Inhaber]}/>} > */}
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="attendance" element={<Attendance />} />
                 <Route path="employee" element={<Employee />} />
                 <Route path="employee/departments" element={<Department />} />
