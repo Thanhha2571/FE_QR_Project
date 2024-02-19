@@ -11,9 +11,7 @@ const dateFormat = 'MM/DD/YYYY';
 
 function Dashboard() {
     document.title = "Dashboard";
-    // const [inputMonth, setInputMonth] = useState("")
-    // const [inputYear, setInputYear] = useState("")
-    // const [inputDay, setInputDay] = useState("")
+
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
     const [selectedDepartment, setSelectedDepartment] = useState("Selected Department");

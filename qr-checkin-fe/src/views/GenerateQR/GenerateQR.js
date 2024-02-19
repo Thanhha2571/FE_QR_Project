@@ -13,6 +13,7 @@ const GenerateQR = () => {
     const [checkManager, setCheckManager] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
+    const [hashDepartment, setHashDepartment] = useState()
 
     useEffect(() => {
         const updateQRCode = () => {
@@ -24,10 +25,20 @@ const GenerateQR = () => {
 
         const intervalId = setInterval(updateQRCode, 20000);
 
+
         return () => {
             clearInterval(intervalId);
         };
+
     }, [selectedDepartment]);
+
+    const encryptParameter = (param) => {
+        const key = 'YourSecretKey';
+        const additionalData = 'YourAdditionalDatasdfsdfdfsfdsdfdfdsfffddsfsdfsdfsdfdsfdsfsdfddsfdsfdsfdsfqweww';
+        const paddedParam = param + additionalData; 
+        const encrypted = btoa(paddedParam + key);
+        return encrypted;
+    };
 
     useEffect(() => {
         if (userObject?.role === 'Admin') {
@@ -88,23 +99,11 @@ const GenerateQR = () => {
                             ))}
                         </select>
                         {qrData && <QRCode value={qrData} className="qr-code" />}
-                        <Link target="_blank" to={`/Qr_link/${selectedDepartment}`} className="w-[250px] mt-3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                        <Link target="_blank" to={`/Qr_link/${encryptParameter(selectedDepartment)}`} className="w-[250px] mt-3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                             Create Link
                         </Link>
                     </div>)}
-                    {/* {checkInhaber && (<div className="ml-[260px] p-5">
-                        <label htmlFor="department">Choose a department:</label>
-                        <select id="department" value={selectedDepartment} onChange={handleDepartmentChange}>
-                            <option value="" disabled className='italic text-sm'>Select Department*</option>
-                            {departmentInhaberOrManager?.map((item, index) => (
-                                <option className='text-sm text-textColor w-full' key={index} value={item}>
-                                    {item}
-                                </option>
-                            ))}
-                        </select>
-                        {qrData && <QRCode value={qrData} className="qr-code" />}
-                    </div>)} */}
                 </div>)}
         </div>
     );
