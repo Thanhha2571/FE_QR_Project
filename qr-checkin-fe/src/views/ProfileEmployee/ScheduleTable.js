@@ -1169,7 +1169,7 @@ const ScheduleTable = (props) => {
                                         <select
                                             id="shift-type"
                                             name="shift-type"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedShiftType}
                                             onChange={(e) => setSelectedShiftType(e.target.value)}
                                             required

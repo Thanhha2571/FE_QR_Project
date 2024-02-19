@@ -537,7 +537,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="name"
                                         name="name"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.name}
                                         onChange={handleChange}
                                     />
@@ -548,7 +548,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="id"
                                         name="id"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.id}
                                         onChange={handleChange}
                                     />
@@ -558,7 +558,7 @@ const ProfileEmployee = () => {
                                     <select
                                         id="gender"
                                         name="gender"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.gender}
                                         onChange={handleChange}
                                     >
@@ -578,7 +578,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="dob"
                                         name="dob"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.dob}
                                         onChange={handleChange}
                                     />
@@ -589,7 +589,7 @@ const ProfileEmployee = () => {
                                         type="email"
                                         id="email"
                                         name="email"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.email}
                                         onChange={handleChange}
                                     />
@@ -600,7 +600,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="address"
                                         name="address"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.address}
                                         onChange={handleChange}
                                     />
@@ -611,7 +611,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="role"
                                         name="role"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.role}
                                         readOnly
                                     // onChange={handleChange}
@@ -677,7 +677,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="total_time_per_month"
                                         name="total_time_per_month"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.total_time_per_month}
                                         onChange={handleChange}
                                     />
@@ -688,7 +688,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="default_day_off"
                                         name="default_day_off"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.default_day_off}
                                         onChange={handleChange}
                                     />
@@ -699,7 +699,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="realistic_day_off"
                                         name="realistic_day_off"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.realistic_day_off}
                                         onChange={handleChange}
                                     />
@@ -710,7 +710,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="house_rent_money"
                                         name="house_rent_money"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.house_rent_money}
                                         onChange={handleChange}
                                     />
@@ -721,7 +721,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="status"
                                         name="status"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={editingData.status}
                                         readOnly
                                     // onChange={handleChange}
@@ -733,7 +733,7 @@ const ProfileEmployee = () => {
                                         type="text"
                                         id="inactive_day"
                                         name="inactive_day"
-                                        className="w-3/4"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                         value={inactive}
                                         readOnly
                                     // onChange={handleChange}
@@ -791,7 +791,7 @@ const ProfileEmployee = () => {
                                         <select
                                             id="department"
                                             name="department"
-                                            className="w-full cursor-pointer"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
                                             value={selectedDepartmentEmployee}
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
