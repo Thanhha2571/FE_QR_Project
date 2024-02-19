@@ -32,7 +32,7 @@ const Navigation = () => {
 
                 <div className="p-4 flex flex-row items-center justify-center">
                     {/* <img src={Logo} alt="" className='w-20 h-auto' /> */}
-                    {/* <h3 className='font-DancingScript font-bold text-xl'>CÔCÔ MANAGEMENT</h3> */}
+                    <h3 className='font-DancingScript font-bold text-xl'>CÔCÔ MANAGEMENT</h3>
                 </div>
 
                 <ul className="routerLink p-3">
@@ -120,12 +120,12 @@ const Navigation = () => {
                             </Link>
                             <Link to="working-schedule/day-off-management">
                                 <li className='px-8 py-2'>
-                                    <span className="flex flex-row justify-center items-center gap-4">
+                                    <Link className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
                                             <div className="item-title">Day Off</div>
                                         </div>
-                                    </span>
+                                    </Link>
                                 </li>
                             </Link>
                         </ul>)}
@@ -159,6 +159,82 @@ const Navigation = () => {
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
                                             <div className="item-title">History</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setLogMenu(!logMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> */}
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Manage Logs
+                                </h4>
+                            </div>
+                            <div className={logMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {logMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <Link to="manage-log">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center" to="manage-log">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Logs</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setCarMenu(!carMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                <img src={CarIcon} className='w-6 h-6' />
+                                {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> */}
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Manage Cars
+                                </h4>
+                            </div>
+                            <div className={carMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {carMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <Link to="manage-car">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Cars</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </Link>
+                        </ul>)}
+                    </div>
+                    <div onClick={() => setReportMenu(!reportMenu)}>
+                        <li className="nav-item mb-3 p-2 rounded flex justify-between">
+                            <div className='flex flex-row justify-center items-center gap-4'>
+                                <img src={FormIcon} className='w-6 h-auto' />
+                                <h4 className={sidebar ? "navName" : "navName fullsize"} >
+                                    Manage Forms
+                                </h4>
+                            </div>
+                            <div className={reportMenu ? "rotate-90" : ""}>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.91003 19.9201L15.43 13.4001C16.2 12.6301 16.2 11.3701 15.43 10.6001L8.91003 4.08008" stroke="#b7c0cd" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </div>
+                        </li>
+                        {reportMenu && (<ul className="flex flex-col gap-3 list-none">
+                            <Link to="manage-report-form">
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Manage Report Form</div>
                                         </div>
                                     </span>
                                 </li>
