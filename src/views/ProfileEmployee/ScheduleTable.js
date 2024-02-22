@@ -51,6 +51,8 @@ const ScheduleTable = (props) => {
     const [statusAttendance, setStatusAttendance] = useState("")
     const [checkInTimeMissing, setCheckInTimeMissing] = useState("")
     const [checkOutTimeMissing, setCheckOutTimeMissing] = useState("")
+    const [checkInTimeCreate, setCheckInTimeCreate] = useState("")
+    const [checkOutTimeCreate, setCheckOutTimeCreate] = useState("")
     //const [shiftCodeCreate, setShiftCodeCreate] = useState("")
     // const today = new Date()
     // const tomorrow = new Date()
@@ -591,19 +593,27 @@ const ScheduleTable = (props) => {
         setCheckOutTimeMissing(time.format('HH:mm:ss'))
     }
 
+    const handleTimeCheckInCreate = (time) => {
+        setCheckInTimeCreate(time.format('HH:mm:ss'))
+    }
+
+    const handleTimeCheckOutCreate = (time) => {
+        setCheckOutTimeCreate(time.format('HH:mm:ss'))
+    }
+
     const handleSubmitChangeAttendancInfo = async (e) => {
         e.preventDefault();
 
         setLoading(true);
 
         if (userObject?.role === 'Admin') {
-            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time !== "") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
-                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
@@ -616,22 +626,18 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
             }
-            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time === "") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                         },
                         { withCredentials: true }
@@ -643,22 +649,17 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckInTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
             }
-            if (attendanceData.data.check_in_time === "" && attendanceData.data.check_out_time !== "") {
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
                         { withCredentials: true }
@@ -670,12 +671,7 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckOutTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
@@ -709,13 +705,13 @@ const ScheduleTable = (props) => {
         }
 
         if (userObject?.role === 'Inhaber') {
-            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time !== "") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
-                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
@@ -728,22 +724,18 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
             }
-            if (attendanceData.data.check_in_time !== "" && attendanceData.data.check_out_time === "") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                         },
                         { withCredentials: true }
@@ -755,22 +747,17 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckInTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
             }
-            if (attendanceData.data.check_in_time === "" && attendanceData.data.check_out_time !== "") {
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
-                            "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
                         { withCredentials: true }
@@ -782,12 +769,7 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
-                    setAttendanceData({
-                        data: {
-                            check_in_time: '',
-                            check_out_time: '',
-                        },
-                    });
+                    setCheckOutTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
                 }
@@ -840,8 +822,8 @@ const ScheduleTable = (props) => {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
                     {
-                        "check_in_time": attendanceDataCreate.data.check_in_time,
-                        "check_out_time": attendanceDataCreate.data.check_out_time,
+                        "check_in_time": checkInTimeCreate,
+                        "check_out_time": checkOutTimeCreate,
                         "check_in_status": selectedCheckInStatusCreate,
                         "check_out_status": selectedCheckOutStatusCreate,
                     },
@@ -854,12 +836,8 @@ const ScheduleTable = (props) => {
             } finally {
                 setLoading(false);
                 setChangeAttendanceFormState(false);
-                setAttendanceDataCreate({
-                    data: {
-                        check_in_time: '',
-                        check_out_time: '',
-                    },
-                });
+                setCheckInTimeCreate("")
+                setCheckOutTimeCreate("")
                 setSelectedCheckInStatusCreate("")
                 setSelectedCheckOutStatusCreate("")
             }
@@ -870,8 +848,8 @@ const ScheduleTable = (props) => {
                 const { data } = await axios.post(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
                     {
-                        "check_in_time": attendanceDataCreate.data.check_in_time,
-                        "check_out_time": attendanceDataCreate.data.check_out_time,
+                        "check_in_time": checkInTimeCreate,
+                        "check_out_time": checkOutTimeCreate,
                         "check_in_status": selectedCheckInStatusCreate,
                         "check_out_status": selectedCheckOutStatusCreate,
                     },
@@ -884,12 +862,8 @@ const ScheduleTable = (props) => {
             } finally {
                 setLoading(false);
                 setChangeAttendanceFormState(false);
-                setAttendanceDataCreate({
-                    data: {
-                        check_in_time: '',
-                        check_out_time: '',
-                    },
-                });
+                setCheckInTimeCreate("")
+                setCheckOutTimeCreate("")
                 setSelectedCheckInStatusCreate("")
                 setSelectedCheckOutStatusCreate("")
             }
@@ -1222,14 +1196,7 @@ const ScheduleTable = (props) => {
                                                                             <span className="text-rose-500">*</span>
                                                                             <span className="">Check_in_time</span>
                                                                         </div>
-                                                                        <input
-                                                                            type="text"
-                                                                            name="check_in_time"
-                                                                            // required
-                                                                            value={attendanceDataCreate.data.check_in_time}
-                                                                            onChange={handleChangeAttendanceDataCreate}
-                                                                            placeholder="eg:11:40:00 PM"
-                                                                        />
+                                                                        <TimePicker onChange={handleTimeCheckInCreate} className="w-full h-[42px]" format={formatTimePicker} />
                                                                     </div>
                                                                     <div className="w-full flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
@@ -1239,7 +1206,7 @@ const ScheduleTable = (props) => {
                                                                         <select
                                                                             id="department"
                                                                             name="department"
-                                                                            className="w-full cursor-pointer"
+                                                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                             value={selectedCheckInStatusCreate}
                                                                             onChange={(e) => setSelectedCheckInStatusCreate(e.target.value)}
                                                                         // required
@@ -1257,14 +1224,7 @@ const ScheduleTable = (props) => {
                                                                             <span className="text-rose-500">*</span>
                                                                             <span className="">Check_out_time</span>
                                                                         </div>
-                                                                        <input
-                                                                            type="text"
-                                                                            name="check_out_time"
-                                                                            // required
-                                                                            value={attendanceDataCreate.data.check_out_time}
-                                                                            onChange={handleChangeAttendanceDataCreate}
-                                                                            placeholder="eg:11:20:00 PM"
-                                                                        />
+                                                                        <TimePicker onChange={handleTimeCheckOutCreate} className="w-full h-[42px]" format={formatTimePicker} />
                                                                     </div>
                                                                     <div className="w-full flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
@@ -1274,7 +1234,7 @@ const ScheduleTable = (props) => {
                                                                         <select
                                                                             id="department"
                                                                             name="department"
-                                                                            className="w-full cursor-pointer"
+                                                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                             value={selectedCheckOutStatusCreate}
                                                                             onChange={(e) => setSelectedCheckOutStatusCreate(e.target.value)}
                                                                         // required
@@ -1370,6 +1330,7 @@ const ScheduleTable = (props) => {
                                                                                     name="id"
                                                                                     value={attendanceId}
                                                                                     // onChange={(e) => setAttendanceId(e.target.value)}
+                                                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                                     readOnly={true}
                                                                                 />
                                                                             </div>
@@ -1382,6 +1343,7 @@ const ScheduleTable = (props) => {
                                                                                     type="text"
                                                                                     name="status"
                                                                                     value={"checked"}
+                                                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                                     // onChange={(e) => setAttendanceId(e.target.value)}
                                                                                     readOnly={true}
                                                                                 />
@@ -1408,7 +1370,7 @@ const ScheduleTable = (props) => {
                                                                                 <select
                                                                                     id="department"
                                                                                     name="department"
-                                                                                    className="w-full cursor-pointer"
+                                                                                    className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                                     value={selectedCheckInStatus}
                                                                                     onChange={(e) => setSelectedCheckInStatus(e.target.value)}
                                                                                 // required
@@ -1443,7 +1405,7 @@ const ScheduleTable = (props) => {
                                                                                 <select
                                                                                     id="department"
                                                                                     name="department"
-                                                                                    className="w-full cursor-pointer"
+                                                                                    className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                                     value={selectedCheckOutStatus}
                                                                                     onChange={(e) => setSelectedCheckOutStatus(e.target.value)}
                                                                                 // required
