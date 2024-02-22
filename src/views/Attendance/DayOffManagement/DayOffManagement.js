@@ -173,13 +173,13 @@ const DayOffManagement = () => {
                                                         {/* <Link className="img-table-item-block" to={`viewprofile/${uuid}`}>
                                                 <img className="img-table-item" src={imageUrl} alt="" />
                                             </Link> */}
-                                                        <Link to={`/gitemployee/view-profile/${employee_id}`} className="cursor-pointer flex flex-col" >{employee_name}
+                                                        <Link to={`/employee/view-profile/${employee_id}/${employee_name}`} className="cursor-pointer flex flex-col" >{employee_name}
                                                         </Link>
                                                     </h2>
                                                 </td>
                                                 <td className="p-2">{employee_id}</td>
-                                                <td className="p-2">{request_dayOff_start.substring(0, 10)}</td>
-                                                <td className="p-2">{request_dayOff_end.substring(0, 10)}</td>
+                                                <td className="p-2">{`${String(new Date(request_dayOff_start).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_start).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_start).getFullYear()}`}</td>
+                                                <td className="p-2">{`${String(new Date(request_dayOff_end).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_end).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_end).getFullYear()}`}</td>
                                                 <td className="p-2">{request_content}</td>
                                                 <td className="p-2 cursor-pointer hover:text-buttonColor2" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>
                                             </tr>
