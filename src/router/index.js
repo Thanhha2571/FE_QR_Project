@@ -49,7 +49,7 @@ const Router = () => {
         <Routes>
             <Route path="/" element={<Layout />} >
                 {/* public routes */}
-                <Route path="login" element={<Login />} />
+                <Route path="/" element={<Login />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
         
                 {/* protected routes */}
