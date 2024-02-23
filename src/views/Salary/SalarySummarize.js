@@ -30,6 +30,16 @@ const SalarySummarizie = () => {
     const [userList, setUserList] = useState()
     const [userListSearch, setUserListSearch] = useState()
 
+    const PAGE_SIZE = 50
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * PAGE_SIZE;
+    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(salaryListByMonth?.length / PAGE_SIZE);
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const handleMonthChange = (date, dateString) => {
         console.log('Selected Date:', dateString);
         setMonthPicker(dateString)
@@ -61,6 +71,7 @@ const SalarySummarizie = () => {
             }
         }
         if (userObject.role === 'Admin' && monthPicker !== "" && inputId !== "" && inputName !== "") {
+            setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
@@ -88,6 +99,7 @@ const SalarySummarizie = () => {
             }
         }
         if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId !== "" && inputName !== "") {
+            setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
@@ -420,11 +432,11 @@ const SalarySummarizie = () => {
                                 </th>
                             </tr>
                         </thead>
-                        {Array.isArray(salaryListByMonth) && salaryListByMonth?.length === 0 ? (
+                        {Array.isArray(currentUsers) && currentUsers?.length === 0 ? (
                             <div className="no-result-text text-center">NO RESULT</div>
                         ) : (
                             <tbody className="tbody">
-                                {salaryListByMonth?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter, total_km, total_salary }) => (
+                                {currentUsers?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter, total_km, total_salary }) => (
                                     <tr className="tr-item" key={employee_id}>
                                         <td className="p-2 hover:text-buttonColor2">
                                             <h2 className="text-left">
@@ -456,6 +468,22 @@ const SalarySummarizie = () => {
                             </tbody>
                         )}
                     </table>
+                </div>
+                <div className="flex justify-center">
+                    {totalPages > 1 && (
+                        <div className="flex flex-row gap-2">
+                            {Array.from({ length: totalPages }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 {salaryCountingFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                     <div
