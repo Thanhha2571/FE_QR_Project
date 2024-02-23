@@ -1464,9 +1464,13 @@ const ScheduleTable = (props) => {
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Date</span>
                                                         <span className="w-2/3">{selectedDate.substring(0, 10)}</span>
                                                     </div>
-                                                    <div className="flex flex-wrap w-full items-center justify-center mb-5">
+                                                    <div className="flex flex-wrap w-full items-center justify-center">
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Shift's Code</span>
                                                         <span className="w-2/3">{selectedShift}</span>
+                                                    </div>
+                                                    <div className="flex flex-wrap w-full items-center justify-center mb-5">
+                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Time</span>
+                                                        <span className="w-2/3">{filteredItem?.time_slot?.start_time} ~ {filteredItem?.time_slot?.end_time}</span>
                                                     </div>
                                                 </div>
                                             ))}

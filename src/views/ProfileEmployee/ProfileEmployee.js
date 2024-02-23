@@ -33,9 +33,11 @@ const ProfileEmployee = () => {
     const [formAddDepartmentState, setFormAddDepartmentState] = useState(false)
     const [selectedPositionEmployee, setSelectedPositionEmployee] = useState('');
     const [selectedDepartmentEmployee, setSelectedDepartmentEmployee] = useState('');
+    const [selectedDepartmentRemove, setSelectedDepartmentRemove] = useState('');
     const [departmentDefined, setDepartmentDefined] = useState()
     const [restDepartmentList, setRestDepartmentList] = useState()
     const [deleteFormState, setDeleteFormState] = useState(false)
+    const [removeDepartmentFormState, setRemoveDepartmentFormState] = useState(false)
     const [selectedStatus, setSelectedStatus] = useState("active")
     const [changeStatus, setChangeStatus] = useState(false)
     const [inputDateInactive, setInputDateInactive] = useState('')
@@ -99,6 +101,31 @@ const ProfileEmployee = () => {
         }
 
     }
+    const handleRemoveDepartmentForEmployee = async () => {
+        if (userObject?.role === "Admin") {
+            setLoading(true);
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/remove-member/${selectedDepartmentRemove}`,
+                    {
+                        employeeID: id,
+                        employeeName: name,
+                    },
+                    { withCredentials: true },
+                );
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                getUser();
+                setRemoveDepartmentFormState(false)
+                setSelectedDepartmentRemove('')
+            }
+        }
+
+    }
+
     const getUser = async () => {
         if (userObject?.role === 'Admin') {
             try {
@@ -460,6 +487,9 @@ const ProfileEmployee = () => {
                 <div className="flex flex-row px-4 gap-4">
                     {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
+                    </button>)}
+                    {exportState && (<button onClick={() => setRemoveDepartmentFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                        <img className="w-4 h-4" src={DeleteIcon} />Remove Department
                     </button>)}
                     {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                         Make Inactive
@@ -937,6 +967,58 @@ const ProfileEmployee = () => {
                                     <div
                                         className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-700 w-full">
                                         <button onClick={handleChangeStatus} type="button" className="w-full">Change Status</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {removeDepartmentFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                <div
+                    onClick={() => setRemoveDepartmentFormState(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Add Department</div>
+                                <div
+                                    onClick={() => setRemoveDepartmentFormState(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7">
+                                <div
+                                    className="flex flex-col gap-6 w-full justify-center items-center"
+                                >
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader"></div>
+                                    </div>)}
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Department</span>
+                                        </div>
+                                        <select
+                                            id="department_delete"
+                                            name="department_delete"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
+                                            value={selectedDepartmentRemove}
+                                            onChange={(e) => setSelectedDepartmentRemove(e.target.value)}
+                                            required
+                                        >
+                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            {user && user[0]?.department?.map((item, index) => (
+                                                <option className='text-sm text-textColor w-full' key={index} value={item.name}>
+                                                    {item.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div
+                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                        <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Remove Department</button>
                                     </div>
                                 </div>
                             </div>
