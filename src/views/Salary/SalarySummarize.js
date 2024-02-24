@@ -17,6 +17,7 @@ const SalarySummarizie = () => {
     const [inputName, setInputName] = useState("")
     const [salaryListByMonth, setSalaryListByMonth] = useState()
     const [monthPicker, setMonthPicker] = useState("")
+    const [monthCountingPikcer, setMonthCountingPikcer] = useState("")
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -45,6 +46,9 @@ const SalarySummarizie = () => {
         setMonthPicker(dateString)
     };
 
+    const handleMonthCountingChange = (date, dateString) => {
+        setMonthCountingPikcer(dateString)
+    }
     useEffect(() => {
         if (userObject?.role === 'Manager') {
             setCheckManager(true)
@@ -57,7 +61,7 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -74,7 +78,7 @@ const SalarySummarizie = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -88,7 +92,7 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId === "" && inputName === "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -102,7 +106,7 @@ const SalarySummarizie = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
@@ -206,7 +210,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${formData.user.year}&month=${formData.user.month}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3,7)}&month=${monthCountingPikcer.substring(0,2)}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -220,8 +224,6 @@ const SalarySummarizie = () => {
                     setFormData({
                         user: {
                             id: '',
-                            month: '',
-                            year: '',
                             a: '',
                             b: '',
                             c: '',
@@ -230,9 +232,11 @@ const SalarySummarizie = () => {
                         },
                     });
                     setSelectedUserName("")
+                    setMonthCountingPikcer("")
                     setSalaryCountingFormState(false)
                 } catch (err) {
                     alert(err.response?.data?.message)
+                    setLoading(false)
                 } finally {
                     handleSeacrh()
                 }
@@ -241,7 +245,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${formData.user.year}&month=${formData.user.month}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3,7)}&month=${monthCountingPikcer.substring(0,2)}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -255,8 +259,6 @@ const SalarySummarizie = () => {
                     setFormData({
                         user: {
                             id: '',
-                            month: '',
-                            year: '',
                             a: '',
                             b: '',
                             c: '',
@@ -265,6 +267,7 @@ const SalarySummarizie = () => {
                         },
                     });
                     setSelectedUserName("")
+                    setMonthCountingPikcer("")
                     setSalaryCountingFormState(false)
                 } catch (error) {
                     // Handle error
@@ -282,7 +285,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0,2)}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -290,7 +293,7 @@ const SalarySummarizie = () => {
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Salary_Data_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Salary_Data_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -306,7 +309,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0,2)}`,
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     { responseType: "arraybuffer", withCredentials: true }
                 );
 
@@ -314,7 +317,7 @@ const SalarySummarizie = () => {
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Salary_Data_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Salary_Data_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -359,7 +362,7 @@ const SalarySummarizie = () => {
                             <DatePicker onChange={handleMonthChange} className="w-full h-[50px] text-base text-placeholderTextColor" format={monthFormat} picker="month" />
                         </Space>
                         <input
-                            className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
+                            className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                             type="text"
                             placeholder="Enter ID"
                             value={inputId}
@@ -369,7 +372,7 @@ const SalarySummarizie = () => {
                             <select
                                 id="name_search"
                                 name="name_search"
-                                className="w-full cursor-pointer h-[50px] border-[#d9d9d9] rounded-[6px] text-[#6c757d]"
+                                className="w-full cursor-pointer h-[50px] border-[#d9d9d9] rounded-[6px] text-[#6c757d] hover:border-[#4096ff] focus:border-[#4096ff]"
                                 value={inputName}
                                 onChange={(e) => setInputName(e.target.value)}
                             // required
@@ -513,6 +516,7 @@ const SalarySummarizie = () => {
                                             </div>
                                             <input
                                                 type="text"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 name="id"
                                                 required
                                                 value={formData.user.id}
@@ -527,7 +531,7 @@ const SalarySummarizie = () => {
                                             <select
                                                 id="name"
                                                 name="name"
-                                                className="w-full cursor-pointer"
+                                                className="cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 value={selectedUserName}
                                                 onChange={(e) => setSelectedUserName(e.target.value)}
                                             // required
@@ -545,26 +549,9 @@ const SalarySummarizie = () => {
                                                 <span className="text-rose-500">*</span>
                                                 <span className="">Month</span>
                                             </div>
-                                            <input
-                                                type="text"
-                                                name="month"
-                                                required
-                                                value={formData.user.month}
-                                                onChange={handleChange}
-                                            />
-                                        </div>
-                                        <div className="w-full h-auto flex flex-col gap-2">
-                                            <div className="flex flex-row gap-2">
-                                                <span className="text-rose-500">*</span>
-                                                <span className="">Year</span>
-                                            </div>
-                                            <input
-                                                type="text"
-                                                name="year"
-                                                required
-                                                value={formData.user.year}
-                                                onChange={handleChange}
-                                            />
+                                            <Space className="w-full text-[#6c757d] font-Changa" direction="vertical" size={12}>
+                                                <DatePicker required onChange={handleMonthCountingChange} placeholder="Select Month" className="placeholder:text-sm placeholder:text-placeholderTextColor w-full h-[45px] text-base text-placeholderTextColor" format={monthFormat} picker="month" />
+                                            </Space>
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
@@ -574,6 +561,7 @@ const SalarySummarizie = () => {
                                             <input
                                                 type="text"
                                                 name="a"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.a}
                                                 onChange={handleChange}
@@ -587,6 +575,7 @@ const SalarySummarizie = () => {
                                             <input
                                                 type="text"
                                                 name="b"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.b}
                                                 onChange={handleChange}
@@ -600,6 +589,7 @@ const SalarySummarizie = () => {
                                             <input
                                                 type="text"
                                                 name="c"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.c}
                                                 onChange={handleChange}
@@ -613,6 +603,7 @@ const SalarySummarizie = () => {
                                             <input
                                                 type="text"
                                                 name="d"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.d}
                                                 onChange={handleChange}
@@ -626,6 +617,7 @@ const SalarySummarizie = () => {
                                             <input
                                                 type="text"
                                                 name="f"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.f}
                                                 onChange={handleChange}
@@ -656,7 +648,7 @@ const SalarySummarizie = () => {
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Do you want to export Employee_Salary_Data_{monthPicker.substring(0,2)}_{monthPicker.substring(3,7)}.xlsx?</span>
+                                    <span>Do you want to export Employee_Salary_Data_{monthPicker.substring(0, 2)}_{monthPicker.substring(3, 7)}.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
