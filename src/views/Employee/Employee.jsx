@@ -609,7 +609,7 @@ function Employee() {
                 {/* //---------------------------------------------------------------- SEARCH ----------------------------------------------------------------// */}
                 <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
                     <input
-                        className="w-1/4 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
+                        className="w-1/3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColorw-1/4 text-base px-4 py-3 placeholder:text-placeholderTextColor"
                         type="text"
                         placeholder="Search by name, ID, position"
                         value={inputSearch}
@@ -618,7 +618,7 @@ function Employee() {
                     {checkAdminAndInhaber && (<div
                         onClick={handleRoleMenu}
                         className="w-1/6 h-[50px] text-base cursor-pointer">
-                        <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
+                        <div className="flex flex-col w-full py-3 px-2 border border-solid text-placeholderTextColorw-2/3 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor">
                             <div className="flex flex-row items-center justify-around w-full">
                                 <div className="ml-4">{selectedRole}</div>
                                 <div className={`w-4 h-4 flex justify-center items-center ${roleMenu ? "rotate-180" : ""}`}>
@@ -637,7 +637,7 @@ function Employee() {
                     {checkRole && (<div
                         onClick={handleDepartmetnnMenu}
                         className="w-1/6 h-[50px] text-base cursor-pointer">
-                        <div className="flex flex-col w-full py-3 px-2 border border-solid border-placeholderTextColor text-placeholderTextColor">
+                        <div className="flex flex-col w-full py-3 px-2 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor border border-solid">
                             <div className="flex flex-row items-center justify-around w-full">
                                 <div className="ml-4">{selectedDepartment}</div>
                                 <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
@@ -755,7 +755,7 @@ function Employee() {
                                         {loading && (<div className="absolute flex w-full h-full items-center justify-center">
                                             <div className="loader"></div>
                                         </div>)}
-                                        <div className="w-full h-auto flex flex-col gap-2">
+                                        <div className="w-full h-auto flex flex-col gap-2 mt-4">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
                                                 <span className="">Employee's ID</span>
@@ -763,6 +763,7 @@ function Employee() {
                                             <input
                                                 type="text"
                                                 name="id"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 required
                                                 value={formData.user.id}
                                                 onChange={handleChange}
@@ -776,6 +777,7 @@ function Employee() {
                                             <input
                                                 type="text"
                                                 name="name"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 required
                                                 value={formData.user.name}
                                                 onChange={handleChange}
@@ -789,6 +791,7 @@ function Employee() {
                                             <input
                                                 type="text"
                                                 name="password"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 required
                                                 value={formData.user.password}
                                                 onChange={handleChange}
@@ -801,6 +804,7 @@ function Employee() {
                                             </div>
                                             <input
                                                 type="email"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 name="email"
                                                 required
                                                 value={formData.user.email}
@@ -983,7 +987,7 @@ function Employee() {
                                             <select
                                                 id="role"
                                                 name="role"
-                                                className="w-full cursor-pointer"
+                                                className="w-full cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 value={selectedRoleUser}
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required
@@ -1004,7 +1008,7 @@ function Employee() {
                                             <select
                                                 id="role"
                                                 name="role"
-                                                className="w-full cursor-pointer"
+                                                className="w-full cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 value={selectedRoleUser}
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required
@@ -1025,7 +1029,7 @@ function Employee() {
                                             <select
                                                 id="role"
                                                 name="role"
-                                                className="w-full cursor-pointer"
+                                                className="w-full cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 value={selectedRoleUser}
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required

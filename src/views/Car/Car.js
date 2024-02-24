@@ -1,8 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { DatePicker, Space } from 'antd';
 import axios from "axios";
 import "./Car.css"
 import CarItem from "./CarItem";
+
+const dateFormat = 'MM/DD/YYYY';
+
 const Car = () => {
     const [carList, setCarList] = useState()
     const [loading, setLoading] = useState(false);
@@ -10,7 +14,7 @@ const Car = () => {
     const [createCarFormState, setCreateCarFormState] = useState(false)
     const [departmentList, setDepartmentList] = useState()
     const [selectedDepartmentCar, setSelectedDepartmentCar] = useState('');
-
+    const [registerDate, setRegisterDate] = useState("")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
@@ -82,7 +86,6 @@ const Car = () => {
         car: {
             car_name: '',
             car_number: '',
-            register_date: '',
         },
     });
 
@@ -94,6 +97,11 @@ const Car = () => {
                 [name]: value,
             },
         }));
+    };
+
+    const handleRegisterDate = (date, dateString) => {
+        console.log('Selected Date:', dateString);
+        setRegisterDate(dateString)
     };
 
     const handleSubmit = async (e) => {
@@ -111,7 +119,7 @@ const Car = () => {
                     {
                         car_name: formData.car.car_name,
                         car_number: formData.car.car_number,
-                        register_date: formData.car.register_date,
+                        register_date: registerDate,
                         department_name: selectedDepartmentCar
                     },
                     { withCredentials: true }
@@ -127,9 +135,9 @@ const Car = () => {
                     car: {
                         car_name: '',
                         car_number: '',
-                        register_date: '',
                     },
                 })
+                setRegisterDate("")
                 setSelectedDepartmentCar("")
 
             }
@@ -141,7 +149,7 @@ const Car = () => {
                     {
                         car_name: formData.car.car_name,
                         car_number: formData.car.car_number,
-                        register_date: formData.car.register_date,
+                        register_date: registerDate,
                         department_name: selectedDepartmentCar
                     },
                     { withCredentials: true }
@@ -157,9 +165,9 @@ const Car = () => {
                     car: {
                         car_name: '',
                         car_number: '',
-                        register_date: '',
                     },
                 })
+                setRegisterDate("")
                 setSelectedDepartmentCar("")
 
             }
@@ -178,7 +186,7 @@ const Car = () => {
                             </div>
                         </div>
                         {exportState && (<div className="flex flex-row px-4 gap-4">
-                            <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                            <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                                 <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
                                 Create Car
                             </button>
@@ -209,10 +217,10 @@ const Car = () => {
                                         <form
                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                             onSubmit={handleSubmit}>
-                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
                                                 <div className="loader"></div>
                                             </div>)}
-                                            <div className="w-full h-auto flex flex-col gap-2">
+                                            <div className="w-full h-auto flex flex-col gap-2 mt-4">
                                                 <div className="flex flex-row gap-2">
                                                     <span className="text-rose-500">*</span>
                                                     <span className="">Car Name</span>
@@ -220,6 +228,7 @@ const Car = () => {
                                                 <input
                                                     type="text"
                                                     name="car_name"
+                                                    className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                     required
                                                     value={formData.car.car_name}
                                                     onChange={handleChange}
@@ -233,6 +242,7 @@ const Car = () => {
                                                 <input
                                                     type="text"
                                                     name="car_number"
+                                                    className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                     required
                                                     value={formData.car.car_number}
                                                     onChange={handleChange}
@@ -243,14 +253,9 @@ const Car = () => {
                                                     <span className="text-rose-500">*</span>
                                                     <span className="">Register Date</span>
                                                 </div>
-                                                <input
-                                                    type="text"
-                                                    name="register_date"
-                                                    required
-                                                    value={formData.car.register_date}
-                                                    onChange={handleChange}
-                                                    placeholder="MM/DD/YYYY"
-                                                />
+                                                <Space className="w-full" direction="vertical" size={12}>
+                                                    <DatePicker onChange={handleRegisterDate} className="w-full h-[45px] text-base text-placeholderTextColor" format={dateFormat} />
+                                                </Space>
                                             </div>
                                             {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">

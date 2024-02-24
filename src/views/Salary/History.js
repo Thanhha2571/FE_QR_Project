@@ -84,7 +84,7 @@ const History = () => {
                 <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
                     <div className="flex flex-row gap-20 w-3/5">
                         <input
-                            className="w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor focus:border-2 focus:border-solid focus:border-placeholderTextColor focus:ring-0"
+                            className="w-1/3 text-base px-4 py-3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor"
                             type="text"
                             placeholder="Enter Employee ID"
                             value={inputId}
@@ -94,7 +94,7 @@ const History = () => {
                             <select
                                 id="name_search"
                                 name="name_search"
-                                className="w-2/3 cursor-pointer h-[50px]"
+                                className="w-2/3 text-base px-4 py-3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor"
                                 value={inputName}
                                 onChange={(e) => setInputName(e.target.value)}
                             // required

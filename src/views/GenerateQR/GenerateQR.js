@@ -90,7 +90,7 @@ const GenerateQR = () => {
                 (<div>
                     {checkAdmin && (<div className="ml-[260px] p-5">
                         <label htmlFor="department">Choose a department:</label>
-                        <select id="department" value={selectedDepartment} onChange={handleDepartmentChange}>
+                        <select className='ml-5 mb-5 text-base px-4 py-3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor' id="department" value={selectedDepartment} onChange={handleDepartmentChange}>
                             <option value="" disabled className='italic text-sm'>Select Department*</option>
                             {departmentList?.map((item, index) => (
                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
