@@ -391,6 +391,7 @@ function Employee() {
         }
         if (userObject.role === 'Inhaber') {
             if (inputSearch === "" && selectedRole !== "Select Role") {
+                setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
                     // console.log(query);
@@ -402,6 +403,7 @@ function Employee() {
                 }
             }
             if (inputSearch !== "" && selectedRole === "Select Role") {
+                setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
                     // console.log(query);
@@ -422,6 +424,7 @@ function Employee() {
         }
         if (userObject.role === 'Manager') {
             if (inputSearch !== "") {
+                setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
                     // console.log(query);

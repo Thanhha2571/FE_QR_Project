@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DatePicker, Space } from 'antd';
 import axios from "axios";
+import DeleteIcon from "../../assets/images/icon-delete.png"
 import "./Car.css"
 import CarItem from "./CarItem";
 
@@ -12,12 +13,14 @@ const Car = () => {
     const [loading, setLoading] = useState(false);
     const [exportState, setExportState] = useState(false)
     const [createCarFormState, setCreateCarFormState] = useState(false)
+    const [deleteCarFormState, setDeleteCarFormState] = useState(false)
     const [departmentList, setDepartmentList] = useState()
     const [selectedDepartmentCar, setSelectedDepartmentCar] = useState('');
     const [registerDate, setRegisterDate] = useState("")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
+    const [selectedCarDelete, setSelectedCarDelete] = useState(false)
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -173,6 +176,77 @@ const Car = () => {
             }
         }
     }
+
+    const handleDeleteCarSubmit = async (e) => {
+        e.preventDefault();
+
+        setLoading(true);
+
+        // ----------------------------------------------------------------CREATE BY ADMIN ---------------------------------------------------------------- //
+
+        //CREATE CAR BY ADMIN
+        if (userObject?.role === 'Admin') {
+            try {
+                const { data } = await axios.post(
+                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/create",
+                    {
+                        car_name: formData.car.car_name,
+                        car_number: formData.car.car_number,
+                        register_date: registerDate,
+                        department_name: selectedDepartmentCar
+                    },
+                    { withCredentials: true }
+                );
+
+                getAllCars()
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setCreateCarFormState(false)
+                setFormData({
+                    car: {
+                        car_name: '',
+                        car_number: '',
+                    },
+                })
+                setRegisterDate("")
+                setSelectedDepartmentCar("")
+
+            }
+        }
+        if (userObject?.role === 'Inhaber') {
+            try {
+                const { data } = await axios.post(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/create?inhaber_name=${userObject?.name}`,
+                    {
+                        car_name: formData.car.car_name,
+                        car_number: formData.car.car_number,
+                        register_date: registerDate,
+                        department_name: selectedDepartmentCar
+                    },
+                    { withCredentials: true }
+                );
+
+                getAllCars()
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setCreateCarFormState(false)
+                setFormData({
+                    car: {
+                        car_name: '',
+                        car_number: '',
+                    },
+                })
+                setRegisterDate("")
+                setSelectedDepartmentCar("")
+
+            }
+        }
+    }
+
     return (
         <div>
             {exportState ? (
@@ -185,12 +259,25 @@ const Car = () => {
                                 <span className="text-[#6c757d] font-xl">/ Car Management</span>
                             </div>
                         </div>
-                        {exportState && (<div className="flex flex-row px-4 gap-4">
-                            <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
-                                <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                                Create Car
-                            </button>
-                        </div>)}
+                        <div className="flex gap-3">
+                            {exportState && (<div className="flex flex-row px-4 gap-4">
+                                <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
+                                    <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                                    Create Car
+                                </button>
+                            </div>)}
+                            {exportState && (<div className="flex flex-row px-4 gap-4">
+                                <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                                    Edit Car
+                                </button>
+                            </div>)}
+                            {exportState && (<div className="flex flex-row px-4 gap-4">
+                                <button onClick={() => setDeleteCarFormState(!deleteCarFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                    <img className="w-4 h-4" src={DeleteIcon} />
+                                    Delete Car
+                                </button>
+                            </div>)}
+                        </div>
                     </div>
                     <div className="text-xl font-semibold leading-6">Car Management</div>
                     <div className="flex flex-row gap-4 text-xl">
@@ -379,6 +466,57 @@ const Car = () => {
                             </div>
                         </div>
                     </div>)}
+
+                    {deleteCarFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                        <div
+                            onClick={() => setDeleteCarFormState(false)}
+                            className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                        <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                            <div className="w-full h-full">
+                                <div className="flex flex-col mt-8">
+                                    <div className="flex flex-row justify-between px-8 items-center">
+                                        <div className="font-bold text-xl">Delete Car</div>
+                                        <div
+                                            onClick={() => setDeleteCarFormState(false)}
+                                            className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                    </div>
+                                    <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                    <div className="flex flex-col px-8 w-full mt-7">
+                                        <form onSubmit={handleDeleteCarSubmit} className="flex flex-col gap-6 w-full justify-center items-center">
+                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                <div className="loader"></div>
+                                            </div>)}
+                                            <div className="w-full flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Car</span>
+                                                </div>
+                                                <select
+                                                    id="shift_code"
+                                                    name="shift_code"
+                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                    value={selectedCarDelete}
+                                                    onChange={(e) => setSelectedCarDelete(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="" disabled className='italic text-sm'>Select Car*</option>
+                                                    {carList?.map(( item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item.car_name}>
+                                                            {item.car_name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <button className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-900 w-full" type="submit" onClick={handleDeleteCarSubmit}>
+                                                Delete Car
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>)}
+
 
 
                     {/* //----------------------------------------------------------------CAR MANAGEMENT------------------------------------------------------------------------------------// */}

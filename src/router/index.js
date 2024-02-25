@@ -50,6 +50,7 @@ const Router = () => {
             <Route path="/" element={<Layout />} >
                 {/* public routes */}
                 <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
                 <Route path="unauthorized" element={<Unauthorized />} />
         
                 {/* protected routes */}

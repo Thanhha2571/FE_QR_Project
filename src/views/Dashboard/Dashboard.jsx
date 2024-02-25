@@ -59,6 +59,7 @@ function Dashboard() {
             // setLoading(true)
             if (userObject?.role === "Admin") {
                 if (selectedDepartment === "Selected Department") {
+                    setUserListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserListToday(response.data.message);
@@ -71,6 +72,7 @@ function Dashboard() {
                     setCurrentDate(`${datePicker}`)
                 }
                 if (selectedDepartment !== "Selected Department") {
+                    setUserListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserListToday(response.data.message);
@@ -85,6 +87,7 @@ function Dashboard() {
             }
             if (userObject?.role === "Inhaber") {
                 if (selectedDepartment === "Selected Department") {
+                    setUserListToday([])
                     // if (currentDate) {
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
@@ -99,6 +102,7 @@ function Dashboard() {
                     setCurrentDate(`${datePicker}`)
                 }
                 if (selectedDepartment !== "Selected Department") {
+                    setUserListToday([])
                     // if (currentDate) {
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
@@ -146,6 +150,7 @@ function Dashboard() {
 
             if (userObject?.role === "Inhaber") {
                 if (selectedDepartment === "Selected Department") {
+                    setUserAttendListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
@@ -159,6 +164,7 @@ function Dashboard() {
                     setCurrentDate(`${datePicker}`)
                 }
                 if (selectedDepartment !== "Selected Department") {
+                    setUserAttendListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
