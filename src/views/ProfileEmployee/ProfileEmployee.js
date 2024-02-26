@@ -95,9 +95,29 @@ const ProfileEmployee = () => {
                 setFormAddDepartmentState(false)
                 setSelectedDepartmentEmployee('')
             }
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 2000);
+        }
+
+        if (userObject?.role === "Inhaber") {
+            setLoading(true);
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/add-member/${selectedDepartmentEmployee}?inhaber_name=${userObject?.name}`,
+                    {
+                        employeeID: id,
+                        employeeName: name,
+                        position: selectedPositionEmployee,
+                    },
+                    { withCredentials: true },
+                );
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                getUser();
+                setFormAddDepartmentState(false)
+                setSelectedDepartmentEmployee('')
+            }
         }
 
     }
@@ -181,6 +201,15 @@ const ProfileEmployee = () => {
             setDepartmentDefined(departmentDefined);
 
             const restDepartmentList = departmentList
+                ?.map((item) => item.name)
+                ?.filter((item) => !departmentDefined?.includes(item));
+            setRestDepartmentList(restDepartmentList);
+        }
+        if (user && userObject?.role === "Inhaber") {
+            const departmentDefined = user[0]?.department?.map((item) => item.name);
+            setDepartmentDefined(departmentDefined);
+
+            const restDepartmentList = userObject?.department
                 ?.map((item) => item.name)
                 ?.filter((item) => !departmentDefined?.includes(item));
             setRestDepartmentList(restDepartmentList);
@@ -485,7 +514,7 @@ const ProfileEmployee = () => {
                     </div>
                 </div>
                 <div className="flex flex-row px-4 gap-4">
-                    {checkAdmin && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
+                    {exportState && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
                         <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
                     </button>)}
                     {exportState && (<button onClick={() => setRemoveDepartmentFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
@@ -702,7 +731,7 @@ const ProfileEmployee = () => {
                                     </div>)}
                                 </div>}
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Total Hour(per month):</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Total Hour (per month):</label>
                                     <input
                                         type="text"
                                         id="total_time_per_month"
