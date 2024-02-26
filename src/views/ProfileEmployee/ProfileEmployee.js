@@ -100,7 +100,7 @@ const ProfileEmployee = () => {
         if (userObject?.role === "Inhaber") {
             setLoading(true);
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/add-member/${selectedDepartmentEmployee}?inhaber_name=${userObject?.name}`,
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-department/add-member/${selectedDepartmentEmployee}?inhaber_name=${userObject?.name}`,
                     {
                         employeeID: id,
                         employeeName: name,
@@ -126,6 +126,28 @@ const ProfileEmployee = () => {
             setLoading(true);
             try {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/remove-member/${selectedDepartmentRemove}`,
+                    {
+                        employeeID: id,
+                        employeeName: name,
+                    },
+                    { withCredentials: true },
+                );
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                getUser();
+                setRemoveDepartmentFormState(false)
+                setSelectedDepartmentRemove('')
+            }
+        }
+
+        if (userObject?.role === "Inhaber") {
+            setLoading(true);
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-department/remove-member/${selectedDepartmentRemove}?inhaber_name=${userObject?.name}`,
                     {
                         employeeID: id,
                         employeeName: name,
