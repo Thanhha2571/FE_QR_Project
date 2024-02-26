@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 
 const EmployeeAttendItem = (props) => {
-    const { employee_name,employee_id, position,department_name, shift_info } = props;
+    const { employee_name, employee_id, position, department_name, shift_info, status } = props;
     return (
         <tr className="tr-item">
             <td className="p-2 hover:text-buttonColor2">
@@ -17,10 +17,13 @@ const EmployeeAttendItem = (props) => {
             <td className="p-2">{department_name}</td>
             <td className="p-2">{position}</td>
             <td className="p-2">{shift_info?.shift_code}</td>
-            <td className="p-2 flex flex-col">
+            {status === "missing" ? (<td className="p-2 flex flex-col">
+                <span>{status}</span>
+            </td>) :
+            (<td className="p-2 flex flex-col">
                 <span>{shift_info?.time_slot?.check_in_time}</span>
                 <span className="italic">{shift_info?.time_slot?.check_in_status}</span>
-            </td>
+            </td>)}
         </tr>
     )
 }

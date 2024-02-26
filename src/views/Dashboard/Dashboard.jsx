@@ -360,7 +360,7 @@ function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {userAttendListToday?.map(({ _id, employee_name, employee_id, position, department_name, shift_info }) => (
+                                        {userAttendListToday?.map(({ _id, employee_name, employee_id, position, department_name, shift_info, status }) => (
                                             <EmployeeAttendItem
                                                 key={_id}
                                                 employee_id={employee_id}
@@ -368,6 +368,7 @@ function Dashboard() {
                                                 position={position}
                                                 department_name={department_name}
                                                 shift_info={shift_info}
+                                                status={status}
                                             />
                                         ))}
                                     </tbody>
