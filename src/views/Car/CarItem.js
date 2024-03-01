@@ -1,5 +1,7 @@
+import { useEffect } from "react";
+
 const CarItem = (props) => {
-    const { car_name, car_number, register_date, department_name } = props;
+    const { car_name, car_number, register_date, department_name, setSelectedCarEdit, id, setFormEdit, formEdit } = props;
     const inputDateString = register_date;
     const inputDate = new Date(inputDateString);
 
@@ -17,12 +19,27 @@ const CarItem = (props) => {
 
     // Create the formatted date string
     const formattedDateString = `${year}-${month}-${day}`;
+
+    const handleGetIdCarEdit = async (id) => {
+        setFormEdit(!formEdit)
+        setSelectedCarEdit(id)
+        console.log("Car id",id);
+    }
+
+
     return (
         <tr className="tr-item">
             <td className="p-4 hover:text-buttonColor2">{car_name}</td>
             <td className="p-4 text-left">{car_number}</td>
             <td className="p-4 text-left">{formattedDateString}</td>
-            <td className="p-4 text-left">{department_name?.join(",")}</td>
+            <td className="p-4 text-left">{department_name?.join(", ")}</td>
+            <td className="p-4 text-left">
+                <button
+                    onClick={() => handleGetIdCarEdit(id)}
+                    type="button"
+                    className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800 px-4"
+                >Edit</button>
+            </td>
         </tr>
     );
 }

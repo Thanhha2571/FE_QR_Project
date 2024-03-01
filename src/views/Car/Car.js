@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DatePicker, Space } from 'antd';
 import axios from "axios";
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import DeleteIcon from "../../assets/images/icon-delete.png"
 import "./Car.css"
 import CarItem from "./CarItem";
 
+dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
 const Car = () => {
@@ -15,13 +18,16 @@ const Car = () => {
     const [createCarFormState, setCreateCarFormState] = useState(false)
     const [deleteCarFormState, setDeleteCarFormState] = useState(false)
     const [departmentList, setDepartmentList] = useState()
+    const [selectedCarEdit, setSelectedCarEdit] = useState("")
+    const [formEdit, setFormEdit] = useState(false)
     const [selectedDepartmentCar, setSelectedDepartmentCar] = useState('');
     const [registerDate, setRegisterDate] = useState("")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [selectedCarDelete, setSelectedCarDelete] = useState(false)
-
+    const [filterCarById, setFilterCarById] = useState()
+    const [registerDateOfCar, setRegisterDateOfCar] = useState("")
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
@@ -57,6 +63,7 @@ const Car = () => {
         }
     };
 
+
     const getAllDepartments = async () => {
         if (userObject?.role === "Admin") {
             try {
@@ -85,6 +92,83 @@ const Car = () => {
         }
 
     }, [userObject?.role])
+
+    const getCarById = async () => {
+
+        if (userObject?.role === "Admin" && selectedCarEdit !== "") {
+            setRegisterDateOfCar("")
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarEdit}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
+    }
+
+    useEffect(() => {
+        getCarById()
+    }, [selectedCarEdit])
+
+    useEffect(() => {
+        if (filterCarById) {
+            const year = new Date(filterCarById.register_date).getFullYear();
+            const month = String(new Date(filterCarById.register_date).getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+            const day = String(new Date(filterCarById.register_date).getDate()).padStart(2, '0');
+
+            const formattedDateOfCarString = `${month}/${day}/${year}`;
+            setRegisterDateOfCar(formattedDateOfCarString);
+            console.log(formattedDateOfCarString);
+        }
+    }, [filterCarById]);
+
+    const [editingCarData, setEditingCarData] = useState({
+        car_name: '',
+        car_number: '',
+    })
+
+    useEffect(() => {
+        // Update editingData whenever user changes
+        if (filterCarById) {
+            setEditingCarData({
+                car_name: filterCarById.car_name || '',
+                car_number: filterCarById.car_number || '',
+            });
+        }
+    }, [filterCarById]);
+
+    const handleChangeEditCar = (e) => {
+        const { name, value } = e.target;
+        setEditingCarData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }))
+    }
+
+    const handleSubmitEditCar = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        if (userObject?.role === "Admin") {
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/update-by-id/${selectedCarEdit}`, {
+                    car_name: editingCarData.car_name,
+                    car_number: editingCarData.car_number,
+                    register_date: registerDateOfCar
+                }, {
+                    withCredentials: true,
+                })
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false)
+                setFormEdit(false)
+                getAllCars()
+            }
+        }
+    }
+
     const [formData, setFormData] = useState({
         car: {
             car_name: '',
@@ -105,6 +189,11 @@ const Car = () => {
     const handleRegisterDate = (date, dateString) => {
         console.log('Selected Date:', dateString);
         setRegisterDate(dateString)
+    };
+
+    const handleRegisterDateEdit = (date, dateString) => {
+        console.log('Selected Date Edit:', dateString);
+        setRegisterDateOfCar(dateString)
     };
 
     const handleSubmit = async (e) => {
@@ -467,6 +556,75 @@ const Car = () => {
                         </div>
                     </div>)}
 
+                    {formEdit && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                        <div
+                            onClick={() => setFormEdit(false)}
+                            className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                        <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white overflow-y-aut">
+                            <div className="w-full h-full">
+                                <div className="flex flex-col mt-8">
+                                    <div className="flex flex-row justify-between px-8 items-center">
+                                        <div className="font-bold text-xl">Create Car</div>
+                                        <div
+                                            onClick={() => setFormEdit(false)}
+                                            className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                    </div>
+                                    <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                    <div className="flex flex-col px-8 w-full mt-7o">
+                                        <form
+                                            className="flex flex-col gap-6 w-full justify-center items-center"
+                                            onSubmit={handleSubmitEditCar}>
+                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                                <div className="loader"></div>
+                                            </div>)}
+                                            <div className="w-full h-auto flex flex-col gap-2 mt-4">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Car Name</span>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    name="car_name"
+                                                    className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                    required
+                                                    value={editingCarData.car_name}
+                                                    onChange={handleChangeEditCar}
+                                                />
+                                            </div>
+                                            <div className="w-full h-auto flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Car Number</span>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    name="car_number"
+                                                    className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                    required
+                                                    value={editingCarData.car_number}
+                                                    onChange={handleChangeEditCar}
+                                                />
+                                            </div>
+                                            <div className="w-full h-auto flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Register Date</span>
+                                                </div>
+                                                {registerDateOfCar !== "" && (<Space className="w-full" direction="vertical" size={12}>
+                                                    <DatePicker defaultValue={dayjs(registerDateOfCar)} onChange={handleRegisterDateEdit} className="w-full h-[45px] text-base text-placeholderTextColor" format={dateFormat} />
+                                                </Space>)}
+                                            </div>
+                                            <div
+                                                className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-800 w-full">
+                                                <button type="submit" className="w-full">Edit</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>)}
+
                     {deleteCarFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                         <div
                             onClick={() => setDeleteCarFormState(false)}
@@ -500,7 +658,7 @@ const Car = () => {
                                                     required
                                                 >
                                                     <option value="" disabled className='italic text-sm'>Select Car*</option>
-                                                    {carList?.map(( item, index) => (
+                                                    {carList?.map((item, index) => (
                                                         <option className='text-sm text-textColor w-full' key={index} value={item.car_name}>
                                                             {item.car_name}
                                                         </option>
@@ -537,19 +695,26 @@ const Car = () => {
                                     <th className="p-4 text-left">
                                         <span className="table-title-role">Department</span>
                                     </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Action</span>
+                                    </th>
                                 </tr>
                             </thead>
                             {Array.isArray(carList) && carList?.length === 0 ? (
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {carList?.map(({ _id, car_name, car_number, register_date, department_name }) => (
+                                    {carList?.map(({ _id, car_name, car_number, register_date, department_name, formEdit }) => (
                                         <CarItem
                                             key={_id}
                                             car_name={car_name}
                                             car_number={car_number}
                                             register_date={register_date}
                                             department_name={department_name}
+                                            setSelectedCarEdit={setSelectedCarEdit}
+                                            setFormEdit={setFormEdit}
+                                            id={_id}
+                                            formEdit={formEdit}
                                         />
                                     ))}
                                 </tbody>
