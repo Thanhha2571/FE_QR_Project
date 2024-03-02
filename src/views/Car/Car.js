@@ -356,11 +356,6 @@ const Car = () => {
                                 </button>
                             </div>)}
                             {exportState && (<div className="flex flex-row px-4 gap-4">
-                                <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                                    Edit Car
-                                </button>
-                            </div>)}
-                            {exportState && (<div className="flex flex-row px-4 gap-4">
                                 <button onClick={() => setDeleteCarFormState(!deleteCarFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                                     <img className="w-4 h-4" src={DeleteIcon} />
                                     Delete Car

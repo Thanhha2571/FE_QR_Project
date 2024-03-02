@@ -349,6 +349,7 @@ function Employee() {
     const SeacrhTyoe = async (department, details, role) => {
         //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
         if (userObject.role === 'Admin') {
+            setUserList([])
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, { withCredentials: true });
                 // console.log(query);
