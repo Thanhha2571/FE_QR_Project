@@ -476,7 +476,7 @@ const ProfileEmployee = () => {
 
         if (userObject?.role === "Admin") {
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/make-inactive?employeeID=${id}&employeeName=${name}`,
+                const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/make-inactive?employeeID=${id}&employeeName=${name}`,
                     {
 
                         inactive_day: `${dateInactive} ${timeInactive}`,
