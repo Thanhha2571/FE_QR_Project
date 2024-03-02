@@ -54,7 +54,7 @@ function Employee() {
         const userObject = userString ? JSON.parse(userString) : null;
         setUserObject(userObject)
         console.log(userObject);
-    },[])
+    }, [])
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -391,6 +391,18 @@ function Employee() {
             }, 2000);
         }
         if (userObject.role === 'Inhaber') {
+            if (inputSearch === "" && selectedRole === "Select Role") {
+                setUserList([])
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                    // console.log(query);
+                    setUserList(response.data.message);
+                } catch (error) {
+                    // if(error.)
+                    setUserList([])
+                    // console.error('Error fetching data:', error);
+                }
+            }
             if (inputSearch === "" && selectedRole !== "Select Role") {
                 setUserList([])
                 try {
