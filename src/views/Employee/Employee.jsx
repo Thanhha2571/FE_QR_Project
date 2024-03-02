@@ -415,6 +415,18 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
+            if (inputSearch !== "" && selectedRole !== "Select Role") {
+                setUserList([])
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, { withCredentials: true });
+                    // console.log(query);
+                    setUserList(response.data.message);
+                } catch (error) {
+                    // if(error.)
+                    setUserList([])
+                    // console.error('Error fetching data:', error);
+                }
+            }
             if (inputSearch === "" && selectedRole === "Select Role") {
                 getAllUsers()
             }
