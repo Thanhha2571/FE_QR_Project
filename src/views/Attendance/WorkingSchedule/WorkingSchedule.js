@@ -516,7 +516,7 @@ const WorkingSchedule = () => {
                                             <span className="text-rose-500">*</span>
                                             <span className="">Start Time</span>
                                         </div>
-                                        <TimePicker onChange={handleTimeStartEditShift} className="w-full h-[42px]" format={format} />
+                                        <TimePicker onChange={handleTimeStartEditShift} className="w-full h-[42px] text-black" format={format} />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
