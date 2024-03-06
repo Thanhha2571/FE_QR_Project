@@ -23,12 +23,12 @@ const GenerateQR = () => {
 
         updateQRCode();
 
-        const intervalId = setInterval(updateQRCode, 20000);
+        // const intervalId = setInterval(updateQRCode, 20000);
 
 
-        return () => {
-            clearInterval(intervalId);
-        };
+        // return () => {
+        //     clearInterval(intervalId);
+        // };
 
     }, [selectedDepartment]);
 
