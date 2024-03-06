@@ -393,7 +393,7 @@ const WorkingSchedule = () => {
                                             placeholder="e.g., 22:00"
                                             required
                                         /> */}
-                                        <TimePicker className="w-full h-[42px]" format={format} />
+                                        <TimePicker onChange={handleTimeEndCreateShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-800 w-full" type="submit" onClick={handleSubmit}>
                                         Create Shift
