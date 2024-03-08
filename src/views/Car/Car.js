@@ -20,12 +20,13 @@ const Car = () => {
     const [departmentList, setDepartmentList] = useState()
     const [selectedCarEdit, setSelectedCarEdit] = useState("")
     const [formEdit, setFormEdit] = useState(false)
+    const [selectedCarDelete, setSelectedCarDelete] = useState("")
+    const [formDelete, setFormDelete] = useState(false)
     const [selectedDepartmentCar, setSelectedDepartmentCar] = useState('');
     const [registerDate, setRegisterDate] = useState("")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [checkInhaber, setCheckInhaber] = useState(false)
     const [checkAdmin, setCheckAdmin] = useState(false)
-    const [selectedCarDelete, setSelectedCarDelete] = useState(false)
     const [filterCarById, setFilterCarById] = useState()
     const [registerDateOfCar, setRegisterDateOfCar] = useState("")
     const userString = localStorage.getItem('user');
@@ -105,11 +106,21 @@ const Car = () => {
                 alert(err.response);
             }
         }
-    }
 
+        if (userObject?.role === "Admin" && selectedCarDelete !== "") {
+            setRegisterDateOfCar("")
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarDelete}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
+    }
     useEffect(() => {
         getCarById()
-    }, [selectedCarEdit])
+    }, [selectedCarEdit, selectedCarDelete])
 
     useEffect(() => {
         if (filterCarById) {
@@ -276,62 +287,16 @@ const Car = () => {
         //CREATE CAR BY ADMIN
         if (userObject?.role === 'Admin') {
             try {
-                const { data } = await axios.post(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/create",
-                    {
-                        car_name: formData.car.car_name,
-                        car_number: formData.car.car_number,
-                        register_date: registerDate,
-                        department_name: selectedDepartmentCar
-                    },
+                const { data } = await axios.delete(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/delete-by-id/${selectedCarDelete}`,
                     { withCredentials: true }
                 );
-
-                getAllCars()
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
                 setLoading(false);
-                setCreateCarFormState(false)
-                setFormData({
-                    car: {
-                        car_name: '',
-                        car_number: '',
-                    },
-                })
-                setRegisterDate("")
-                setSelectedDepartmentCar("")
-
-            }
-        }
-        if (userObject?.role === 'Inhaber') {
-            try {
-                const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/create?inhaber_name=${userObject?.name}`,
-                    {
-                        car_name: formData.car.car_name,
-                        car_number: formData.car.car_number,
-                        register_date: registerDate,
-                        department_name: selectedDepartmentCar
-                    },
-                    { withCredentials: true }
-                );
-
+                setFormDelete(false)
                 getAllCars()
-            } catch (err) {
-                alert(err.response?.data?.message)
-            } finally {
-                setLoading(false);
-                setCreateCarFormState(false)
-                setFormData({
-                    car: {
-                        car_name: '',
-                        car_number: '',
-                    },
-                })
-                setRegisterDate("")
-                setSelectedDepartmentCar("")
-
             }
         }
     }
@@ -355,12 +320,7 @@ const Car = () => {
                                     Create Car
                                 </button>
                             </div>)}
-                            {exportState && (<div className="flex flex-row px-4 gap-4">
-                                <button onClick={() => setDeleteCarFormState(!deleteCarFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                                    <img className="w-4 h-4" src={DeleteIcon} />
-                                    Delete Car
-                                </button>
-                            </div>)}
+
                         </div>
                     </div>
                     <div className="text-xl font-semibold leading-6">Car Management</div>
@@ -620,57 +580,31 @@ const Car = () => {
                         </div>
                     </div>)}
 
-                    {deleteCarFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                    {formDelete && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                         <div
-                            onClick={() => setDeleteCarFormState(false)}
+                            onClick={() => setFormDelete(false)}
                             className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                        <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                        <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
                             <div className="w-full h-full">
                                 <div className="flex flex-col mt-8">
                                     <div className="flex flex-row justify-between px-8 items-center">
                                         <div className="font-bold text-xl">Delete Car</div>
                                         <div
-                                            onClick={() => setDeleteCarFormState(false)}
+                                            onClick={() => setFormDelete(false)}
                                             className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                     </div>
                                     <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
-                                    <div className="flex flex-col px-8 w-full mt-7">
-                                        <form onSubmit={handleDeleteCarSubmit} className="flex flex-col gap-6 w-full justify-center items-center">
-                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                <div className="loader"></div>
-                                            </div>)}
-                                            <div className="w-full flex flex-col gap-2">
-                                                <div className="flex flex-row gap-2">
-                                                    <span className="text-rose-500">*</span>
-                                                    <span className="">Car</span>
-                                                </div>
-                                                <select
-                                                    id="shift_code"
-                                                    name="shift_code"
-                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
-                                                    value={selectedCarDelete}
-                                                    onChange={(e) => setSelectedCarDelete(e.target.value)}
-                                                    required
-                                                >
-                                                    <option value="" disabled className='italic text-sm'>Select Car*</option>
-                                                    {carList?.map((item, index) => (
-                                                        <option className='text-sm text-textColor w-full' key={index} value={item.car_name}>
-                                                            {item.car_name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                            <button className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-900 w-full" type="submit" onClick={handleDeleteCarSubmit}>
-                                                Delete Car
-                                            </button>
-                                        </form>
+                                    <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                        <span>Are you sure to delete this car <span className="italic">{filterCarById?.car_name}</span>?</span>
+                                        <div className="flex flex-row gap-3">
+                                            <button onClick={() => setFormDelete(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                            <button onClick={handleDeleteCarSubmit} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>)}
-
-
 
                     {/* //----------------------------------------------------------------CAR MANAGEMENT------------------------------------------------------------------------------------// */}
 
@@ -710,6 +644,9 @@ const Car = () => {
                                             setFormEdit={setFormEdit}
                                             id={_id}
                                             formEdit={formEdit}
+                                            setFormDelete={setFormDelete}
+                                            formDelete={formDelete}
+                                            setSelectedCarDelete={setSelectedCarDelete}
                                         />
                                     ))}
                                 </tbody>

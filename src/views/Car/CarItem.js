@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 const CarItem = (props) => {
-    const { car_name, car_number, register_date, department_name, setSelectedCarEdit, id, setFormEdit, formEdit } = props;
+    const { car_name, car_number, register_date, department_name, setSelectedCarEdit, id, setFormEdit, formEdit, setFormDelete, formDelete, setSelectedCarDelete  } = props;
     const inputDateString = register_date;
     const inputDate = new Date(inputDateString);
 
@@ -20,12 +20,17 @@ const CarItem = (props) => {
     // Create the formatted date string
     const formattedDateString = `${year}-${month}-${day}`;
 
-    const handleGetIdCarEdit = async (id) => {
+    const handleGetIdCarEdit =  (id) => {
         setFormEdit(!formEdit)
         setSelectedCarEdit(id)
-        console.log("Car id",id);
+        console.log("Car id", id);
     }
 
+    const handleGetIdCarDelete =  (id) => {
+        setFormDelete(!formDelete)
+        setSelectedCarDelete(id)
+        console.log(id);
+    }
 
     return (
         <tr className="tr-item">
@@ -33,12 +38,17 @@ const CarItem = (props) => {
             <td className="p-4 text-left">{car_number}</td>
             <td className="p-4 text-left">{formattedDateString}</td>
             <td className="p-4 text-left">{department_name?.join(", ")}</td>
-            <td className="p-4 text-left">
+            <td className="p-4 text-left flex flex-row gap-3">
                 <button
                     onClick={() => handleGetIdCarEdit(id)}
                     type="button"
                     className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800 px-4"
                 >Edit</button>
+                <button
+                    onClick={() => handleGetIdCarDelete(id)}
+                    type="button"
+                    className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800"
+                >Delete</button>
             </td>
         </tr>
     );
