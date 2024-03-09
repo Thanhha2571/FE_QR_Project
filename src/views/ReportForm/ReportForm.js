@@ -23,7 +23,7 @@ const ReportForm = () => {
     const getAllForms = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?year=2024&month=1', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', { withCredentials: true });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {
@@ -32,7 +32,7 @@ const ReportForm = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?year=2024&month=1&inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, { withCredentials: true });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {

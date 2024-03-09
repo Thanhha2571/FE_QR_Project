@@ -17,7 +17,10 @@ const Car = () => {
     const [exportState, setExportState] = useState(false)
     const [createCarFormState, setCreateCarFormState] = useState(false)
     const [deleteCarFormState, setDeleteCarFormState] = useState(false)
+    const [selectedCarDepartement, setSelectedCarDepartement] = useState("")
+    const [selectedCarChangeDepartment, setSelectedCarChangeDepartment] = useState("")
     const [departmentList, setDepartmentList] = useState()
+    const [restDepartmentList, setRestDepartmentList] = useState()
     const [selectedCarEdit, setSelectedCarEdit] = useState("")
     const [formEdit, setFormEdit] = useState(false)
     const [selectedCarDelete, setSelectedCarDelete] = useState("")
@@ -29,6 +32,12 @@ const Car = () => {
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [filterCarById, setFilterCarById] = useState()
     const [registerDateOfCar, setRegisterDateOfCar] = useState("")
+    const [formAddDepartment, setFormAddDepartment] = useState(false)
+    const [selectedCarAddDepartment, setSelectedCarAddDepartment] = useState("")
+    const [selectedDepartment, setSelectedDepartment] = useState("")
+    const [formRemoveDepartment, setFormRemoveDepartment] = useState(false)
+    const [selectedCarRemoveDepartment, setSelectedCarRemoveDepartment] = useState("")
+    const [departmentDefined, setDepartmentDefined] = useState()
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
@@ -117,10 +126,31 @@ const Car = () => {
                 alert(err.response);
             }
         }
+
+        if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
+
+        if (userObject?.role === "Admin" && selectedCarRemoveDepartment !== "") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
     }
     useEffect(() => {
         getCarById()
-    }, [selectedCarEdit, selectedCarDelete])
+    }, [selectedCarEdit, selectedCarDelete, selectedCarAddDepartment, selectedCarRemoveDepartment])
+
 
     useEffect(() => {
         if (filterCarById) {
@@ -148,6 +178,42 @@ const Car = () => {
             });
         }
     }, [filterCarById]);
+
+    useEffect(() => {
+        if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
+            const departmentDefined = filterCarById?.department_name?.map((item) => item);
+            setDepartmentDefined(departmentDefined);
+
+            const restDepartmentList = departmentList
+                ?.map((item) => item.name)
+                ?.filter((item) => !departmentDefined?.includes(item));
+            setRestDepartmentList(restDepartmentList);
+        }
+
+        if (userObject?.role === "Admin" && selectedCarRemoveDepartment !== "") {
+            const departmentDefined = filterCarById?.department_name?.map((item) => item);
+            setDepartmentDefined(departmentDefined);
+
+            const restDepartmentList = departmentList
+                ?.map((item) => item.name)
+                ?.filter((item) => !departmentDefined?.includes(item));
+            setRestDepartmentList(restDepartmentList);
+        }
+
+        // if (userObject?.role === "Inhaber") {
+        //     const departmentDefined = user[0]?.department?.map((item) => item.name);
+        //     setDepartmentDefined(departmentDefined);
+
+        //     const restDepartmentList = userObject?.department
+        //         ?.map((item) => item.name)
+        //         ?.filter((item) => !departmentDefined?.includes(item));
+        //     setRestDepartmentList(restDepartmentList);
+        // }
+    }, [selectedCarAddDepartment, departmentList, userObject?.role, filterCarById, selectedCarRemoveDepartment]);
+
+    // console.log(departmentDefined);
+    // console.log(departmentList);
+    // console.log(restDepartmentList);
 
     const handleChangeEditCar = (e) => {
         const { name, value } = e.target;
@@ -301,6 +367,55 @@ const Car = () => {
         }
     }
 
+    const handleAddDepartmentCar = async (e) => {
+        e.preventDefault();
+        if (userObject?.role === "Admin") {
+            setLoading(true);
+            try {
+                const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/add-car/${selectedCarAddDepartment}`,
+                {
+                    departmentName: selectedDepartment,
+                },
+
+                { withCredentials: true });
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                getAllCars();
+                setFormAddDepartment(false)
+                setSelectedCarAddDepartment('')
+                setSelectedDepartment('')
+            }
+        }
+    }
+
+    const handleRemoveDepartmentCar = async (e) => {
+        e.preventDefault();
+        if (userObject?.role === "Admin") {
+            setLoading(true);
+            try {
+                const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/remove-car/${selectedCarRemoveDepartment}`,
+                {
+                    departmentName: selectedDepartment,
+                },
+
+                { withCredentials: true });
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                getAllCars();
+                setFormRemoveDepartment(false)
+                setSelectedCarRemoveDepartment('')
+                setSelectedDepartment('')
+            }
+        }
+    }
     return (
         <div>
             {exportState ? (
@@ -606,6 +721,111 @@ const Car = () => {
                         </div>
                     </div>)}
 
+                    {formAddDepartment && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                        <div
+                            onClick={() => setFormAddDepartment(false)}
+                            className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                        <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                            <div className="w-full h-full">
+                                <div className="flex flex-col mt-8">
+                                    <div className="flex flex-row justify-between px-8 items-center">
+                                        <div className="font-bold text-xl">Add Department</div>
+                                        <div
+                                            onClick={() => setFormAddDepartment(false)}
+                                            className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                    </div>
+                                    <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                    <div className="flex flex-col px-8 w-full mt-7">
+                                        <div
+                                            className="flex flex-col gap-6 w-full justify-center items-center"
+                                        >
+                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                <div className="loader"></div>
+                                            </div>)}
+                                            <div className="w-full flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Department</span>
+                                                </div>
+                                                <select
+                                                    id="department"
+                                                    name="department"
+                                                    className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
+                                                    value={selectedDepartment}
+                                                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    {restDepartmentList?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div
+                                                className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                                <button onClick={handleAddDepartmentCar} type="button" className="w-full">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>)}
+
+                    {formRemoveDepartment && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                        <div
+                            onClick={() => setFormRemoveDepartment(false)}
+                            className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                        <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                            <div className="w-full h-full">
+                                <div className="flex flex-col mt-8">
+                                    <div className="flex flex-row justify-between px-8 items-center">
+                                        <div className="font-bold text-xl">Remove Department</div>
+                                        <div
+                                            onClick={() => setFormRemoveDepartment(false)}
+                                            className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                    </div>
+                                    <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                    <div className="flex flex-col px-8 w-full mt-7">
+                                        <div
+                                            className="flex flex-col gap-6 w-full justify-center items-center"
+                                        >
+                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                                <div className="loader"></div>
+                                            </div>)}
+                                            <div className="w-full flex flex-col gap-2">
+                                                <div className="flex flex-row gap-2">
+                                                    <span className="text-rose-500">*</span>
+                                                    <span className="">Department</span>
+                                                </div>
+                                                <select
+                                                    id="department"
+                                                    name="department"
+                                                    className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
+                                                    value={selectedDepartment}
+                                                    onChange={(e) => setSelectedDepartment(e.target.value)}
+                                                    required
+                                                >
+                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    {departmentDefined?.map((item, index) => (
+                                                        <option className='text-sm text-textColor w-full' key={index} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            <div
+                                                className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-800 w-full">
+                                                <button onClick={handleRemoveDepartmentCar} type="button" className="w-full">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>)}
                     {/* //----------------------------------------------------------------CAR MANAGEMENT------------------------------------------------------------------------------------// */}
 
                     <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
@@ -647,6 +867,13 @@ const Car = () => {
                                             setFormDelete={setFormDelete}
                                             formDelete={formDelete}
                                             setSelectedCarDelete={setSelectedCarDelete}
+                                            formAddDepartment={formAddDepartment}
+                                            setFormAddDepartment={setFormAddDepartment}
+                                            setSelectedCarAddDepartment={setSelectedCarAddDepartment}
+                                            user={userObject}
+                                            formRemoveDepartment={formRemoveDepartment}
+                                            setFormRemoveDepartment={setFormRemoveDepartment}
+                                            setSelectedCarRemoveDepartment={setSelectedCarRemoveDepartment}
                                         />
                                     ))}
                                 </tbody>
