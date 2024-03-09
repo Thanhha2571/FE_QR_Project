@@ -84,12 +84,12 @@ const SalaryEmployee = () => {
 
         if (userObject.role === 'Inhaber' && monthPicker !== "") {
             try {
+                setSalaryInfoState(true)
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     { withCredentials: true }
                 );
                 setSalaryListByMonth(data?.message)
-                setSalaryListByMonth([])
                 // console.log(data?.);
             } catch (error) {
                 // Handle error
@@ -101,6 +101,7 @@ const SalaryEmployee = () => {
 
         if (userObject.role === 'Inhaber' && monthPicker !== "") {
             try {
+                setSalaryInfoState(true)
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     { withCredentials: true }
@@ -114,7 +115,7 @@ const SalaryEmployee = () => {
                 setLoading(false)
             }
         }
-        setSalaryInfoState(true)
+        console.log(salaryInfoState);
     }
 
 
