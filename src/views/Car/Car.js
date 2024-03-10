@@ -405,6 +405,21 @@ const Car = () => {
                 getAllCars()
             }
         }
+
+        if (userObject?.role === 'Inhaber') {
+            try {
+                const { data } = await axios.delete(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/delete-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`,
+                    { withCredentials: true }
+                );
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setFormDelete(false)
+                getAllCars()
+            }
+        }
     }
 
     const handleAddDepartmentCar = async (e) => {
