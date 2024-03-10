@@ -269,7 +269,7 @@ const Car = () => {
 
         if (userObject?.role === "Inhaber") {
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/update-by-id/${selectedCarEdit}?inhaber_name=${userObject?.role}`, {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/update-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
                     car_name: editingCarData.car_name,
                     car_number: editingCarData.car_number,
                     register_date: registerDateOfCar
