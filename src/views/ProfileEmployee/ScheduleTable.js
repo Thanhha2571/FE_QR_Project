@@ -1122,28 +1122,6 @@ const ScheduleTable = (props) => {
                                             onChange={setDatePicker}
                                         />
                                     </div>
-                                    <div className="w-full flex flex-col gap-2">
-                                        <div className="flex flex-row gap-2">
-                                            <span className="text-rose-500">*</span>
-                                            <span className="">Shift Type</span>
-                                        </div>
-                                        <select
-                                            id="shift-type"
-                                            name="shift-type"
-                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
-                                            value={selectedShiftType}
-                                            onChange={(e) => setSelectedShiftType(e.target.value)}
-                                            required
-                                        >
-                                            <option value="" disabled className='italic text-sm'>Select Shift Type*</option>
-                                            {shiftType?.map((item, index) => (
-                                                <option className='text-sm text-textColor w-full' key={index} value={item.name}>
-                                                    {item.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                         <button type="submit" className="w-full">Add</button>
