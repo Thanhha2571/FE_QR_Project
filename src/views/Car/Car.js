@@ -244,6 +244,24 @@ const Car = () => {
                 getAllCars()
             }
         }
+
+        if (userObject?.role === "Inhaber") {
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/update-by-id/${selectedCarEdit}?inhaber_name=${userObject?.role}`, {
+                    car_name: editingCarData.car_name,
+                    car_number: editingCarData.car_number,
+                    register_date: registerDateOfCar
+                }, {
+                    withCredentials: true,
+                })
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false)
+                setFormEdit(false)
+                getAllCars()
+            }
+        }
     }
 
     const [formData, setFormData] = useState({
