@@ -127,6 +127,28 @@ const Car = () => {
             }
         }
 
+        if (userObject?.role === "Inhaber" && selectedCarEdit !== "") {
+            setRegisterDateOfCar("")
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
+
+        if (userObject?.role === "Inhaber" && selectedCarDelete !== "") {
+            setRegisterDateOfCar("")
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, { withCredentials: true })
+                console.log(response.data.message);
+                setFilterCarById(response.data.message)
+            } catch (err) {
+                alert(err.response);
+            }
+        }
+        
         if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, { withCredentials: true })

@@ -126,7 +126,7 @@ const ScheduleTable = (props) => {
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
             } catch (err) {
-                alert("No shift for this employee")
+                // alert("No shift for this employee")
             }
         }
         if (userObject?.role === "Inhaber") {
@@ -136,7 +136,7 @@ const ScheduleTable = (props) => {
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
             } catch (err) {
-                alert("No shift for this employee")
+                // alert("No shift for this employee")
             }
         }
         if (userObject?.role === "Manager") {
@@ -146,7 +146,7 @@ const ScheduleTable = (props) => {
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
             } catch (err) {
-                alert("No shift for this employee")
+                // alert("No shift for this employee")
             }
         }
     };
