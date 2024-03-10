@@ -780,8 +780,8 @@ const ScheduleTable = (props) => {
                 const { data } = await axios.put(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                     {
-                        "shift_info.time_slot.check_in_time": attendanceData.data.check_in_time,
-                        "shift_info.time_slot.check_out_time": attendanceData.data.check_out_time,
+                        "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                        "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                         "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                         "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         status: "checked"
