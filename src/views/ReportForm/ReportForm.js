@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReportFormItem from "./ReportFormItem";
+import { DatePicker, Space } from 'antd';
+const { RangePicker } = DatePicker;
+const dateFormat = 'MM/DD/YYYY';
 
 const ReportForm = () => {
+    document.title = "Report Form";
     const [formList, setFormList] = useState()
     const [loading, setLoading] = useState(false);
 
@@ -13,6 +17,11 @@ const ReportForm = () => {
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+
+    const [datePicker, setDatePicker] = useState("")
+    const [departmentMenu, setDepartmentMenu] = useState(false)
+    const [selectedDepartment, setSelectedDepartment] = useState("Selected Department");
+    const [departmentList, setDepartmentList] = useState()
 
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
@@ -57,6 +66,42 @@ const ReportForm = () => {
     useEffect(() => {
         getAllForms();
     }, []);
+
+    const handleDateChange = (date, dateString) => {
+        console.log('Selected Date:', dateString);
+        setDatePicker(dateString)
+    };
+
+    const handleDepartmentMenu = () => {
+        setDepartmentMenu(!departmentMenu)
+    }
+
+    const handleChangeSelectedDepartment = (item) => {
+        setSelectedDepartment(item)
+    };
+
+    const handleSeacrh = async () => {
+        if (userObject?.role === "Admin") {
+            setFormList([])
+            if (datePicker !== "") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, { withCredentials: true })
+                    setFormList(response?.data?.message);
+                } catch (e) {
+                    alert("something went wrong")
+                }
+            }
+
+            if (selectedDepartment === "Selected Department") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, { withCredentials: true })
+                    setFormList(response?.data?.message);
+                } catch (e) {
+                    alert("something went wrong")
+                }
+            }
+        }
+    }
     return (
         <div>
             {exportState ? (
@@ -81,6 +126,42 @@ const ReportForm = () => {
 
                     {/* //----------------------------------------------------------------FORM MANAGEMENT------------------------------------------------------------------------------------// */}
 
+                    <div className="p-5 w-full flex flex-col gap-10">
+                        <div className="z-10 flex flex-row mt-10 justify-between h-[50px] gap-8">
+                            <Space className="w-2/5" direction="vertical" size={12}>
+                                <RangePicker
+                                    className="w-full h-[50px] text-base text-placeholderTextColor"
+                                    onChange={handleDateChange}
+                                    format={dateFormat}
+                                />
+                            </Space>
+                            <div className="flex flex-row gap-20 w-full">
+                                {checkAdmin && (<div
+                                    onClick={handleDepartmentMenu}
+                                    className="text-base w-3/10 h-[50px] cursor-pointer">
+                                    <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px]">
+                                        <div className="flex flex-row items-center justify-around w-full gap-2">
+                                            <div className="ml-4">{selectedDepartment}</div>
+                                            <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
+                                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-[#d9d9d9] flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
+                                        {departmentList?.map(({ index, name }) => {
+                                            return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center hover:underline">{name}</div>
+                                        })}
+                                    </div>)}
+                                </div>)}
+                                <div
+                                    onClick={handleSeacrh}
+                                    className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
+                                    <button className="search-btn">Seacrh</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                         <table className="w-full table">
                             <thead className="">
@@ -115,7 +196,7 @@ const ReportForm = () => {
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {formList?.map(({ date, employee_id,employee_name, position, car_info, check_in_km, check_out_km, bar,kredit_karte, kassen_schniff,gesamt_ligerbude,results,gesamt_liegerando,gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
+                                    {formList?.map(({ date, employee_id, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}

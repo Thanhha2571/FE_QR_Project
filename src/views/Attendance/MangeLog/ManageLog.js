@@ -4,6 +4,7 @@ import LogItem from "./LogItem";
 import { Link } from "react-router-dom";
 
 const ManageLog = () => {
+    document.title = "Log Management";
     const [logList, setLogList] = useState([]);
     const [checkAdmin, setCheckAdmin] = useState(false);
 

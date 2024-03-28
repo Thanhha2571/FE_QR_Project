@@ -4,6 +4,7 @@ import axios from "axios";
 import DayOffItem from "./DayOffItem";
 
 const DayOffManagement = () => {
+    document.title = "Day Off Management"
     const [requestList, setRequestList] = useState()
     const [requestModal, setRequestModal] = useState(false)
     const [requestId, setRequestId] = useState()

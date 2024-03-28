@@ -12,6 +12,7 @@ dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
 const Car = () => {
+    document.title = 'Car Management';
     const [carList, setCarList] = useState()
     const [loading, setLoading] = useState(false);
     const [exportState, setExportState] = useState(false)

@@ -5,6 +5,7 @@ import "./Salary.css"
 import * as XLSX from "xlsx";
 
 const History = () => {
+    document.title = "History Counting"
     const [inputId, setInputId] = useState("")
     const [inputName, setInputName] = useState("")
     const [salaryListByMonth, setSalaryListByMonth] = useState()

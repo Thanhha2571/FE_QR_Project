@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const GenerateQR = () => {
+    document.title = 'Generate QR Code';
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [qrData, setQRData] = useState(`QR code for department - ${Date.now()}`);
     const [departmentList, setDepartmentList] = useState()

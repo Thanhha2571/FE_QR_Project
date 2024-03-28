@@ -15,7 +15,7 @@ const EmployeeAttendItem = (props) => {
                 </h2>
             </td>
             <td className="p-2">{department_name}</td>
-            <td className="p-2">{position}</td>
+            {/* <td className="p-2">{position}</td> */}
             <td className="p-2">{shift_info?.shift_code}</td>
             {status === "missing" ? (<td className="p-2 flex flex-col">
                 <span>{status}</span>

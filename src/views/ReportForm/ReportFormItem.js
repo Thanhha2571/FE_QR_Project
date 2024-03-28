@@ -1,5 +1,6 @@
 const ReportFormItem = (props) => {
     const { date, employee_id, position, car_info, employee_name, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung, results } = props;
+    console.log(props);
     const inputDateString = date;
     const inputDate = new Date(inputDateString);
 

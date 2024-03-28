@@ -32,7 +32,6 @@ const Navigation = () => {
 
                 <div className="p-4 flex flex-row items-center justify-center">
                     {/* <img src={Logo} alt="" className='w-20 h-auto' /> */}
-                    <h3 className='font-DancingScript font-bold text-xl'>CÔCÔ MANAGEMENT</h3>
                 </div>
 
                 <ul className="routerLink p-3">

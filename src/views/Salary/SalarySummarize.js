@@ -11,6 +11,7 @@ dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 
 const SalarySummarizie = () => {
+    document.title = 'Salary Summarization'
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
     const [inputId, setInputId] = useState("")

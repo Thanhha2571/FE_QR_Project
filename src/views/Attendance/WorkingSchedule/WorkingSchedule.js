@@ -9,6 +9,7 @@ import { TimePicker } from 'antd';
 const format = 'HH:mm';
 
 const WorkingSchedule = () => {
+    document.title = 'Working Schedule';
     const [shiftList, setShiftList] = useState()
     const [shiftManageState, setShiftManageState] = useState(true)
 
