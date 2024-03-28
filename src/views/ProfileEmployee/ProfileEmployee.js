@@ -176,7 +176,9 @@ const ProfileEmployee = () => {
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
             } catch (err) {
-                alert(err.response?.data?.message)
+                if (err.response?.data?.message !== "Employee not found!") {
+                    alert(err.response?.data?.message)
+                }
             } finally {
                 setLoading(false);
             }
@@ -188,7 +190,9 @@ const ProfileEmployee = () => {
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
             } catch (err) {
-                alert(err.response?.data?.message)
+                if (err.response?.data?.message !== "Employee not found!") {
+                    alert(err.response?.data?.message)
+                }
             } finally {
                 setLoading(false);
             }
@@ -393,8 +397,7 @@ const ProfileEmployee = () => {
                     },
                     { withCredentials: true },
                 );
-
-
+                navigate(`/employee/view-profile/${editingData.id}/${editingData.name}`);
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
@@ -426,7 +429,7 @@ const ProfileEmployee = () => {
                     { withCredentials: true },
                 );
 
-
+                navigate(`/employee/view-profile/${editingData.id}/${editingData.name}`);
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
