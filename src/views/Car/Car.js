@@ -495,10 +495,6 @@ const Car = () => {
                         </div>
                     </div>
                     <div className="text-xl font-semibold leading-6">Car Management</div>
-                    <div className="flex flex-row gap-4 text-xl">
-                        <div
-                            className="cursor-pointer text-buttonColor1 underline decoration-buttonColor1">Car Management</div>
-                    </div>
 
                     {/* //---------------------------------------------------------------- CREATE CAR ------------------------------------------------------------------------------------// */}
                     {createCarFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
@@ -889,10 +885,10 @@ const Car = () => {
                             <thead className="">
                                 <tr className="">
                                     <th className="p-4 text-left">
-                                        <span className="font-bold">Car Name</span>
+                                        <span className="font-bold">Name</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="table-title-id">Car Number</span>
+                                        <span className="table-title-id">Kennzeichen</span>
                                     </th>
                                     <th className="p-4 text-left">
                                         <span className="table-title-role">Register Date</span>

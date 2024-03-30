@@ -89,7 +89,7 @@ const Navigation = () => {
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={QrIcon} className='w-6 h-6' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    GenerateQR
+                                    QR generieren
                                 </h4>
                             </div>
                         </li>
@@ -99,7 +99,7 @@ const Navigation = () => {
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={WorkingIcon} className='w-6 h-6' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Work Management
+                                    Arbeitsmanagement
                                 </h4>
                             </div>
                             <div className={scheduleMenu ? "rotate-90" : ""}>
@@ -112,7 +112,7 @@ const Navigation = () => {
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">Working Schedule</div>
+                                            <div className="item-title">Schichtplan</div>
                                         </div>
                                     </span>
                                 </li>
@@ -122,7 +122,7 @@ const Navigation = () => {
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">Day Off</div>
+                                            <div className="item-title">Fehltage</div>
                                         </div>
                                     </span>
                                 </li>
@@ -134,7 +134,7 @@ const Navigation = () => {
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={SalaryIcon} className='w-6 h-6' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Salary
+                                    Gehaltsabrechnung
                                 </h4>
                             </div>
                             <div className={salaryMenu ? "rotate-90" : ""}>
@@ -147,7 +147,7 @@ const Navigation = () => {
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">Salary Summarize</div>
+                                            <div className="item-title">Gehaltsübersicht</div>
                                         </div>
                                     </span>
                                 </li>
@@ -157,7 +157,7 @@ const Navigation = () => {
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">History</div>
+                                            <div className="item-title">Geschichtszählung</div>
                                         </div>
                                     </span>
                                 </li>
@@ -195,7 +195,7 @@ const Navigation = () => {
                                 <img src={CarIcon} className='w-6 h-6' />
                                 {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="#b7c0cd" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg> */}
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Manage Cars
+                                    Autos
                                 </h4>
                             </div>
                             <div className={carMenu ? "rotate-90" : ""}>
@@ -208,7 +208,7 @@ const Navigation = () => {
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">Manage Cars</div>
+                                            <div className="item-title">Autos</div>
                                         </div>
                                     </span>
                                 </li>
@@ -220,7 +220,7 @@ const Navigation = () => {
                             <div className='flex flex-row justify-center items-center gap-4'>
                                 <img src={FormIcon} className='w-6 h-auto' />
                                 <h4 className={sidebar ? "navName" : "navName fullsize"} >
-                                    Manage Forms
+                                    Berichte
                                 </h4>
                             </div>
                             <div className={reportMenu ? "rotate-90" : ""}>
@@ -233,7 +233,7 @@ const Navigation = () => {
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
                                         <div className="item-sub-menu">
-                                            <div className="item-title">Manage Report Form</div>
+                                            <div className="item-title">Berichte</div>
                                         </div>
                                     </span>
                                 </li>

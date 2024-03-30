@@ -277,10 +277,10 @@ const WorkingSchedule = () => {
         <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
             <div className="flex flex-row items-center justify-between">
                 <div>
-                    <h1 className="font-bold text-3xl">Working Schedule</h1>
+                    <h1 className="font-bold text-3xl">Schichtplan</h1>
                     <div className="flex flex-row">
                         <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
-                        <span className="text-[#6c757d] font-xl">/ Working Schedule</span>
+                        <span className="text-[#6c757d] font-xl">/ Schichtplan</span>
                     </div>
                 </div>
                 <div className="flex gap-3">
@@ -304,15 +304,7 @@ const WorkingSchedule = () => {
                     </div>)}
                 </div>
             </div>
-            <div className="text-xl font-semibold leading-6">Working Schedule Management</div>
-            <div className="flex flex-row gap-4 text-xl">
-                <div
-                    onClick={() => {
-                        setShiftManageState(true)
-                    }}
-                    className={`hover:text-buttonColor1 cursor-pointer ${shiftManageState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Shift Management</div>
-            </div>
-
+            <div className="text-xl font-semibold leading-6">Schichtplan</div>
             {/* //---------------------------------------------------------------- CREATE SHIFT ------------------------------------------------------------------------------------// */}
 
             {createShiftFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">

@@ -50,6 +50,18 @@ const ReportForm = () => {
         }
     };
 
+    const getAllDepartments = async () => {
+        if (userObject?.role === "Admin") {
+            try {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                setDepartmentList(response.data);
+            } catch (err) {
+                alert(err.response?.data?.message)
+            }
+        }
+    };
+
+
     useEffect(() => {
         if (userObject?.role === 'Admin') {
             setCheckAdmin(true)
@@ -65,6 +77,7 @@ const ReportForm = () => {
 
     useEffect(() => {
         getAllForms();
+        getAllDepartments()
     }, []);
 
     const handleDateChange = (date, dateString) => {
@@ -87,8 +100,8 @@ const ReportForm = () => {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, { withCredentials: true })
                     setFormList(response?.data?.message);
-                } catch (e) {
-                    alert("something went wrong")
+                } catch (err) {
+                    alert(err.response?.data?.message)
                 }
             }
 
@@ -96,8 +109,8 @@ const ReportForm = () => {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, { withCredentials: true })
                     setFormList(response?.data?.message);
-                } catch (e) {
-                    alert("something went wrong")
+                } catch (err) {
+                    alert(err.response?.data?.message)
                 }
             }
         }
@@ -116,14 +129,6 @@ const ReportForm = () => {
                         </div>
                     </div>
                     <div className="text-xl font-semibold leading-6">Report Form Management</div>
-                    <div className="flex flex-row gap-4 text-xl">
-                        <div
-                            className="cursor-pointer text-buttonColor1 underline decoration-buttonColor1">Form Management</div>
-                    </div>
-
-
-
-
                     {/* //----------------------------------------------------------------FORM MANAGEMENT------------------------------------------------------------------------------------// */}
 
                     <div className="p-5 w-full flex flex-col gap-10">
