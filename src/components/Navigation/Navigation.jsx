@@ -58,7 +58,7 @@ const Navigation = () => {
                             </div>
                         </li>
                         {employeeMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <Link to="employee">
+                            <a href='employee'>
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
@@ -67,7 +67,7 @@ const Navigation = () => {
                                         </div>
                                     </span>
                                 </li>
-                            </Link>
+                            </a>
                             {/* <li>
                                 <Link className="tags" to="employee/departments">
                                     <div className="item-sub-menu">
@@ -228,7 +228,7 @@ const Navigation = () => {
                             </div>
                         </li>
                         {reportMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <Link to="manage-report-form">
+                            <a to="manage-report-form">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
@@ -237,7 +237,7 @@ const Navigation = () => {
                                         </div>
                                     </span>
                                 </li>
-                            </Link>
+                            </a>
                         </ul>)}
                     </div>
                 </ul>
