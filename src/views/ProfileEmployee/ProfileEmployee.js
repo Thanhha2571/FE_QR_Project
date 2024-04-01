@@ -15,6 +15,7 @@ import { TimePicker } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
+import { adminListRole, inhaberListRole, managerListRole } from "assets/data/data"
 dayjs.extend(customParseFormat);
 
 const dateFormat = 'MM/DD/YYYY';
@@ -278,6 +279,11 @@ const ProfileEmployee = () => {
             setCheckAdmin(false)
             setCheckInhaber(true)
             setCheckManager(false)
+        }
+        if (userObject?.role === 'Manager') {
+            setCheckAdmin(false)
+            setCheckInhaber(false)
+            setCheckManager(true)
         }
     }, [user, userObject?.role]);
 
@@ -689,7 +695,45 @@ const ProfileEmployee = () => {
                                         onChange={handleChange}
                                     />
                                 </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
+                                {checkAdmin && <div className="flex flex-wrap w-[600px] items-center">
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
+                                    <select
+                                        id="role"
+                                        name="role"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                        value={editingData.role}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="" disabled>
+                                            {editingData.role || 'Select Role'}
+                                        </option>
+                                        {adminListRole?.map(({ index, role }) => (
+                                            <option key={index} value={role}>
+                                                {role}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>}
+                                {checkInhaber && <div className="flex flex-wrap w-[600px] items-center">
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
+                                    <select
+                                        id="role"
+                                        name="role"
+                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                        value={editingData.role}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="" disabled>
+                                            {editingData.role || 'Select Role'}
+                                        </option>
+                                        {inhaberListRole?.map(({ index, role }) => (
+                                            <option key={index} value={role}>
+                                                {role}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>}
+                                {checkManager && <div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
                                     <input
                                         type="text"
@@ -700,7 +744,7 @@ const ProfileEmployee = () => {
                                         readOnly
                                     // onChange={handleChange}
                                     />
-                                </div>
+                                </div>}
                                 {checkAdmin && <div className="flex flex-col w-[600px] items-center">
                                     <div className="flex flex-wrap w-[600px] items-center">
                                         <div className="flex flex-row"></div>

@@ -53,6 +53,11 @@ const ScheduleTable = (props) => {
     const [checkOutTimeMissing, setCheckOutTimeMissing] = useState("")
     const [checkInTimeCreate, setCheckInTimeCreate] = useState("")
     const [checkOutTimeCreate, setCheckOutTimeCreate] = useState("")
+    const [shiftCodeDelete, setShiftCodeDelete] = useState("")
+    const [departmentShiftCodeDelete, setDepartmentShiftCodeDelete] = useState("")
+    const [dateShiftCodeDelete, setDateShiftCodeDelete] = useState("")
+    const [deleteShiftModal, setDeleteShiftModal] = useState(false)
+    const [arrayDateDelete, setArrayDateDelete] = useState([])
     //const [shiftCodeCreate, setShiftCodeCreate] = useState("")
     // const today = new Date()
     // const tomorrow = new Date()
@@ -871,6 +876,32 @@ const ScheduleTable = (props) => {
 
 
     };
+
+    const handleDeleteShift = async () => {
+        if (userObject?.role === 'Admin') {
+            arrayDateDelete.push(dateShiftCodeDelete)
+            console.log(arrayDateDelete);
+            console.log(shiftCodeDelete);
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/delete?employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    {
+                        shift_code: shiftCodeDelete,
+                        dates: arrayDateDelete
+                    },
+                );
+                fetchScheduleEmployyee();
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setArrayDateDelete([])
+            } finally {
+                setDeleteShiftModal(false)
+                setFormState(false)
+                setArrayDateDelete([])
+            }
+
+        }
+    }
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
             <h2 className="text-2xl font-bold">Schedule Calendar</h2>
@@ -1450,6 +1481,37 @@ const ScheduleTable = (props) => {
                                                         <span className="text-[#6c757d] w-1/3 text-right px-3">Time</span>
                                                         <span className="w-2/3">{filteredItem?.time_slot?.start_time} ~ {filteredItem?.time_slot?.end_time}</span>
                                                     </div>
+                                                    <button onClick={() => {
+                                                        setShiftCodeDelete(selectedShift)
+                                                        setDepartmentShiftCodeDelete(filteredItem?.department_name)
+                                                        setDateShiftCodeDelete(`${selectedDate.substring(5, 7)}/${selectedDate.substring(8, 10)}/${selectedDate.substring(0, 4)}`)
+                                                        setDeleteShiftModal(true)
+                                                    }}
+                                                        className="bg-red-600 w-full text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                                        Delete Shift
+                                                    </button>
+                                                    {deleteShiftModal && (<div className="flex justify-center items-center w-full font-Changa mt-5">
+                                                        <div className="w-[400px] h-[200px] bg-white border border-stone-[rgba(0,0,0,.45)]">
+                                                            <div className="w-full h-[200px]">
+                                                                <div className="flex flex-col mt-8">
+                                                                    <div className="flex flex-row justify-between px-8 items-center">
+                                                                        <div className="font-bold text-xl">Delete Shift</div>
+                                                                        <div
+                                                                            onClick={() => setDeleteShiftModal(false)}
+                                                                            className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                                                    </div>
+
+                                                                    <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                                                        <span>Are you sure to delete this shift?</span>
+                                                                        <div className="flex flex-row gap-3">
+                                                                            <button onClick={() => setDeleteShiftModal(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                                                            <button onClick={handleDeleteShift} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>)}
                                                 </div>
                                             ))}
                                     </div>

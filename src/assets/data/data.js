@@ -100,3 +100,34 @@ export const attendanceStatus = [
         name:"late"
     }
 ]
+
+export const adminListRole = [
+    {
+        role: "Inhaber",
+    },
+    {
+        role: "Manager",
+    },
+    {
+        role: "Employee",
+    }
+]
+export const inhaberListRole = [
+    {
+        role: "Inhaber",
+    },
+    {
+        role: "Manager",
+    },
+    {
+        role: "Employee",
+    }
+]
+export const managerListRole = [
+    {
+        role: "Manager",
+    },
+    {
+        role: "Employee",
+    },
+]
