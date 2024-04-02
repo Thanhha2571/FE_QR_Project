@@ -41,6 +41,7 @@ const Car = () => {
     const [departmentDefined, setDepartmentDefined] = useState()
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+    const [a, setA] = useState(true)
 
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
