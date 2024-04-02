@@ -58,7 +58,7 @@ const Navigation = () => {
                             </div>
                         </li>
                         {employeeMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <a href='employee'>
+                            <a href='/employee'>
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />

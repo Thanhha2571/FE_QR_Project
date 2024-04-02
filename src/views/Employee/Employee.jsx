@@ -10,8 +10,8 @@ import * as XLSX from "xlsx";
 function Employee() {
     document.title = "Employee";
     const [selectedPosition, setSelectedPosition] = useState("Select Position")
-    const [selectedDepartment, setSelectedDepartment] = useState("Select Department")
-    const [selectedRole, setSelectedRole] = useState("Select Role")
+    const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen")
+    const [selectedRole, setSelectedRole] = useState("Wählen Sie Rolle aus")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [exportState, setExportState] = useState(false)
 
@@ -366,32 +366,32 @@ function Employee() {
 
     const handleSeacrh = async () => {
         if (userObject?.role === 'Admin') {
-            if (inputSearch !== "" && selectedDepartment === "Select Department" && selectedRole === "Select Role") {
+            if (inputSearch !== "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
                 SeacrhTyoe("", inputSearch, "")
             }
-            if (inputSearch === "" && selectedDepartment !== "Select Department" && selectedRole === "Select Role") {
+            if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
                 SeacrhTyoe(selectedDepartment, "", "")
             }
-            if (inputSearch === "" && selectedDepartment === "Select Department" && selectedRole !== "Select Role") {
+            if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
                 SeacrhTyoe("", "", selectedRole)
             }
-            if (inputSearch !== "" && selectedDepartment !== "Select Department" && selectedRole !== "Select Role") {
+            if (inputSearch !== "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
                 SeacrhTyoe(selectedRole, selectedDepartment, inputSearch)
             }
-            if (inputSearch === "" && selectedDepartment !== "Select Department" && selectedRole !== "Select Role") {
+            if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
                 SeacrhTyoe(selectedDepartment, "", selectedRole)
             }
-            if (inputSearch === "" && selectedDepartment === "Select Department" && selectedRole === "Select Role") {
+            if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
                 getAllUsers()
             }
             setTimeout(() => {
-                setSelectedDepartment("Select Department")
-                setSelectedRole("Select Role")
+                setSelectedDepartment("Abteilung auswählen")
+                setSelectedRole("Wählen Sie Rolle aus")
                 setSelectedPosition("Select Position")
             }, 2000);
         }
         if (userObject.role === 'Inhaber') {
-            if (inputSearch === "" && selectedRole === "Select Role") {
+            if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, { withCredentials: true });
@@ -403,7 +403,7 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
-            if (inputSearch === "" && selectedRole !== "Select Role") {
+            if (inputSearch === "" && selectedRole !== "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
@@ -415,7 +415,7 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
-            if (inputSearch !== "" && selectedRole === "Select Role") {
+            if (inputSearch !== "" && selectedRole === "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
@@ -427,7 +427,7 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
-            if (inputSearch !== "" && selectedRole !== "Select Role") {
+            if (inputSearch !== "" && selectedRole !== "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, { withCredentials: true });
@@ -439,11 +439,11 @@ function Employee() {
                     // console.error('Error fetching data:', error);
                 }
             }
-            if (inputSearch === "" && selectedRole === "Select Role") {
+            if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
                 getAllUsers()
             }
             setTimeout(() => {
-                setSelectedRole("Select Role")
+                setSelectedRole("Wählen Sie Rolle aus")
                 setSelectedPosition("Select Position")
             }, 2000);
         }
@@ -464,7 +464,7 @@ function Employee() {
                 getAllUsers()
             }
             setTimeout(() => {
-                setSelectedRole("Select Role")
+                setSelectedRole("Wählen Sie Rolle aus")
                 setSelectedPosition("Select Position")
             }, 2000);
         }
@@ -624,11 +624,11 @@ function Employee() {
                     <div className="flex flex-row px-4 gap-4">
                         <button onClick={() => setAddEmployee(!addEmployee)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Add Employee
+                            Mitarbeiter hinzufügen
                         </button>
                         {exportState && (<button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Export File
+                            Exportdatei
                         </button>)}
                     </div>
                 </div>
@@ -639,7 +639,7 @@ function Employee() {
                     <input
                         className="w-1/3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColorw-1/4 text-base px-4 py-3 placeholder:text-placeholderTextColor"
                         type="text"
-                        placeholder="Search by name, ID, position"
+                        placeholder="Suchen nach name, ID, position"
                         value={inputSearch}
                         onChange={(e) => setInputSearch(e.target.value)}
                     />
@@ -684,7 +684,7 @@ function Employee() {
                     <div
                         onClick={handleSeacrh}
                         className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
-                        <button className="search-btn">Seacrh</button>
+                        <button className="search-btn">Suchen</button>
                     </div>
                 </div>
 
@@ -703,10 +703,10 @@ function Employee() {
                                     <span className="table-title-email">Email</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-role">Role</span>
+                                    <span className="table-title-role">Rolle</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-role">Department</span>
+                                    <span className="table-title-role">Filiale</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-role"></span>
@@ -842,7 +842,7 @@ function Employee() {
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Department</span>
+                                                <span className="">Filiale</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">
@@ -898,7 +898,7 @@ function Employee() {
                                         {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Department</span>
+                                                <span className="">Filiale</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">
@@ -954,7 +954,7 @@ function Employee() {
                                         {checkManager && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Department</span>
+                                                <span className="">Filiale</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">
@@ -1010,7 +1010,7 @@ function Employee() {
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Role</span>
+                                                <span className="">Rolle</span>
                                             </div>
                                             <select
                                                 id="role"
@@ -1020,7 +1020,7 @@ function Employee() {
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required
                                             >
-                                                <option value="" disabled className='italic text-sm'>Select Role*</option>
+                                                <option value="" disabled className='italic text-sm'>Wählen Sie Rolle aus*</option>
                                                 {roleList?.map((item, index) => (
                                                     <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                         {item.name}
@@ -1031,7 +1031,7 @@ function Employee() {
                                         {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Role</span>
+                                                <span className="">Rolle</span>
                                             </div>
                                             <select
                                                 id="role"
@@ -1041,7 +1041,7 @@ function Employee() {
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required
                                             >
-                                                <option value="" disabled className='italic text-sm'>Select Role*</option>
+                                                <option value="" disabled className='italic text-sm'>Wählen Sie Rolle aus*</option>
                                                 {roleListForInhaber?.map((item, index) => (
                                                     <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                         {item.name}
@@ -1052,7 +1052,7 @@ function Employee() {
                                         {checkManager && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Role</span>
+                                                <span className="">Rolle</span>
                                             </div>
                                             <select
                                                 id="role"
@@ -1062,7 +1062,7 @@ function Employee() {
                                                 onChange={(e) => setSelectedRoleUser(e.target.value)}
                                                 required
                                             >
-                                                <option value="" disabled className='italic text-sm'>Select Role*</option>
+                                                <option value="" disabled className='italic text-sm'>Wählen Sie Rolle aus*</option>
                                                 {roleListForManager?.map((item, index) => (
                                                     <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                         {item.name}
@@ -1128,7 +1128,7 @@ function Employee() {
                                         </div>)}
                                         <div
                                             className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center mb-7 border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                            <button type="submit" className="w-full">Add</button>
+                                            <button type="submit" className="w-full">Hinzufügen</button>
                                         </div>
                                     </form>
                                 </div>

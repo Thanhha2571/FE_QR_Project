@@ -40,8 +40,8 @@ const QrLink = () => {
     return (
         <div className="bg-white h-screen w-full z-20 absolute">
             <div className="flex flex-col items-center justify-center mt-10 gap-3">
-                <div>Welcome to department {decryptParameter(selectedDepartment)}</div>
-                <div>Scan this Qr Code to check attendance</div>
+                <div>Willkommen in der Abteilung {decryptParameter(selectedDepartment)}</div>
+                <div>Scannen Sie diesen QR-Code, um die Anwesenheit zu überprüfen</div>
                 {qrData && <QRCode value={qrData} className="qr-code" />}
             </div>
         </div>

@@ -931,13 +931,13 @@ const ScheduleTable = (props) => {
                                             setAddShiftFormState(true)
                                             setInforShiftFormState(false)
                                         }}
-                                        className={`cursor-pointer font-bold text-xl ${addShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Add Shift</div>
+                                        className={`cursor-pointer font-bold text-xl ${addShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schicht hinzufügen</div>
                                     {exportState && (<div
                                         onClick={() => {
                                             setAddShiftFormState(false)
                                             setInforShiftFormState(true)
                                         }}
-                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Shift Information</div>)}
+                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schichtinformationen</div>)}
                                 </div>
                                 <div
                                     onClick={() => setFormState(false)}
@@ -946,7 +946,7 @@ const ScheduleTable = (props) => {
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             {addShiftFormState && (<div className="flex flex-col px-8 w-full mt-7">
                                 {employeeStats?.map((item, index) => (
-                                    <div key={index}>Time left: {item?.realistic_schedule_times}</div>
+                                    <div key={index}>übrige Zeit: {item?.realistic_schedule_times}</div>
                                 ))}
                                 <form
                                     className="flex flex-col gap-6 w-full justify-center items-center"
@@ -957,7 +957,7 @@ const ScheduleTable = (props) => {
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Shift Code</span>
+                                            <span className="">Schichtcode</span>
                                         </div>
                                         <select
                                             id="shift_code"
@@ -967,7 +967,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedShiftAddShiftForm(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
+                                            <option value="" disabled className='italic text-sm'>Schichtcode auswählen*</option>
                                             {shiftList?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item.code}>
                                                     {item.code}
@@ -978,7 +978,7 @@ const ScheduleTable = (props) => {
                                     {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Department</span>
+                                            <span className="">Filiale</span>
                                         </div>
                                         <select
                                             id="department"
@@ -988,7 +988,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                             {departmentDefined?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                     {item}
@@ -1009,7 +1009,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            <option value="" disabled className='italic text-sm'>Position auswählen*</option>
                                             {employeeData?.message[0]?.department
                                                 ?.filter((dept) => dept.name === selectedDepartmentEmployee)
                                                 ?.map((dept) =>
@@ -1024,7 +1024,7 @@ const ScheduleTable = (props) => {
                                     {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Department</span>
+                                            <span className="">Filiale</span>
                                         </div>
                                         <select
                                             id="department"
@@ -1034,7 +1034,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                             {/* {departmentInhaberOrManager?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                     {item}
@@ -1062,7 +1062,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            <option value="" disabled className='italic text-sm'>Position auswählen*</option>
                                             {employeeData?.message[0]?.department
                                                 ?.filter((dept) => dept.name === selectedDepartmentEmployee)
                                                 ?.map((dept) =>
@@ -1077,7 +1077,7 @@ const ScheduleTable = (props) => {
                                     {checkManager && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Department</span>
+                                            <span className="">Filiale</span>
                                         </div>
                                         <select
                                             id="department"
@@ -1115,7 +1115,7 @@ const ScheduleTable = (props) => {
                                             onChange={(e) => setSelectedPositionEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Position*</option>
+                                            <option value="" disabled className='italic text-sm'>Position auswählen*</option>
                                             {employeeData?.message[0]?.department
                                                 ?.filter((dept) => dept.name === selectedDepartmentEmployee)
                                                 ?.map((dept) =>
@@ -1155,16 +1155,16 @@ const ScheduleTable = (props) => {
                                     </div>
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                        <button type="submit" className="w-full">Add</button>
+                                        <button type="submit" className="w-full">Schicht hinzufügen</button>
                                     </div>
                                 </form>
                             </div>)}
                             {/* //----------------------------------------------------------------  SHIFT INFORMATION ----------------------------------------------------------------// */}
                             {exportState && (inforShiftFormState && (<div className="flex flex-col px-8 w-full mt-7 gap-2 font-Changa text-textColor">
-                                <div className="font-bold text-2xl">Shift Information</div>
+                                <div className="font-bold text-2xl">Schichtinformationen</div>
                                 <div className="flex flex-row gap-3">
                                     {scheduleDataByDate?.length === 0 ? (
-                                        <div className="font-bold text-red-600 text-xl">No shift for this day</div>
+                                        <div className="font-bold text-red-600 text-xl">Für diesen Tag gibt es keine Schicht</div>
                                     ) : (
                                         scheduleDataByDate?.map((item) => (
                                             <div key={item._id} className="flex flex-row gap-4">
@@ -1179,20 +1179,20 @@ const ScheduleTable = (props) => {
                                     <div>
                                         {attendanceDataByDate?.length === 0 ? (
                                             <div className="flex flex-col gap-3">
-                                                <div className="text-center font-bold text-gray-600 text-xl mt-4">No attendance data available</div>
+                                                <div className="text-center font-bold text-gray-600 text-xl mt-4">Keine Anwesenheitsdaten verfügbar</div>
                                                 <div className="flex flex-col">
                                                     <button onClick={() => {
                                                         setCreateAttendanceFormState(!createAttendanceFormState)
                                                     }
-                                                    } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                                                        Create Attendance Information
+                                                    } className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-700">
+                                                        Anwesenheitsinformationen erstellen
                                                     </button>
                                                     {createAttendanceFormState && (<div className="w-full h-full">
                                                         <div className="flex flex-col mt-8">
                                                             <div className="flex flex-row justify-between px-8 items-center">
-                                                                <div className="font-bold text-xl">Create Attendance Information</div>
+                                                                <div className="font-bold text-xl">Anwesenheitsinformationen erstellen</div>
                                                             </div>
-                                                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                                            {/* <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div> */}
                                                             <div className="flex flex-col px-8 w-full mt-7">
                                                                 <form
                                                                     className="flex flex-col gap-6 w-full justify-center items-center"
@@ -1203,7 +1203,7 @@ const ScheduleTable = (props) => {
                                                                     <div className="w-full h-auto flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
                                                                             <span className="text-rose-500">*</span>
-                                                                            <span className="">Check_in_time</span>
+                                                                            <span className="">Check-in-Zeit</span>
                                                                         </div>
                                                                         <TimePicker onChange={handleTimeCheckInCreate} className="w-full h-[42px]" format={formatTimePicker} />
                                                                     </div>
@@ -1213,14 +1213,14 @@ const ScheduleTable = (props) => {
                                                                             <span className="">Check_in_status</span>
                                                                         </div>
                                                                         <select
-                                                                            id="department"
-                                                                            name="department"
+                                                                            id="check_in_time"
+                                                                            name="check_in_time"
                                                                             className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                             value={selectedCheckInStatusCreate}
                                                                             onChange={(e) => setSelectedCheckInStatusCreate(e.target.value)}
                                                                         // required
                                                                         >
-                                                                            <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                            <option value="" disabled className='italic text-sm'>Wählen Sie Status aus*</option>
                                                                             {attendanceStatus?.map((item, index) => (
                                                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                     {item.name}
@@ -1231,24 +1231,24 @@ const ScheduleTable = (props) => {
                                                                     <div className="w-full h-auto flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
                                                                             <span className="text-rose-500">*</span>
-                                                                            <span className="">Check_out_time</span>
+                                                                            <span className="">Abreisezeit</span>
                                                                         </div>
                                                                         <TimePicker onChange={handleTimeCheckOutCreate} className="w-full h-[42px]" format={formatTimePicker} />
                                                                     </div>
                                                                     <div className="w-full flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
                                                                             <span className="text-rose-500">*</span>
-                                                                            <span className="">Check_out_status</span>
+                                                                            <span className="">Überprüfen Sie den Status</span>
                                                                         </div>
                                                                         <select
-                                                                            id="department"
-                                                                            name="department"
+                                                                            id="check_out_time"
+                                                                            name="check_out_time"
                                                                             className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                                                             value={selectedCheckOutStatusCreate}
                                                                             onChange={(e) => setSelectedCheckOutStatusCreate(e.target.value)}
                                                                         // required
                                                                         >
-                                                                            <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                            <option value="" disabled className='italic text-sm'>Wählen Sie Status aus*</option>
                                                                             {attendanceStatus?.map((item, index) => (
                                                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                     {item.name}
@@ -1258,7 +1258,7 @@ const ScheduleTable = (props) => {
                                                                     </div>
                                                                     <div
                                                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                                                        <button type="submit" className="w-full">Create Attendance</button>
+                                                                        <button type="submit" className="w-full">Anwesenheitsinformationen erstellen</button>
                                                                     </div>
                                                                 </form>
                                                             </div>
@@ -1272,7 +1272,7 @@ const ScheduleTable = (props) => {
                                                 .map((filteredItem) => (
                                                     <div className="flex flex-col gap-4" key={filteredItem._id}>
                                                         {filteredItem?.status === "missing" ? (
-                                                            <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: MISSING</div>
+                                                            <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: Fehlen</div>
                                                         ) : (
                                                             <div className="flex flex-col gap-4">
                                                                 <div className="flex flex-row justify-between mt-5">
@@ -1282,7 +1282,7 @@ const ScheduleTable = (props) => {
                                                                         <div className="italic text-xs">Status: {filteredItem?.shift_info?.time_slot?.check_in_status}</div>
                                                                     </div>
                                                                     <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                        <div>WORKING TIME</div>
+                                                                        <div>ARBEITSZEIT</div>
                                                                         <div>{`${filteredItem?.shift_info?.total_hour}h ${filteredItem?.shift_info?.total_minutes}m`}</div>
                                                                     </div>
                                                                     <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
@@ -1297,7 +1297,7 @@ const ScheduleTable = (props) => {
                                                                         <div>{filteredItem?.check_in_km}</div>
                                                                     </div>
                                                                     <div className="flex flex-col justify-center items-center text-buttonColor1 font-bold text-xl">
-                                                                        <div>TOTAL KM TIME</div>
+                                                                        <div>GESAMT KM TIME</div>
                                                                         <div>{filteredItem?.total_km}</div>
                                                                     </div>
                                                                     <div className="flex flex-col justify-center items-center font-bold text-red-600 text-xl">
@@ -1314,12 +1314,12 @@ const ScheduleTable = (props) => {
                                                                 setStatusAttendance(filteredItem?.status)
                                                             }
                                                             } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                                                                Change Attendance Information
+                                                                Anwesenheitsinformationen ändern
                                                             </button>
                                                             {changeAttendanceFormState && (<div className="w-full h-full">
                                                                 <div className="flex flex-col mt-8">
                                                                     <div className="flex flex-row justify-between px-8 items-center">
-                                                                        <div className="font-bold text-xl">Change Attendance Information</div>
+                                                                        <div className="font-bold text-xl">Anwesenheitsinformationen ändern</div>
                                                                     </div>
                                                                     <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                                                     <div className="flex flex-col px-8 w-full mt-7">
@@ -1332,7 +1332,7 @@ const ScheduleTable = (props) => {
                                                                             <div className="w-full h-auto flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
-                                                                                    <span className="">Attendance ID</span>
+                                                                                    <span className="">Teilnahme ID</span>
                                                                                 </div>
                                                                                 <input
                                                                                     type="text"
@@ -1384,7 +1384,7 @@ const ScheduleTable = (props) => {
                                                                                     onChange={(e) => setSelectedCheckInStatus(e.target.value)}
                                                                                 // required
                                                                                 >
-                                                                                    <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                    <option value="" disabled className='italic text-sm'>Wählen Sie Status aus*</option>
                                                                                     {attendanceStatus?.map((item, index) => (
                                                                                         <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                             {item.name}
@@ -1395,7 +1395,7 @@ const ScheduleTable = (props) => {
                                                                             <div className="w-full h-auto flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
-                                                                                    <span className="">Check_out_time</span>
+                                                                                    <span className="">Abreisezeit</span>
                                                                                 </div>
                                                                                 {/* <input
                                                                                     type="text"
@@ -1409,7 +1409,7 @@ const ScheduleTable = (props) => {
                                                                             <div className="w-full flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
-                                                                                    <span className="">Check_out_status</span>
+                                                                                    <span className="">Überprüfen Sie den Status</span>
                                                                                 </div>
                                                                                 <select
                                                                                     id="department"
@@ -1419,7 +1419,7 @@ const ScheduleTable = (props) => {
                                                                                     onChange={(e) => setSelectedCheckOutStatus(e.target.value)}
                                                                                 // required
                                                                                 >
-                                                                                    <option value="" disabled className='italic text-sm'>Select Status*</option>
+                                                                                    <option value="" disabled className='italic text-sm'>Wählen Sie Status aus*</option>
                                                                                     {attendanceStatus?.map((item, index) => (
                                                                                         <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                                                             {item.name}
@@ -1429,7 +1429,7 @@ const ScheduleTable = (props) => {
                                                                             </div>
                                                                             <div
                                                                                 className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                                                                <button type="submit" className="w-full">Save Changes</button>
+                                                                                <button type="submit" className="w-full">Änderungen speichern</button>
                                                                             </div>
                                                                         </form>
                                                                     </div>
@@ -1458,11 +1458,11 @@ const ScheduleTable = (props) => {
                                                         <span className="w-2/3">{id}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
-                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Department</span>
+                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Filiale</span>
                                                         <span className="w-2/3">{filteredItem?.department_name}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
-                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Role</span>
+                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Rolle</span>
                                                         <span className="w-2/3">{role}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
@@ -1474,7 +1474,7 @@ const ScheduleTable = (props) => {
                                                         <span className="w-2/3">{selectedDate.substring(0, 10)}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
-                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Shift's Code</span>
+                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Schichtcode</span>
                                                         <span className="w-2/3">{selectedShift}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center mb-5">
@@ -1495,14 +1495,14 @@ const ScheduleTable = (props) => {
                                                             <div className="w-full h-[200px]">
                                                                 <div className="flex flex-col mt-8">
                                                                     <div className="flex flex-row justify-between px-8 items-center">
-                                                                        <div className="font-bold text-xl">Delete Shift</div>
+                                                                        <div className="font-bold text-xl">Schicht löschen</div>
                                                                         <div
                                                                             onClick={() => setDeleteShiftModal(false)}
                                                                             className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                                                     </div>
 
                                                                     <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                                                        <span>Are you sure to delete this shift?</span>
+                                                                        <span>Möchten Sie diese Schicht wirklich löschen?</span>
                                                                         <div className="flex flex-row gap-3">
                                                                             <button onClick={() => setDeleteShiftModal(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                                                             <button onClick={handleDeleteShift} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>

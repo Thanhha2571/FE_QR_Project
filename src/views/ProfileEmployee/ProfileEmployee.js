@@ -546,16 +546,16 @@ const ProfileEmployee = () => {
                 </div>
                 <div className="flex flex-row px-4 gap-4">
                     {exportState && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
-                        <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Department
+                        <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Abteilung hinzufügen
                     </button>)}
                     {exportState && (<button onClick={() => setRemoveDepartmentFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                        <img className="w-4 h-4" src={DeleteIcon} />Remove Department
+                        <img className="w-4 h-4" src={DeleteIcon} />Abteilung entfernen
                     </button>)}
                     {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                        Make Inactive
+                        Inaktiv machen
                     </button>)}
                     {exportState && (<button onClick={() => setDeleteFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                        <img className="w-4 h-4" src={DeleteIcon} />Delete Employee
+                        <img className="w-4 h-4" src={DeleteIcon} />Mitarbeiter löschen
                     </button>)}
                 </div>
             </div>
@@ -567,13 +567,13 @@ const ProfileEmployee = () => {
                             setScheduleState(false)
                             setProfileState(true)
                         }}
-                        className={`hover:text-buttonColor1 cursor-pointer ${profileState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Basic Information</div>
+                        className={`hover:text-buttonColor1 cursor-pointer ${profileState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Grundinformation</div>
                     <div
                         onClick={() => {
                             setScheduleState(true)
                             setProfileState(false)
                         }}
-                        className={`hover:text-buttonColor1 cursor-pointer ${scheduleState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schedule's Calendar</div>
+                        className={`hover:text-buttonColor1 cursor-pointer ${scheduleState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Zeitplan Kalender</div>
                 </div>
             </div>
             {user?.map((index, item) =>
@@ -593,15 +593,15 @@ const ProfileEmployee = () => {
                                     <span className="w-2/3 px-2">{user[0]?.name}</span>
                                 </div>
                                 <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Gender</span>
+                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Geschlecht</span>
                                     <span className="w-2/3 px-2">{user[0]?.gender}</span>
                                 </div>
                                 <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Address</span>
+                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Adresse</span>
                                     <span className="w-2/3 px-2">{user[0]?.address}</span>
                                 </div>
                                 <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Date of Birth</span>
+                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Geburtsdatum</span>
                                     <span className="w-2/3 px-2">{user[0]?.dob}</span>
                                 </div>
                                 <div className="flex flex-wrap w-full items-center justify-center">
@@ -609,7 +609,7 @@ const ProfileEmployee = () => {
                                     <span className="w-2/3 px-2">{user[0]?.email}</span>
                                 </div>
                                 <div className="flex flex-wrap w-full items-center justify-center">
-                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Role</span>
+                                    <span className="text-[#6c757d] w-1/3 text-right px-3">Rolle</span>
                                     <span className="w-2/3 px-2">{user[0]?.role}</span>
                                 </div>
                             </div>
@@ -644,7 +644,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Gender:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Geschlecht:</label>
                                     <select
                                         id="gender"
                                         name="gender"
@@ -663,7 +663,7 @@ const ProfileEmployee = () => {
                                     </select>
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="dob">Date of Birth:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="dob">Geburtsdatum:</label>
                                     <input
                                         type="text"
                                         id="dob"
@@ -685,7 +685,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="address">Address:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="address">Adresse:</label>
                                     <input
                                         type="text"
                                         id="address"
@@ -696,7 +696,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 {checkAdmin && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
                                     <select
                                         id="role"
                                         name="role"
@@ -715,7 +715,7 @@ const ProfileEmployee = () => {
                                     </select>
                                 </div>}
                                 {checkInhaber && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
                                     <select
                                         id="role"
                                         name="role"
@@ -734,7 +734,7 @@ const ProfileEmployee = () => {
                                     </select>
                                 </div>}
                                 {checkManager && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Role:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
                                     <input
                                         type="text"
                                         id="role"
@@ -748,7 +748,7 @@ const ProfileEmployee = () => {
                                 {checkAdmin && <div className="flex flex-col w-[600px] items-center">
                                     <div className="flex flex-wrap w-[600px] items-center">
                                         <div className="flex flex-row"></div>
-                                        <label className="w-1/4 text-right p-4">Department:</label>
+                                        <label className="w-1/4 text-right p-4">Filiale:</label>
                                         <div className="flex flex-row gap-4">
                                             {user[0]?.department?.map((item, index) => (
                                                 <span className={`cursor-pointer ${selectedDepartment === item.name ? 'text-buttonColor1 underline decoration-buttonColor1' : ''
@@ -770,7 +770,7 @@ const ProfileEmployee = () => {
                                 {checkInhaber && <div className="flex flex-col w-[600px] items-center">
                                     <div className="flex flex-wrap w-[600px] items-center">
                                         <div className="flex flex-row"></div>
-                                        <label className="w-1/4 text-right p-4">Department:</label>
+                                        <label className="w-1/4 text-right p-4">Filiale:</label>
                                         <div className="flex flex-row gap-4">
                                             {user[0]?.department
                                                 // ?.filter((item) => item.name === userObject?.department_name)
@@ -800,7 +800,7 @@ const ProfileEmployee = () => {
                                     </div>)}
                                 </div>}
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Total Hour (per month):</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Gesamtstunde (pro Monat):</label>
                                     <input
                                         type="text"
                                         id="total_time_per_month"
@@ -811,7 +811,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Days Off (per year):</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Freie Tage (pro Jahr):</label>
                                     <input
                                         type="text"
                                         id="default_day_off"
@@ -822,7 +822,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Rest Days Off:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Ruhetage frei:</label>
                                     <input
                                         type="text"
                                         id="realistic_day_off"
@@ -833,7 +833,7 @@ const ProfileEmployee = () => {
                                     />
                                 </div>
                                 <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">House renting money:</label>
+                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Hausvermietung:</label>
                                     <input
                                         type="text"
                                         id="house_rent_money"
@@ -869,10 +869,10 @@ const ProfileEmployee = () => {
                                 </div>)}
                                 {exportState && (<div className="flex flex-row w-full justify-center gap-6">
                                     <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                                        Cancel
+                                        Stornieren
                                     </button>
                                     <button type="submit" className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                                        Save Changes
+                                        Änderungen speichern
                                     </button>
                                 </div>)}
                             </form>
@@ -898,7 +898,7 @@ const ProfileEmployee = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Add Department</div>
+                                <div className="font-bold text-xl">Abteilung hinzufügen</div>
                                 <div
                                     onClick={() => setFormAddDepartmentState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -914,7 +914,7 @@ const ProfileEmployee = () => {
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Department</span>
+                                            <span className="">Filiale</span>
                                         </div>
                                         <select
                                             id="department"
@@ -924,7 +924,7 @@ const ProfileEmployee = () => {
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                             {restDepartmentList?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                     {item}
@@ -990,7 +990,7 @@ const ProfileEmployee = () => {
                                     </div>
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                        <button onClick={handleAddDepartmentForEmployee} type="button" className="w-full">Add</button>
+                                        <button onClick={handleAddDepartmentForEmployee} type="button" className="w-full">Abteilung hinzufügen</button>
                                     </div>
                                 </div>
                             </div>
@@ -1002,18 +1002,18 @@ const ProfileEmployee = () => {
                 <div
                     onClick={() => setDeleteFormState(false)}
                     className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                <div className="absolute w-[400px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                <div className="absolute w-[400px] h-[220px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Delete User</div>
+                                <div className="font-bold text-xl">Benutzer löschen</div>
                                 <div
                                     onClick={() => setDeleteFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                             </div>
-                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            {/* <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div> */}
                             <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                <span>Are you sure to to delete user {id}?</span>
+                                <span>Möchten Sie den Benutzer wirklich löschen {id}?</span>
                                 <div className="flex flex-row gap-3">
                                     <button onClick={() => setDeleteFormState(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                     <button onClick={handleDelete} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
@@ -1045,7 +1045,7 @@ const ProfileEmployee = () => {
                                     <div className=" flex flex-row gap-3 items-center">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Day</span>
+                                            <span className="">Tag</span>
                                         </div>
                                         <Space className="w-full" direction="vertical" size={12}>
                                             <DatePicker onChange={handleDateChange} className="w-full h-[42px] text-base text-placeholderTextColor" format={dateFormat} />
@@ -1054,7 +1054,7 @@ const ProfileEmployee = () => {
                                     <div className=" flex flex-row gap-2 items-center">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Time</span>
+                                            <span className="">Zeit</span>
                                         </div>
                                         <TimePicker
                                             className="w-full h-[42px]"
@@ -1064,7 +1064,7 @@ const ProfileEmployee = () => {
                                     </div>
                                     <div
                                         className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-700 w-full">
-                                        <button onClick={handleChangeStatus} type="button" className="w-full">Change Status</button>
+                                        <button onClick={handleChangeStatus} type="button" className="w-full">Status ändern</button>
                                     </div>
                                 </div>
                             </div>
@@ -1080,7 +1080,7 @@ const ProfileEmployee = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Add Department</div>
+                                <div className="font-bold text-xl">Abteilung entfernen</div>
                                 <div
                                     onClick={() => setRemoveDepartmentFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -1096,7 +1096,7 @@ const ProfileEmployee = () => {
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Department</span>
+                                            <span className="">Filiale</span>
                                         </div>
                                         <select
                                             id="department_delete"
@@ -1106,7 +1106,7 @@ const ProfileEmployee = () => {
                                             onChange={(e) => setSelectedDepartmentRemove(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                             {user && user[0]?.department?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                     {item.name}
@@ -1115,8 +1115,8 @@ const ProfileEmployee = () => {
                                         </select>
                                     </div>
                                     <div
-                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                        <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Remove Department</button>
+                                        className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-800 w-full">
+                                        <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Abteilung entfernen</button>
                                     </div>
                                 </div>
                             </div>

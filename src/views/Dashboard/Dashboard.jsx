@@ -20,7 +20,7 @@ function Dashboard() {
     // const [inputDay, setInputDay] = useState("")
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
-    const [selectedDepartment, setSelectedDepartment] = useState("Selected Department");
+    const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
     const [departmentMenu, setDepartmentMenu] = useState(false)
     const userString = localStorage.getItem('user');
@@ -76,7 +76,7 @@ function Dashboard() {
         const getEmployeeByManyDateAndShift = async () => {
             // setLoading(true)
             if (userObject?.role === "Admin") {
-                if (selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Abteilung auswählen") {
                     setUserListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
@@ -86,10 +86,10 @@ function Dashboard() {
                     } finally {
                         setLoading(false);
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
-                if (selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Abteilung auswählen") {
                     setUserListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
@@ -99,12 +99,12 @@ function Dashboard() {
                     } finally {
                         setLoading(false)
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
             }
             if (userObject?.role === "Inhaber") {
-                if (selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Abteilung auswählen") {
                     setUserListToday([])
                     // if (currentDate) {
                     try {
@@ -116,10 +116,10 @@ function Dashboard() {
                         setLoading(false);
                     }
                     // }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
-                if (selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Abteilung auswählen") {
                     setUserListToday([])
                     // if (currentDate) {
                     try {
@@ -131,7 +131,7 @@ function Dashboard() {
                         setLoading(false);
                     }
                     // }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
             }
@@ -139,7 +139,7 @@ function Dashboard() {
         const getAttendanceEmployeeByManyDateAndShift = async () => {
             // setLoading(true)
             if (userObject?.role === "Admin") {
-                if (selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Abteilung auswählen") {
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
@@ -149,10 +149,10 @@ function Dashboard() {
                     } finally {
                         setLoading(false);
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
-                if (selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Abteilung auswählen") {
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
                         setUserAttendListToday(response.data.message);
@@ -161,13 +161,13 @@ function Dashboard() {
                     } finally {
                         setLoading(false)
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
             }
 
             if (userObject?.role === "Inhaber") {
-                if (selectedDepartment === "Selected Department") {
+                if (selectedDepartment === "Abteilung auswählen") {
                     setUserAttendListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}`, { withCredentials: true });
@@ -178,10 +178,10 @@ function Dashboard() {
                     } finally {
                         setLoading(false);
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
-                if (selectedDepartment !== "Selected Department") {
+                if (selectedDepartment !== "Abteilung auswählen") {
                     setUserAttendListToday([])
                     try {
                         const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&year=${datePicker.substring(6, 10)}&month=${datePicker.substring(0, 2)}&date=${datePicker}&department_name=${selectedDepartment}`, { withCredentials: true });
@@ -191,7 +191,7 @@ function Dashboard() {
                     } finally {
                         setLoading(false)
                     }
-                    setSelectedDepartment("Selected Department");
+                    setSelectedDepartment("Abteilung auswählen");
                     setCurrentDate(`${datePicker}`)
                 }
             }
@@ -222,7 +222,7 @@ function Dashboard() {
             }
         };
         // const getEmployeeByDateAndShift = async () => {
-        //     // if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Selected Department") {
+        //     // if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Abteilung auswählen") {
         //     setLoading(true)
         //     if (currentDate && userObject?.role === "Admin") {
         //         try {
@@ -314,7 +314,7 @@ function Dashboard() {
                                 <div
                                     onClick={handleSeacrh}
                                     className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
-                                    <button className="search-btn">Seacrh</button>
+                                    <button className="search-btn">Suchen</button>
                                 </div>
                             </div>
                         </div>
@@ -325,10 +325,10 @@ function Dashboard() {
                             <div className="bg-white w-full h-auto p-10">
                                 <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
                                 {Array.isArray(userListToday) && userListToday?.length === 0 ? (
-                                    <div className="font-bold text-2xl text-textColor mb-8">No Employee is working</div>
+                                    <div className="font-bold text-2xl text-textColor mb-8">Kein Mitarbeiter</div>
                                 ) : (
-                                    <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Employee is working
-                                        <span className="text-xl italic font-normal">Total Employee Working: {userListToday?.length} </span>
+                                    <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Arbeitsliste
+                                        <span className="text-xl italic font-normal">Gesamtzahl der Mitarbeiter: {userListToday?.length} </span>
                                     </div>)}
                                 <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                                     <table className="w-full table">
@@ -338,16 +338,16 @@ function Dashboard() {
                                                     <span className="font-bold">Name</span>
                                                 </th>
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Department</span>
+                                                    <span className="table-title-role">Filiale</span>
                                                 </th>
                                                 <th className="p-2 text-left">
                                                     <span className="table-title-role">Position</span>
                                                 </th>
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Shift Code</span>
+                                                    <span className="table-title-role">Schichtcode</span>
                                                 </th>
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Time</span>
+                                                    <span className="table-title-role">Zeit</span>
                                                 </th>
                                             </tr>
                                         </thead>
@@ -372,10 +372,10 @@ function Dashboard() {
                             <div className="bg-white w-full h-auto p-10">
                                 <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
                                 {Array.isArray(userAttendListToday) && userAttendListToday?.length === 0 ? (
-                                    <div className="font-bold text-2xl text-textColor mb-8">No Attendance Checking</div>
+                                    <div className="font-bold text-2xl text-textColor mb-8">Keine Anwesenheit</div>
                                 ) : (
-                                    <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Attendance Checking
-                                        <span className="text-xl italic font-normal">Total Employee Attendance Checking: {userAttendListToday?.length} </span></div>)}
+                                    <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Anwesenheitsliste
+                                        <span className="text-xl italic font-normal">Gesamtanwesenheit: {userAttendListToday?.length} </span></div>)}
                                 <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                                     <table className="w-full table">
                                         <thead className="">
@@ -384,16 +384,16 @@ function Dashboard() {
                                                     <span className="font-bold">Name</span>
                                                 </th>
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Department</span>
+                                                    <span className="table-title-role">Filiale</span>
                                                 </th>
                                                 {/* <th className="p-2 text-left">
                                                 <span className="table-title-role">Position</span>
                                             </th> */}
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Shift Code</span>
+                                                    <span className="table-title-role">Schichtcode</span>
                                                 </th>
                                                 <th className="p-2 text-left">
-                                                    <span className="table-title-role">Check in information</span>
+                                                    <span className="table-title-role">Check-in-Informationen</span>
                                                 </th>
                                             </tr>
                                         </thead>

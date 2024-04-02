@@ -287,19 +287,19 @@ const WorkingSchedule = () => {
                     {exportState && (<div className="flex flex-row px-4 gap-4">
                         <button onClick={() => setCreateShiftFormState(!createShiftFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Create Shift
+                            Schicht erstellen
                         </button>
                     </div>)}
                     {exportState && (<div className="flex flex-row px-4 gap-4">
                         <button onClick={() => setEditShiftFormState(!editShiftFormState)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Edit Shift
+                            Schicht bearbeiten
                         </button>
                     </div>)}
                     {exportState && (<div className="flex flex-row px-4 gap-4">
                         <button onClick={() => setDeleteShiftFormState(!deleteShiftFormState)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Delete Shift
+                            Schicht löschen
                         </button>
                     </div>)}
                 </div>
@@ -315,7 +315,7 @@ const WorkingSchedule = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Create New Shift</div>
+                                <div className="font-bold text-xl">Schicht erstellen</div>
                                 <div
                                     onClick={() => setCreateShiftFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -329,7 +329,7 @@ const WorkingSchedule = () => {
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Shift's Code</span>
+                                            <span className="">Schichtcode</span>
                                         </div>
                                         <input
                                             type="text"
@@ -359,7 +359,7 @@ const WorkingSchedule = () => {
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Start Time</span>
+                                            <span className="">Startzeit</span>
                                         </div>
                                         {/* <input
                                             type="text"
@@ -375,7 +375,7 @@ const WorkingSchedule = () => {
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">End Time</span>
+                                            <span className="">Endzeit</span>
                                         </div>
                                         {/* <input
                                             type="text"
@@ -389,7 +389,7 @@ const WorkingSchedule = () => {
                                         <TimePicker onChange={handleTimeEndCreateShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <button className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-800 w-full" type="submit" onClick={handleSubmit}>
-                                        Create Shift
+                                        Schicht erstellen
                                     </button>
                                 </form>
                             </div>
@@ -406,7 +406,7 @@ const WorkingSchedule = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Delete Shift</div>
+                                <div className="font-bold text-xl">Schicht löschen</div>
                                 <div
                                     onClick={() => setDeleteShiftFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -420,7 +420,7 @@ const WorkingSchedule = () => {
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Shift Code</span>
+                                            <span className="">Schichtcode</span>
                                         </div>
                                         <select
                                             id="shift_code"
@@ -430,7 +430,7 @@ const WorkingSchedule = () => {
                                             onChange={(e) => setSelectedShiftDelete(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
+                                            <option value="" disabled className='italic text-sm'>Schichtcode auswählen*</option>
                                             {shiftList?.map(({ code }, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={code}>
                                                     {code}
@@ -439,7 +439,7 @@ const WorkingSchedule = () => {
                                         </select>
                                     </div>
                                     <button className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-900 w-full" type="submit" onClick={handleDeleteShiftSubmit}>
-                                        Delete Shift
+                                        Schicht löschen
                                     </button>
                                 </form>
                             </div>
@@ -456,7 +456,7 @@ const WorkingSchedule = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Edit Shift</div>
+                                <div className="font-bold text-xl">Schicht bearbeiten</div>
                                 <div
                                     onClick={() => setEditShiftFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -470,7 +470,7 @@ const WorkingSchedule = () => {
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Shift Code</span>
+                                            <span className="">Schichtcode</span>
                                         </div>
                                         <select
                                             id="shift_code_edit"
@@ -481,7 +481,7 @@ const WorkingSchedule = () => {
                                             required
                                             className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
                                         >
-                                            <option value="" disabled className='italic text-sm'>Select Shift Code*</option>
+                                            <option value="" disabled className='italic text-sm'>Schichtcode auswählen*</option>
                                             {shiftList?.map(({ code }, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={code}>
                                                     {code}
@@ -507,19 +507,19 @@ const WorkingSchedule = () => {
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Start Time</span>
+                                            <span className="">Startzeit</span>
                                         </div>
                                         <TimePicker onChange={handleTimeStartEditShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">End Time</span>
+                                            <span className="">Endzeit</span>
                                         </div>
                                         <TimePicker onChange={handleTimeEndEditShift} className="w-full h-[42px]" format={format} />
                                     </div>
                                     <button className=" bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-cyan-700 w-full" type="submit" onClick={handleEditShiftSubmit}>
-                                        Edit Shift
+                                        Schicht bearbeiten
                                     </button>
                                 </form>
                             </div>

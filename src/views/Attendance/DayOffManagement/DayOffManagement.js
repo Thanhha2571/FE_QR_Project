@@ -130,18 +130,18 @@ const DayOffManagement = () => {
                 : (<div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
                     <div className="flex flex-row items-center justify-between">
                         <div>
-                            <h1 className="font-bold text-3xl mb-2">Day Off Management</h1>
+                            <h1 className="font-bold text-3xl mb-2">Verwaltung freier Tage</h1>
                             <div className="flex flex-row">
                                 <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
-                                <div className="text-base font-semibold leading-6 text-[#6c757d]">/ Work Management</div>
-                                <span className="text-[#6c757d] font-xl">/ Day Off</span>
+                                <div className="text-base font-semibold leading-6 text-[#6c757d]">/ Arbeitsmanagement</div>
+                                <span className="text-[#6c757d] font-xl">/ Freie Tage</span>
                             </div>
                         </div>
 
                     </div>
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
-                            <div className="font-bold text-2xl text-textColor mb-8">Request Day Off List</div>
+                            <div className="font-bold text-2xl text-textColor mb-8">Fordern Sie die Liste der freien Tage an</div>
                             <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                                 <table className="w-full table">
                                     <thead className="">
@@ -181,7 +181,7 @@ const DayOffManagement = () => {
                                                 <td className="p-2">{employee_id}</td>
                                                 <td className="p-2">{`${String(new Date(request_dayOff_start).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_start).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_start).getFullYear()}`}</td>
                                                 <td className="p-2">{`${String(new Date(request_dayOff_end).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_end).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_end).getFullYear()}`}</td>
-                                                <td className="p-2">{request_content}</td>
+                                                {request_content === "Sick day" ? (<td className="p-2">Krankheitstage mit AU-Bescheinigung</td>) : (<td className="p-2">Urlaub</td>)}
                                                 <td className="p-2 cursor-pointer hover:text-buttonColor2" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>
                                             </tr>
                                         ))}
