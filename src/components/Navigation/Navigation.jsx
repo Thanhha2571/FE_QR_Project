@@ -228,7 +228,7 @@ const Navigation = () => {
                             </div>
                         </li>
                         {reportMenu && (<ul className="flex flex-col gap-3 list-none">
-                            <a to="manage-report-form">
+                            <a href="/manage-report-form">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row gap-2 justify-center items-center">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
