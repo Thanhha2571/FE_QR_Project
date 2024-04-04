@@ -96,21 +96,35 @@ const ReportForm = () => {
     const handleSeacrh = async () => {
         if (userObject?.role === "Admin") {
             setFormList([])
-            if (datePicker !== "") {
+            if (datePicker !== "" && selectedDepartment === "Selected Department") {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, { withCredentials: true })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
+                } finally {
+                    setSelectedDepartment("Selected Department")
                 }
             }
 
-            if (selectedDepartment === "Selected Department") {
+            if (datePicker === "" && selectedDepartment !== "Selected Department") {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, { withCredentials: true })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
+                } finally {
+                    setSelectedDepartment("Selected Department")
+                }
+            }
+            if (datePicker !== "" && selectedDepartment !== "Selected Department") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, { withCredentials: true })
+                    setFormList(response?.data?.message);
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setSelectedDepartment("Selected Department")
                 }
             }
         }
@@ -201,7 +215,7 @@ const ReportForm = () => {
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {formList?.map(({ date, employee_id, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
+                                    {formList?.filter((item) => item.position === "Lito" || item.position === "Service" || item.position === "Autofahrer")?.map(({ date, employee_id, department_name, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}
@@ -220,6 +234,7 @@ const ReportForm = () => {
                                             trinked_ec={trinked_ec}
                                             trink_geld={trink_geld}
                                             auf_rechnung={auf_rechnung}
+                                            department_name={department_name}
                                         />
                                     ))}
                                 </tbody>

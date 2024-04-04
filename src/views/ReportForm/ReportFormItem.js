@@ -1,5 +1,5 @@
 const ReportFormItem = (props) => {
-    const { date, employee_id, position, car_info, employee_name, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung, results } = props;
+    const { department_name, date, employee_id, position, car_info, employee_name, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung, results } = props;
     console.log(props);
     const inputDateString = date;
     const inputDate = new Date(inputDateString);
@@ -23,7 +23,7 @@ const ReportFormItem = (props) => {
             <td className="p-4 hover:text-buttonColor2">{formattedDateString}</td>
             <td className="p-4 text-left">{employee_name}</td>
             <td className="p-4 text-left">{employee_id}</td>
-            <td className="p-4 text-left">{position}</td>
+            <td className="p-4 text-left">{department_name}- {position}</td>
             <td className="p-4 text-left">
                 <div className="flex flex-col">
                     <span>{car_info?.car_number}</span>
