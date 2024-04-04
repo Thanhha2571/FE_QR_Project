@@ -20,7 +20,7 @@ const ReportForm = () => {
 
     const [datePicker, setDatePicker] = useState("")
     const [departmentMenu, setDepartmentMenu] = useState(false)
-    const [selectedDepartment, setSelectedDepartment] = useState("Selected Department");
+    const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
 
     useEffect(() => {
@@ -96,35 +96,35 @@ const ReportForm = () => {
     const handleSeacrh = async () => {
         if (userObject?.role === "Admin") {
             setFormList([])
-            if (datePicker !== "" && selectedDepartment === "Selected Department") {
+            if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, { withCredentials: true })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
                 } finally {
-                    setSelectedDepartment("Selected Department")
+                    setSelectedDepartment("Abteilung auswählen")
                 }
             }
 
-            if (datePicker === "" && selectedDepartment !== "Selected Department") {
+            if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, { withCredentials: true })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
                 } finally {
-                    setSelectedDepartment("Selected Department")
+                    setSelectedDepartment("Abteilung auswählen")
                 }
             }
-            if (datePicker !== "" && selectedDepartment !== "Selected Department") {
+            if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, { withCredentials: true })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
                 } finally {
-                    setSelectedDepartment("Selected Department")
+                    setSelectedDepartment("Abteilung auswählen")
                 }
             }
         }

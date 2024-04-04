@@ -347,11 +347,11 @@ const SalarySummarizie = () => {
                     <div className="flex flex-row px-4 gap-4">
                         <button onClick={() => setSalaryCountingFormState(!salaryCountingFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Salary Counting
+                            Gehaltszählung
                         </button>
                         <button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                             <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                            Export File
+                            Exportdatei
                         </button>
                     </div>
                 </div>
@@ -390,7 +390,7 @@ const SalarySummarizie = () => {
                     <div
                         onClick={handleSeacrh}
                         className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
-                        <button className="search-btn">Seacrh</button>
+                        <button className="search-btn">Suchen</button>
                     </div>
                 </div>
 
@@ -405,34 +405,34 @@ const SalarySummarizie = () => {
                                     <span className="table-title-id">Employee ID</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">Working Time</span>
+                                    <span className="table-title-status">ARBEITSZEIT</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">Total Working</span>
+                                    <span className="table-title-status">Total funktionsfähig</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">Hour Overtine</span>
+                                    <span className="table-title-status">Im Laufe der Zeit</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">a_parameter</span>
+                                    <span className="table-title-status">netto</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">b_parameter</span>
+                                    <span className="table-title-status">überweisung</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">c_parameter</span>
+                                    <span className="table-title-status">optional</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">d_parameter</span>
+                                    <span className="table-title-status">€/km (0,25)</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">f_parameter</span>
+                                    <span className="table-title-status">über s x</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">Total Km</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">Salary</span>
+                                    <span className="table-title-status">Gehalt</span>
                                 </th>
                             </tr>
                         </thead>
@@ -497,7 +497,7 @@ const SalarySummarizie = () => {
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
-                                    <div className="font-bold text-xl">Couting Salary For Employee</div>
+                                    <div className="font-bold text-xl">Gehaltszählung</div>
                                     <div
                                         onClick={() => setSalaryCountingFormState(false)}
                                         className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -557,7 +557,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">a_parameter</span>
+                                                <span className="">netto</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -571,7 +571,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">b_parameter</span>
+                                                <span className="">überweisung</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -585,7 +585,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">c_parameter</span>
+                                                <span className="">optional</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -599,7 +599,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">d_parameter</span>
+                                                <span className="">€/km (0,25)</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -613,7 +613,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">f_parameter</span>
+                                                <span className="">über s x</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -626,7 +626,7 @@ const SalarySummarizie = () => {
                                         </div>
                                         <div
                                             className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                            <button type="submit" className="w-full">Couting Salary</button>
+                                            <button type="submit" className="w-full">Gehaltszählung</button>
                                         </div>
                                     </form>
                                 </div>
@@ -638,7 +638,7 @@ const SalarySummarizie = () => {
                     <div
                         onClick={() => setExportEmployee(false)}
                         className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                    <div className="absolute w-[500px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                    <div className="absolute w-[700px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
@@ -649,7 +649,7 @@ const SalarySummarizie = () => {
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Do you want to export Employee_Salary_Data_{monthPicker.substring(0, 2)}_{monthPicker.substring(3, 7)}.xlsx?</span>
+                                    <span>Möchten Sie exportieren Employee_Salary_Data_{monthPicker.substring(0, 2)}_{monthPicker.substring(3, 7)}.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
