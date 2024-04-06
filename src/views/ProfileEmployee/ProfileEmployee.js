@@ -47,7 +47,13 @@ const ProfileEmployee = () => {
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
     const [inactive, setInactive] = useState()
-
+    const [departmentChangePosition, setDepartmentChangePosition] = useState("")
+    const [positionInDepartmentDefined, setPositionInDepartmentDefined] = useState([])
+    const [positionAdd, setPositionAdd] = useState([])
+    const [positionRemove, setPositionRemove] = useState([])
+    const [formAddPositionToDepartment, setFormAddPositionToDepartment] = useState(false)
+    const [formRemovePositionFromDepartment, setFormRemovePositionFromDepartment] = useState(false)
+    const [positionListAddPositionToDepartment, setPositionListAddPositionToDepartment] = useState([])
     // const [userObject, setUserObject] = useState()
 
     const [checkInhaber, setCheckInhaber] = useState(false)
@@ -173,7 +179,7 @@ const ProfileEmployee = () => {
         if (userObject?.role === 'Admin') {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, { withCredentials: true });
-                console.log(response.data.message);
+                // console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
             } catch (err) {
@@ -530,6 +536,53 @@ const ProfileEmployee = () => {
             // }, 2000);
         }
     }
+    // console.log(positionInDepartmentDefined);
+    // console.log(departmentChangePosition);
+    useEffect(() => {
+        if(positionInDepartmentDefined && formAddPositionToDepartment === true) {
+            setPositionListAddPositionToDepartment(positionList.filter((item) => !positionInDepartmentDefined.includes(item.name)));
+        }
+    },[positionInDepartmentDefined, formAddPositionToDepartment])
+    //console.log(positionListAddPositionToDepartment);
+
+    const handleAddPositionToDepartment = async () => {
+        setLoading(true);
+
+        // if (userObject?.role === "Admin") {
+        //     try {
+        //         const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/delete-byId?employeeID=${id}&employeeName=${name}`,
+        //             { withCredentials: true },
+        //         );
+
+
+        //     } catch (err) {
+        //         alert(err.response?.data?.message)
+        //     } finally {
+        //         setLoading(false);
+        //         navigate("/employee")
+        //     }
+        // }
+    }
+
+    const handleRemovePositionToDepartment = async () => {
+        setLoading(true);
+
+        // if (userObject?.role === "Admin") {
+        //     try {
+        //         const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/delete-byId?employeeID=${id}&employeeName=${name}`,
+        //             { withCredentials: true },
+        //         );
+
+
+        //     } catch (err) {
+        //         alert(err.response?.data?.message)
+        //     } finally {
+        //         setLoading(false);
+        //         navigate("/employee")
+        //     }
+        // }
+    }
+
     return (
         <div className="ml-[260px] flex flex-col font-Changa text-textColor">
             {loading && (<div className="absolute flex w-full h-full justify-center mt-52">
@@ -581,8 +634,8 @@ const ProfileEmployee = () => {
                     {profileState && (<div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                         <div className="flex flex-col justify-center items-center gap-1 mt-4">
                             <img src={ProfileIcon} className="w-32 h-32" />
-                            <span className="mt-3 font-bold text-xl">{user[0]?.name}</span>
-                            <span className="text-base">Employee's ID: {user[0]?.id}</span>
+                            <span className="mt-3 font-bold text-xl">{name}</span>
+                            <span className="text-base">Employee's ID: {id}</span>
                             <div className="flex gap-2 justify-center items-center w-full h-full">
                                 <img className="w-4 h-4" src={IconActive} />
                                 <span className="text-buttonColor2">{user[0]?.status}</span>
@@ -618,9 +671,10 @@ const ProfileEmployee = () => {
                     {profileState && (<div className="bg-white h-auto w-2/3 flex flex-col p-4 rounded-md">
                         <div className="flex flex-col gap-1 mt-4">
                             <div className="text-xl font-bold">Employee's Information</div>
-                            <form
+                            <div
                                 className="ml-20 mt-10 flex flex-col gap-4"
-                                onSubmit={handleSubmit}>
+                            // onSubmit={handleSubmit}
+                            >
                                 <div className="flex flex-wrap w-[600px] items-center">
                                     <label className="w-1/4 text-right p-4" htmlFor="name">Name:</label>
                                     <input
@@ -760,9 +814,37 @@ const ProfileEmployee = () => {
                                         <label className="w-1/4 text-right p-4">Position:</label>
                                         <div className="flex flex-row gap-4">
                                             {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
-                                                .map((filteredItem, index) => (<div key={index}>
-                                                    {filteredItem?.position?.join(", ")}
-                                                </div>))
+                                                .map((filteredItem, index) => (
+                                                    <div className="flex flex-col gap-3 justify-center">
+                                                        <div key={index}>
+                                                            {filteredItem?.position?.join(", ")}
+                                                        </div>
+                                                        <div className="flex flex-row gap-4">
+                                                            {exportState && (<button
+                                                                onClick={() => {
+                                                                    setFormAddPositionToDepartment(true)
+                                                                    setDepartmentChangePosition(selectedDepartment)
+                                                                    //console.log(departmentChangePosition);
+                                                                    setPositionInDepartmentDefined(filteredItem?.position)
+                                                                    //console.log(positionInDepartmentDefined);
+                                                                }}
+                                                                className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
+                                                                <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Add Position
+                                                            </button>)}
+                                                            {exportState && (<button
+                                                                onClick={() => {
+                                                                    setFormRemovePositionFromDepartment(true)
+                                                                    setDepartmentChangePosition(selectedDepartment)
+                                                                    //console.log(departmentChangePosition);
+                                                                    setPositionInDepartmentDefined(filteredItem?.position)
+                                                                    //console.log(positionInDepartmentDefined);
+                                                                }}
+                                                                className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
+                                                                <img className="w-4 h-4" src={DeleteIcon} />Remove Position
+                                                            </button>)}
+                                                        </div>
+                                                    </div>
+                                                ))
                                             }
                                         </div>
                                     </div>)}
@@ -871,11 +953,11 @@ const ProfileEmployee = () => {
                                     <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                                         Stornieren
                                     </button>
-                                    <button type="submit" className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                                    <button type="button" onClick={handleSubmit} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                                         Änderungen speichern
                                     </button>
                                 </div>)}
-                            </form>
+                            </div>
                         </div>
                     </div>)
                     }
@@ -1117,6 +1199,208 @@ const ProfileEmployee = () => {
                                     <div
                                         className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-800 w-full">
                                         <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Abteilung entfernen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {formAddPositionToDepartment && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                <div
+                    onClick={() => setFormAddPositionToDepartment(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Add Position</div>
+                                <div
+                                    onClick={() => setFormAddPositionToDepartment(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7">
+                                <div
+                                    className="flex flex-col gap-6 w-full justify-center items-center"
+                                >
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader"></div>
+                                    </div>)}
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Filiale</span>
+                                        </div>
+                                        <input
+                                            id="department"
+                                            name="department"
+                                            type="text"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
+                                            value={departmentChangePosition}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Positions</span>
+                                        </div>
+                                        <div className="w-full flex flex-row gap-8 justify-between">
+                                            <div className="flex flex-col gap-2">
+                                                {positionListAddPositionToDepartment?.slice(0, Math.ceil(positionListAddPositionToDepartment.length / 2)).map((item, index) => (
+                                                    <div key={index} className="flex items-center gap-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`position_add_${index}`}
+                                                            name={`position_add_${index}`}
+                                                            value={item.name}
+                                                            checked={positionAdd?.includes(item.name)}
+                                                            onChange={(e) => {
+                                                                const isChecked = e.target.checked;
+                                                                setPositionAdd((prevPositions) =>
+                                                                    isChecked
+                                                                        ? [...prevPositions, item.name]
+                                                                        : prevPositions.filter((posAdd) => posAdd !== item.name)
+                                                                );
+                                                            }}
+                                                        />
+                                                        <label htmlFor={`position_add_${index}`} className="text-sm text-textColor">
+                                                            {item.name}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                {positionListAddPositionToDepartment?.slice(Math.ceil(positionListAddPositionToDepartment.length / 2)).map((item, index) => (
+                                                    <div key={index} className="flex items-center gap-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`position_add_${index}`}
+                                                            name={`position_add_${index}`}
+                                                            value={item.name}
+                                                            checked={positionAdd?.includes(item.name)}
+                                                            onChange={(e) => {
+                                                                const isChecked = e.target.checked;
+                                                                setPositionAdd((prevPositions) =>
+                                                                    isChecked
+                                                                        ? [...prevPositions, item.name]
+                                                                        : prevPositions.filter((posAdd) => posAdd !== item.name)
+                                                                );
+                                                            }}
+                                                        />
+                                                        <label htmlFor={`position_add_${index}`} className="text-sm text-textColor">
+                                                            {item.name}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                        <button onClick={handleAddPositionToDepartment} type="button" className="w-full">Add Position</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>)}
+            {formRemovePositionFromDepartment && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa overflow-y-auto">
+                <div
+                    onClick={() => setFormRemovePositionFromDepartment(false)}
+                    className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                <div className="absolute w-[500px] top-0 right-0 bottom-0 z-30 bg-white">
+                    <div className="w-full h-full">
+                        <div className="flex flex-col mt-8">
+                            <div className="flex flex-row justify-between px-8 items-center">
+                                <div className="font-bold text-xl">Add Position</div>
+                                <div
+                                    onClick={() => setFormRemovePositionFromDepartment(false)}
+                                    className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                            </div>
+                            <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                            <div className="flex flex-col px-8 w-full mt-7">
+                                <div
+                                    className="flex flex-col gap-6 w-full justify-center items-center"
+                                >
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader"></div>
+                                    </div>)}
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Filiale</span>
+                                        </div>
+                                        <input
+                                            id="department"
+                                            name="department"
+                                            type="text"
+                                            className="w-full cursor-pointer rounded-[6px] border-[#d9d9d9]"
+                                            value={departmentChangePosition}
+                                            readOnly
+                                        />
+                                    </div>
+                                    <div className="w-full flex flex-col gap-2">
+                                        <div className="flex flex-row gap-2">
+                                            <span className="text-rose-500">*</span>
+                                            <span className="">Positions</span>
+                                        </div>
+                                        <div className="w-full flex flex-row gap-8 justify-between">
+                                            <div className="flex flex-col gap-2">
+                                                {positionInDepartmentDefined?.slice(0, Math.ceil(positionInDepartmentDefined.length / 2)).map((item, index) => (
+                                                    <div key={index} className="flex items-center gap-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`position_remove_${index}`}
+                                                            name={`position_remove_${index}`}
+                                                            value={item}
+                                                            checked={positionRemove?.includes(item)}
+                                                            onChange={(e) => {
+                                                                const isChecked = e.target.checked;
+                                                                setPositionRemove((prevPositions) =>
+                                                                    isChecked
+                                                                        ? [...prevPositions, item]
+                                                                        : prevPositions.filter((posRemove) => posRemove !== item)
+                                                                );
+                                                            }}
+                                                        />
+                                                        <label htmlFor={`position_remove_${index}`} className="text-sm text-textColor">
+                                                            {item}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="flex flex-col gap-2">
+                                                {positionInDepartmentDefined?.slice(Math.ceil(positionInDepartmentDefined.length / 2)).map((item, index) => (
+                                                    <div key={index} className="flex items-center gap-2">
+                                                        <input
+                                                            type="checkbox"
+                                                            id={`position_remove_${index}`}
+                                                            name={`position_remove_${index}`}
+                                                            value={item}
+                                                            checked={positionRemove?.includes(item)}
+                                                            onChange={(e) => {
+                                                                const isChecked = e.target.checked;
+                                                                setPositionRemove((prevPositions) =>
+                                                                    isChecked
+                                                                        ? [...prevPositions, item]
+                                                                        : prevPositions.filter((posRemove) => posRemove !== item)
+                                                                );
+                                                            }}
+                                                        />
+                                                        <label htmlFor={`position_remove_${index}`} className="text-sm text-textColor">
+                                                            {item}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-800 w-full">
+                                        <button onClick={handleRemovePositionToDepartment} type="button" className="w-full">Remove Position</button>
                                     </div>
                                 </div>
                             </div>
