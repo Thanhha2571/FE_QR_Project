@@ -290,6 +290,9 @@ const ProfileEmployee = () => {
             setCheckAdmin(false)
             setCheckInhaber(false)
             setCheckManager(true)
+            setProfileState(false)
+            setScheduleState(true)
+
         }
     }, [user, userObject?.role]);
 
@@ -606,12 +609,12 @@ const ProfileEmployee = () => {
             <div className="border border-solid border-t-[#6c757d]"></div>
             <div className="bg-white h-auto w-full flex flex-col p-4 rounded-md">
                 <div className="flex flex-row gap-4 text-xl">
-                    <div
+                    {userObject?.role === "Manager" ? (<div></div>) : (<div
                         onClick={() => {
                             setScheduleState(false)
                             setProfileState(true)
                         }}
-                        className={`hover:text-buttonColor1 cursor-pointer ${profileState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Grundinformation</div>
+                        className={`hover:text-buttonColor1 cursor-pointer ${profileState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Grundinformation</div>)}
                     <div
                         onClick={() => {
                             setScheduleState(true)
