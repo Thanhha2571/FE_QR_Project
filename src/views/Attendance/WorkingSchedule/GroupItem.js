@@ -55,7 +55,7 @@ const GroupItem = (props) => {
                     <Link className="cursor-pointer flex flex-col">{name}</Link>
                 </h2>
             </td>
-            <td className="py-4 px-2 text-left">{code}</td>
+            <td className="py-4 px-2 text-left">{cosdfdsfsdde}</td>
             <td className="py-4 px-2">{shift_type}</td>
             <td className="py-4 px-2 flex flex-col gap-3">
                 {shift_design?.map((item, index) => (

@@ -31,14 +31,6 @@ const titles = {
     '/employee': 'Employee',
 }
 
-const ROLES = {
-    'Admin': 'Admin',
-    'Inhaber': 'Inhaber',
-    'Manager': 'Manager',
-    'Employee': 'Employee',
-}
-
-
 const Router = () => {
     // const location = useLocation()
     // useEffect(
