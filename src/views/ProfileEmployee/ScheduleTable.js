@@ -346,6 +346,27 @@ const ScheduleTable = (props) => {
                 }
             }
         }
+
+        if (userObject?.role === "Manager" && year !== "" && month !== "" && day !== "" && date !== "") {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+
+                setScheduleDataByDate(response.data.message);
+                // console.log("schedule", response.data.message);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setScheduleDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
     };
 
     useEffect(() => {
@@ -477,9 +498,6 @@ const ScheduleTable = (props) => {
                     },
                     { withCredentials: true }
                 );
-                fetchScheduleEmployyee()
-                fetchEmployeeStatsByMonth()
-                fetchScheduleDataByDate()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -495,6 +513,9 @@ const ScheduleTable = (props) => {
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
+                fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
+                fetchScheduleDataByDate()
             }
         }
         if (userObject.role === 'Inhaber') {
@@ -511,8 +532,6 @@ const ScheduleTable = (props) => {
                     },
                     { withCredentials: true }
                 );
-                fetchScheduleEmployyee()
-                fetchEmployeeStatsByMonth()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -528,6 +547,9 @@ const ScheduleTable = (props) => {
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
+                fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
+                fetchScheduleDataByDate()
             }
         }
 
@@ -545,8 +567,6 @@ const ScheduleTable = (props) => {
                     },
                     { withCredentials: true }
                 );
-                fetchScheduleEmployyee()
-                fetchEmployeeStatsByMonth()
                 // setTimeout(() => {
                 //     window.location.reload();
                 // }, 3000);
@@ -562,6 +582,9 @@ const ScheduleTable = (props) => {
                 setSelectedShiftAddShiftForm("")
                 setSelectedDepartmentEmployee("")
                 setSelectedPositionEmployee("")
+                fetchScheduleEmployyee()
+                fetchEmployeeStatsByMonth()
+                fetchScheduleDataByDate()
             }
         }
     }
@@ -898,6 +921,58 @@ const ScheduleTable = (props) => {
                 setDeleteShiftModal(false)
                 setFormState(false)
                 setArrayDateDelete([])
+                fetchScheduleEmployyee();
+                fetchScheduleDataByDate()
+            }
+
+        }
+
+        if (userObject?.role === 'Manager') {
+            arrayDateDelete.push(dateShiftCodeDelete)
+            console.log(arrayDateDelete);
+            console.log(shiftCodeDelete);
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/delete?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    {
+                        shift_code: shiftCodeDelete,
+                        dates: arrayDateDelete
+                    },
+                );
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setArrayDateDelete([])
+            } finally {
+                setDeleteShiftModal(false)
+                setFormState(false)
+                setArrayDateDelete([])
+                fetchScheduleDataByDate()
+                fetchScheduleEmployyee();
+            }
+
+        }
+
+        if (userObject?.role === 'Inhaber') {
+            arrayDateDelete.push(dateShiftCodeDelete)
+            console.log(arrayDateDelete);
+            console.log(shiftCodeDelete);
+            try {
+                const { data } = await axios.put(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/delete?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    {
+                        shift_code: shiftCodeDelete,
+                        dates: arrayDateDelete
+                    },
+                );
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setArrayDateDelete([])
+            } finally {
+                setDeleteShiftModal(false)
+                setFormState(false)
+                setArrayDateDelete([])
+                fetchScheduleDataByDate()
+                fetchScheduleEmployyee();
             }
 
         }
@@ -932,12 +1007,12 @@ const ScheduleTable = (props) => {
                                             setInforShiftFormState(false)
                                         }}
                                         className={`cursor-pointer font-bold text-xl ${addShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schicht hinzufügen</div>
-                                    {exportState && (<div
+                                    <div
                                         onClick={() => {
                                             setAddShiftFormState(false)
                                             setInforShiftFormState(true)
                                         }}
-                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schichtinformationen</div>)}
+                                        className={`cursor-pointer font-bold text-xl ${inforShiftFormState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Schichtinformationen</div>
                                 </div>
                                 <div
                                     onClick={() => setFormState(false)}
@@ -1160,7 +1235,7 @@ const ScheduleTable = (props) => {
                                 </form>
                             </div>)}
                             {/* //----------------------------------------------------------------  SHIFT INFORMATION ----------------------------------------------------------------// */}
-                            {exportState && (inforShiftFormState && (<div className="flex flex-col px-8 w-full mt-7 gap-2 font-Changa text-textColor">
+                            {inforShiftFormState && (<div className="flex flex-col px-8 w-full mt-7 gap-2 font-Changa text-textColor">
                                 <div className="font-bold text-2xl">Schichtinformationen</div>
                                 <div className="flex flex-row gap-3">
                                     {scheduleDataByDate?.length === 0 ? (
@@ -1175,7 +1250,7 @@ const ScheduleTable = (props) => {
                                         ))
                                     )}
                                 </div>
-                                {selectedShift && (
+                                {exportState && (selectedShift && (
                                     <div>
                                         {attendanceDataByDate?.length === 0 ? (
                                             <div className="flex flex-col gap-3">
@@ -1441,7 +1516,7 @@ const ScheduleTable = (props) => {
                                                     // </div>
                                                 )))}
                                     </div>
-                                )}
+                                ))}
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>
                                 {selectedShift && (
                                     <div>
@@ -1516,7 +1591,7 @@ const ScheduleTable = (props) => {
                                             ))}
                                     </div>
                                 )}
-                                {selectedShift && (
+                                {exportState && (selectedShift && (
                                     <div>
                                         {attendanceDataByDate
                                             ?.filter((item) => item?.shift_info?.shift_code === selectedShift)
@@ -1539,8 +1614,8 @@ const ScheduleTable = (props) => {
                                                 </div>
                                             ))}
                                     </div>
-                                )}
-                            </div>))}
+                                ))}
+                            </div>)}
                         </div>
                     </div>
                 </div>
