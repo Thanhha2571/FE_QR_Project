@@ -13,6 +13,17 @@ const DayOffManagement = () => {
 
     const [checkManager, setCheckManager] = useState(false)
 
+    const PAGE_SIZE = 20
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * PAGE_SIZE;
+    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(requestList?.length / PAGE_SIZE);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     useEffect(() => {
 
         if (userObject?.role === 'Manager') {
@@ -191,7 +202,7 @@ const DayOffManagement = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {requestList?.map(({ _id, employee_id, employee_name, answer_status, request_content, request_dayOff_start, request_dayOff_end }) => (
+                                        {currentDayOffLists?.map(({ _id, employee_id, employee_name, answer_status, request_content, request_dayOff_start, request_dayOff_end }) => (
                                             <tr className="tr-item">
                                                 <td className="p-2 hover:text-buttonColor2">
                                                     <h2 className="text-left">
@@ -211,6 +222,22 @@ const DayOffManagement = () => {
                                         ))}
                                     </tbody>
                                 </table>
+                            </div>
+                            <div className="flex justify-center mt-4">
+                                {totalPages > 1 && (
+                                    <div className="flex flex-row gap-2">
+                                        {Array.from({ length: totalPages }).map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handlePageChange(index + 1)}
+                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                            >
+                                                {index + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

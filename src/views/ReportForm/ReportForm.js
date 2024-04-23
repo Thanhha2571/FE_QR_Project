@@ -44,10 +44,10 @@ const ReportForm = () => {
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {
@@ -57,10 +57,10 @@ const ReportForm = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {
@@ -73,10 +73,10 @@ const ReportForm = () => {
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setDepartmentList(response.data);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -277,21 +277,21 @@ const ReportForm = () => {
                         </table>
                     </div>
                     <div className="flex justify-center">
-                    {totalPages > 1 && (
-                        <div className="flex flex-row gap-2">
-                            {Array.from({ length: totalPages }).map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                        {totalPages > 1 && (
+                            <div className="flex flex-row gap-2">
+                                {Array.from({ length: totalPages }).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageChange(index + 1)}
+                                        className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                    // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             ) : (
                 <div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>

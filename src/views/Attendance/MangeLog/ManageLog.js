@@ -11,14 +11,25 @@ const ManageLog = () => {
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
+    const PAGE_SIZE = 20
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * PAGE_SIZE;
+    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    const currentLogs = logList?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(logList?.length / PAGE_SIZE);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     const getAllLogs = async () => {
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-logs/get?type_update=Update attendance', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setLogList(response.data.message);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -49,58 +60,74 @@ const ManageLog = () => {
                     <div className="text-xl font-semibold leading-6">List All Logs</div>
 
                     <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
-                    <table className="w-full table">
-                    <thead className="">
-                        <tr className="">
-                            <th className="p-4 text-left">
-                                <span className="font-bold">Date Edited</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-id">Editor Name</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">Editor Role</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-id">Edited Name</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">Edited Role</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">Shift Code</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">Shift Date</span>
-                            </th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">Before Update</span>
-                            </th>
-                            <th></th>
-                            <th className="p-4 text-left">
-                                <span className="table-title-role">After Update</span>
-                            </th>
-                        </tr>
-                    </thead>
-                    {Array.isArray(logList) && logList?.length === 0 ? (
-                        <div className="no-result-text">NO RESULT</div>
-                    ) : (
-                        <tbody className="tbody">
-                            {logList?.map(({ date, _id, editor_name, editor_role, edited_name, edited_role, before_update, after_update }) => (
-                                <LogItem
-                                    key={_id}
-                                    date={date}
-                                    editor_name={editor_name}
-                                    editor_role={editor_role}
-                                    edited_name={edited_name}
-                                    edited_role={edited_role}
-                                    before_update={before_update}
-                                    after_update={after_update}
-                                />
-                            ))}
-                        </tbody>
-                    )}
-                </table>
+                        <table className="w-full table">
+                            <thead className="">
+                                <tr className="">
+                                    <th className="p-4 text-left">
+                                        <span className="font-bold">Date Edited</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-id">Editor Name</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Editor Role</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-id">Edited Name</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Edited Role</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Shift Code</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Shift Date</span>
+                                    </th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">Before Update</span>
+                                    </th>
+                                    <th></th>
+                                    <th className="p-4 text-left">
+                                        <span className="table-title-role">After Update</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            {Array.isArray(currentLogs) && currentLogs?.length === 0 ? (
+                                <div className="no-result-text">NO RESULT</div>
+                            ) : (
+                                <tbody className="tbody">
+                                    {currentLogs?.map(({ date, _id, editor_name, editor_role, edited_name, edited_role, before_update, after_update }) => (
+                                        <LogItem
+                                            key={_id}
+                                            date={date}
+                                            editor_name={editor_name}
+                                            editor_role={editor_role}
+                                            edited_name={edited_name}
+                                            edited_role={edited_role}
+                                            before_update={before_update}
+                                            after_update={after_update}
+                                        />
+                                    ))}
+                                </tbody>
+                            )}
+                        </table>
+                    </div>
+                    <div className="flex justify-center">
+                        {totalPages > 1 && (
+                            <div className="flex flex-row gap-2">
+                                {Array.from({ length: totalPages }).map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => handlePageChange(index + 1)}
+                                        className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                    // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (
