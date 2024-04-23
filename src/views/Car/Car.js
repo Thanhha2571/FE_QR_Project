@@ -57,7 +57,11 @@ const Car = () => {
     const getAllCars = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // console.log(response.data.message);
                 setCarList(response?.data?.message);
             } catch (err) {
@@ -66,7 +70,11 @@ const Car = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // console.log(response.data.message);
                 setCarList(response?.data?.message);
             } catch (err) {
@@ -79,7 +87,11 @@ const Car = () => {
     const getAllDepartments = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setDepartmentList(response.data);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -110,7 +122,11 @@ const Car = () => {
         if (userObject?.role === "Admin" && selectedCarEdit !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarEdit}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarEdit}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -121,7 +137,11 @@ const Car = () => {
         if (userObject?.role === "Admin" && selectedCarDelete !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarDelete}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarDelete}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -132,7 +152,11 @@ const Car = () => {
         if (userObject?.role === "Inhaber" && selectedCarEdit !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -143,7 +167,11 @@ const Car = () => {
         if (userObject?.role === "Inhaber" && selectedCarDelete !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -153,7 +181,11 @@ const Car = () => {
         
         if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -163,7 +195,11 @@ const Car = () => {
 
         if (userObject?.role === "Admin" && selectedCarRemoveDepartment !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, { withCredentials: true })
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -333,7 +369,11 @@ const Car = () => {
                         register_date: registerDate,
                         department_name: selectedDepartmentCar
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllCars()
@@ -363,7 +403,11 @@ const Car = () => {
                         register_date: registerDate,
                         department_name: selectedDepartmentCar
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllCars()
@@ -397,7 +441,11 @@ const Car = () => {
             try {
                 const { data } = await axios.delete(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/delete-by-id/${selectedCarDelete}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -412,7 +460,11 @@ const Car = () => {
             try {
                 const { data } = await axios.delete(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/delete-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -434,7 +486,11 @@ const Car = () => {
                     departmentName: selectedDepartment,
                 },
 
-                { withCredentials: true });
+                {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
 
             } catch (err) {
@@ -459,7 +515,11 @@ const Car = () => {
                     departmentName: selectedDepartment,
                 },
 
-                { withCredentials: true });
+                {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
 
             } catch (err) {

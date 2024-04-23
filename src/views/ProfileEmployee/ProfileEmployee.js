@@ -90,7 +90,11 @@ const ProfileEmployee = () => {
                         employeeName: name,
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -113,7 +117,11 @@ const ProfileEmployee = () => {
                         employeeName: name,
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -137,7 +145,11 @@ const ProfileEmployee = () => {
                         employeeID: id,
                         employeeName: name,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -159,7 +171,11 @@ const ProfileEmployee = () => {
                         employeeID: id,
                         employeeName: name,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -178,7 +194,11 @@ const ProfileEmployee = () => {
     const getUser = async () => {
         if (userObject?.role === 'Admin') {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -192,7 +212,11 @@ const ProfileEmployee = () => {
         }
         if (userObject?.role === 'Inhaber') {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -207,7 +231,11 @@ const ProfileEmployee = () => {
 
         if (userObject?.role === 'Manager') {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -256,7 +284,11 @@ const ProfileEmployee = () => {
         const getAllDepartments = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     setDepartmentList(response.data);
                 } catch (err) {
                     alert(err.response?.data?.message)
@@ -410,7 +442,11 @@ const ProfileEmployee = () => {
                         total_time_per_month: Number(editingData.total_time_per_month),
                         // inactive_day: editingData.inactive_day,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
                 navigate(`/employee/view-profile/${editingData.id}/${editingData.name}`);
             } catch (err) {
@@ -441,7 +477,11 @@ const ProfileEmployee = () => {
                         realistic_day_off: Number(editingData.realistic_day_off),
                         total_time_per_month: Number(editingData.total_time_per_month)
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
                 navigate(`/employee/view-profile/${editingData.id}/${editingData.name}`);
@@ -463,7 +503,11 @@ const ProfileEmployee = () => {
         if (userObject?.role === "Admin") {
             try {
                 const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/delete-byId?employeeID=${id}&employeeName=${name}`,
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -477,7 +521,11 @@ const ProfileEmployee = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 const { data } = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/delete-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`,
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -499,7 +547,11 @@ const ProfileEmployee = () => {
 
                         inactive_day: `${dateInactive} ${timeInactive}`,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -521,7 +573,11 @@ const ProfileEmployee = () => {
 
                         inactive_day: `${dateInactive} ${timeInactive}`,
                     },
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 
@@ -559,7 +615,11 @@ const ProfileEmployee = () => {
                         newPosition: positionInDepartmentDefined
                     },
 
-                    { withCredentials: true },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
                 );
 
 

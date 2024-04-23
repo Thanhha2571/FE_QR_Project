@@ -126,7 +126,11 @@ const ScheduleTable = (props) => {
     const fetchScheduleEmployyee = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -136,7 +140,11 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -146,7 +154,11 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Manager") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 console.log("scheduleEmployeeAll", response.data);
                 setScheduleEmployee(response.data);
                 // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -164,7 +176,11 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setEmployeeStats(response.data.message);
                 // console.log("attendance stats", response.data.message);
             } catch (error) {
@@ -180,7 +196,11 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Manager" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&manager_name=${userObject?.name}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&manager_name=${userObject?.name}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setEmployeeStats(response.data.message);
                 // console.log("attendance stats", response.data.message);
             } catch (error) {
@@ -196,7 +216,11 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&inhaber_name=${userObject?.name}&employeeName=${name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&inhaber_name=${userObject?.name}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setEmployeeStats(response.data.message);
                 // console.log("attendance stats", response.data.message);
             } catch (error) {
@@ -238,7 +262,11 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
                 setAttendanceDataByDate(response.data.message);
                 console.log("attendance", response.data);
@@ -258,7 +286,11 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
                 setAttendanceDataByDate(response.data.message);
                 console.log("attendance", response.data);
@@ -309,7 +341,11 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setScheduleDataByDate(response.data.message);
                 // console.log("schedule", response.data.message);
             } catch (error) {
@@ -332,7 +368,11 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
                 setScheduleDataByDate(response.data.message);
                 // console.log("schedule", response.data.message);
@@ -353,7 +393,11 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
 
                 setScheduleDataByDate(response.data.message);
                 // console.log("schedule", response.data.message);
@@ -373,7 +417,11 @@ const ScheduleTable = (props) => {
         const getAllShifts = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(response.data.message);
                     setShiftList(response.data.message);
                 } catch (err) {
@@ -383,7 +431,11 @@ const ScheduleTable = (props) => {
 
             if (userObject?.role === "Inhaber") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(response.data.message);
                     setShiftList(response.data.message);
                 } catch (err) {
@@ -392,7 +444,11 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Manager") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(response.data.message);
                     setShiftList(response.data.message);
                 } catch (err) {
@@ -406,7 +462,11 @@ const ScheduleTable = (props) => {
         const fetchData = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log("userData", response.data);
                     setEmployeeData(response.data);
                     // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -416,7 +476,11 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Inhaber") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log("userData", response.data);
                     setEmployeeData(response.data);
                     // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -426,7 +490,11 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Manager") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log("userData", response.data);
                     setEmployeeData(response.data);
                     // setShiftDataByDate(employeeData?.message[0]?.department?.map((item) => item?.schedules));
@@ -496,7 +564,11 @@ const ScheduleTable = (props) => {
                         position: selectedPositionEmployee
 
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 // setTimeout(() => {
                 //     window.location.reload();
@@ -530,7 +602,11 @@ const ScheduleTable = (props) => {
                         position: selectedPositionEmployee
 
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 // setTimeout(() => {
                 //     window.location.reload();
@@ -565,7 +641,11 @@ const ScheduleTable = (props) => {
                         position: selectedPositionEmployee
 
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 // setTimeout(() => {
                 //     window.location.reload();
@@ -645,7 +725,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -668,7 +752,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -690,7 +778,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -716,7 +808,11 @@ const ScheduleTable = (props) => {
                         "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         status: "checked"
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 fetchAttendanceDataByDate();
@@ -743,7 +839,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -766,7 +866,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -788,7 +892,11 @@ const ScheduleTable = (props) => {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         },
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
 
                     fetchAttendanceDataByDate();
@@ -814,7 +922,11 @@ const ScheduleTable = (props) => {
                         "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
                         status: "checked"
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 fetchAttendanceDataByDate();
@@ -855,7 +967,11 @@ const ScheduleTable = (props) => {
                         "check_in_status": selectedCheckInStatusCreate,
                         "check_out_status": selectedCheckOutStatusCreate,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 fetchAttendanceDataByDate();
@@ -881,7 +997,11 @@ const ScheduleTable = (props) => {
                         "check_in_status": selectedCheckInStatusCreate,
                         "check_out_status": selectedCheckOutStatusCreate,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 fetchAttendanceDataByDate();

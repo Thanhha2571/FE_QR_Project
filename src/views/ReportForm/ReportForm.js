@@ -23,6 +23,17 @@ const ReportForm = () => {
     const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
 
+    const PAGE_SIZE = 30
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * PAGE_SIZE;
+    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    const currentForms = formList?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(formList?.length / PAGE_SIZE);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
             setExportState(true)
@@ -32,7 +43,11 @@ const ReportForm = () => {
     const getAllForms = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {
@@ -41,7 +56,11 @@ const ReportForm = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
             } catch (err) {
@@ -53,7 +72,11 @@ const ReportForm = () => {
     const getAllDepartments = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setDepartmentList(response.data);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -98,7 +121,11 @@ const ReportForm = () => {
             setFormList([])
             if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, { withCredentials: true })
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
@@ -109,7 +136,11 @@ const ReportForm = () => {
 
             if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, { withCredentials: true })
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
@@ -119,7 +150,11 @@ const ReportForm = () => {
             }
             if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, { withCredentials: true })
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
                     setFormList(response?.data?.message);
                 } catch (err) {
                     alert(err.response?.data?.message)
@@ -211,11 +246,11 @@ const ReportForm = () => {
                                     </th>
                                 </tr>
                             </thead>
-                            {Array.isArray(formList) && formList?.length === 0 ? (
+                            {Array.isArray(currentForms) && currentForms?.length === 0 ? (
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {formList?.filter((item) => item.position === "Lito" || item.position === "Service" || item.position === "Autofahrer")?.map(({ date, employee_id, department_name, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
+                                    {currentForms?.filter((item) => item.position === "Lito" || item.position === "Service" || item.position === "Autofahrer")?.map(({ date, employee_id, department_name, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}
@@ -241,6 +276,22 @@ const ReportForm = () => {
                             )}
                         </table>
                     </div>
+                    <div className="flex justify-center">
+                    {totalPages > 1 && (
+                        <div className="flex flex-row gap-2">
+                            {Array.from({ length: totalPages }).map((_, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handlePageChange(index + 1)}
+                                    className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                >
+                                    {index + 1}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
                 </div>
             ) : (
                 <div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>

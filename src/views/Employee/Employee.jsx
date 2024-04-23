@@ -100,7 +100,11 @@ function Employee() {
                         role: "Employee",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllUsers()
@@ -141,7 +145,11 @@ function Employee() {
                         role: "Employee",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllUsers()
@@ -178,7 +186,11 @@ function Employee() {
                         role: "Employee",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllUsers()
@@ -215,7 +227,11 @@ function Employee() {
                         role: "Manager",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllUsers()
@@ -253,7 +269,11 @@ function Employee() {
                         role: "Inhaber",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 getAllUsers()
@@ -291,7 +311,11 @@ function Employee() {
                         role: "Manager",
                         position: selectedPositionEmployee,
                     },
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 getAllUsers()
             } catch (err) {
@@ -351,7 +375,11 @@ function Employee() {
         if (userObject.role === 'Admin') {
             setUserList([])
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(query);
                 setUserList(response.data.message);
             } catch (error) {
@@ -394,7 +422,11 @@ function Employee() {
             if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -406,7 +438,11 @@ function Employee() {
             if (inputSearch === "" && selectedRole !== "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -418,7 +454,11 @@ function Employee() {
             if (inputSearch !== "" && selectedRole === "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -430,7 +470,11 @@ function Employee() {
             if (inputSearch !== "" && selectedRole !== "Wählen Sie Rolle aus") {
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -451,7 +495,11 @@ function Employee() {
             if (inputSearch !== "") {
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, { withCredentials: true });
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     // console.log(query);
                     setUserList(response.data.message);
                 } catch (error) {
@@ -478,7 +526,12 @@ function Employee() {
 
                 const { data } = await axios.get(
                     "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-data",
-                    { responseType: "arraybuffer", withCredentials: true }
+                    {
+                        responseType: "arraybuffer",
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -503,7 +556,11 @@ function Employee() {
 
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -528,17 +585,29 @@ function Employee() {
         setLoading(true);
         try {
             if (userObject?.role === 'Admin') {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, { withCredentials: true }
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                }
                 );
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Manager') {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setUserList(response.data.message);
             }
 
@@ -564,7 +633,11 @@ function Employee() {
         const getAllDepartments = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', { withCredentials: true });
+                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                     setDepartmentList(response.data);
                 } catch (err) {
                     alert(err.response?.data?.message)
@@ -657,7 +730,7 @@ function Employee() {
 
                         {roleMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
                             {roleList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedRole(name)} className="w-full text-center">{name}</div>
+                                return <div onClick={() => handleChangeSelectedRole(name)} className="w-full text-center hover:underline">{name}</div>
                             })}
                         </div>)}
                     </div>)}
@@ -676,7 +749,7 @@ function Employee() {
 
                         {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
                             {departmentList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center">{name}</div>
+                                return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center hover:underline">{name}</div>
                             })}
                         </div>)}
                     </div>)}

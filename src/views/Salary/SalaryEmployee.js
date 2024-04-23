@@ -52,8 +52,12 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Admin' && monthPicker !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log(data?.);
@@ -68,8 +72,12 @@ const SalaryEmployee = () => {
         if (userObject.role === 'Admin' && monthPicker !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}`,
-                    { withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setUser(data?.message)
                 // console.log(data?.);
@@ -86,8 +94,12 @@ const SalaryEmployee = () => {
             try {
                 setSalaryInfoState(true)
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log(data?.);
@@ -103,8 +115,12 @@ const SalaryEmployee = () => {
             try {
                 setSalaryInfoState(true)
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setUser(data?.message)
                 console.log("user", data?.message);
@@ -123,15 +139,19 @@ const SalaryEmployee = () => {
         try {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/attendance-stats?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/attendance-stats?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Attendance_Stat_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Attendance_Stat_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -140,15 +160,17 @@ const SalaryEmployee = () => {
 
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    { responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        } }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Attendance_Stat_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Attendance_Stat_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -168,15 +190,17 @@ const SalaryEmployee = () => {
         try {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-attendance?year=${monthPicker.substring(3,7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-attendance?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    { responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        } }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Attendance_History_${employeeId}_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Attendance_History_${employeeId}_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -185,14 +209,16 @@ const SalaryEmployee = () => {
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-attendance?inahber_name=${userObject?.name}&year=${inputYear}&month=${inputMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    { responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        } }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
                 const link = document.createElement("a");
 
                 link.href = window.URL.createObjectURL(blob);
-                link.download = `Employee_Attendance_History_${employeeId}_${monthPicker.substring(0,2)}_${monthPicker.substring(3,7)}.xlsx`;
+                link.download = `Employee_Attendance_History_${employeeId}_${monthPicker.substring(0, 2)}_${monthPicker.substring(3, 7)}.xlsx`;
 
                 document.body.appendChild(link);
                 link.click();
@@ -307,7 +333,7 @@ const SalaryEmployee = () => {
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Do you want to export Employee_Attendance_Stats_{employeeId}_{monthPicker.substring(0,2)}_{monthPicker.substring(3,7)}.xlsx?</span>
+                                    <span>Do you want to export Employee_Attendance_Stats_{employeeId}_{monthPicker.substring(0, 2)}_{monthPicker.substring(3, 7)}.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportAttendanceStatEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportAttendanceStatEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
@@ -332,7 +358,7 @@ const SalaryEmployee = () => {
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                                 <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
-                                    <span>Do you want to export Employee_Attendance_History_{employeeId}_{monthPicker.substring(0,2)}_{monthPicker.substring(3,7)}.xlsx?</span>
+                                    <span>Do you want to export Employee_Attendance_History_{employeeId}_{monthPicker.substring(0, 2)}_{monthPicker.substring(3, 7)}.xlsx?</span>
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportAttendanceHistory(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportAttendanceHistoryEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>

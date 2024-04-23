@@ -63,7 +63,11 @@ const SalarySummarizie = () => {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 console.log(data?.message);
@@ -80,7 +84,11 @@ const SalarySummarizie = () => {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 console.log(data?.message);
@@ -94,7 +102,11 @@ const SalarySummarizie = () => {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log("data", data?.message);
@@ -108,7 +120,11 @@ const SalarySummarizie = () => {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log("data", data?.message);
@@ -138,7 +154,11 @@ const SalarySummarizie = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${formData?.user?.id}`,
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);
@@ -151,7 +171,11 @@ const SalarySummarizie = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${formData?.user?.id}`,
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);
@@ -166,7 +190,11 @@ const SalarySummarizie = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setUserListSearch(data?.message)
                     // console.log("data", data?.message);
@@ -179,7 +207,11 @@ const SalarySummarizie = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setUserListSearch(data?.message)
                     // console.log("data", data?.message);
@@ -211,7 +243,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3,7)}&month=${monthCountingPikcer.substring(0,2)}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -219,7 +251,11 @@ const SalarySummarizie = () => {
                             d_new: formData.user.d,
                             f_new: formData.user.f
                         },
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setLoading(false);
                     setFormData({
@@ -246,7 +282,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3,7)}&month=${monthCountingPikcer.substring(0,2)}`,
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
                             a_new: formData.user.a,
                             b_new: formData.user.b,
@@ -254,7 +290,11 @@ const SalarySummarizie = () => {
                             d_new: formData.user.d,
                             f_new: formData.user.f
                         },
-                        { withCredentials: true }
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
                     );
                     setLoading(false);
                     setFormData({
@@ -287,7 +327,11 @@ const SalarySummarizie = () => {
                 setLoading(true);
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -311,7 +355,11 @@ const SalarySummarizie = () => {
                 setLoading(true);
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
-                    { responseType: "arraybuffer", withCredentials: true }
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });

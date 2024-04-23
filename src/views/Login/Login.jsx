@@ -55,6 +55,7 @@ const Login = () => {
             const userDetails = res?.data?.details;
             
             localStorage.setItem('user', JSON.stringify(userDetails));
+            localStorage.setItem('token', res?.data?.token);
             setAuth({ name, password, role });
             setUser('');
             setPwd('');

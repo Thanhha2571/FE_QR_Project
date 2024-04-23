@@ -27,7 +27,11 @@ const History = () => {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?employeeID=${inputId}&employeeName=${inputName}`,
-                    { withCredentials: true }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                 );
                 setSalaryListByMonth(data?.message)
                 // console.log("data", data?.message);
@@ -44,7 +48,11 @@ const History = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);
@@ -57,7 +65,11 @@ const History = () => {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
-                        { withCredentials: true }
+                        {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);

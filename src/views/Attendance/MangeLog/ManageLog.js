@@ -14,7 +14,11 @@ const ManageLog = () => {
     const getAllLogs = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-logs/get?type_update=Update attendance', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-logs/get?type_update=Update attendance', {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 setLogList(response.data.message);
             } catch (error) {
                 console.error('Error fetching data:', error);

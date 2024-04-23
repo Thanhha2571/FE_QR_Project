@@ -36,7 +36,11 @@ const DayOffManagement = () => {
                     {
                         answer_status: "approved"
                     },
-                    { withCredentials: true });
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // After successfully updating, close the modal and fetch the updated data
                 setRequestModal(false);
                 getAllRequestList()
@@ -51,7 +55,11 @@ const DayOffManagement = () => {
                     {
                         answer_status: "approved"
                     },
-                    { withCredentials: true });
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // After successfully updating, close the modal and fetch the updated data
                 setRequestModal(false);
                 getAllRequestList()
@@ -69,7 +77,11 @@ const DayOffManagement = () => {
                     {
                         answer_status: "denied"
                     },
-                    { withCredentials: true });
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // After successfully updating, close the modal and fetch the updated data
                 setRequestModal(false);
                 getAllRequestList()
@@ -85,7 +97,11 @@ const DayOffManagement = () => {
                     {
                         answer_status: "denied"
                     },
-                    { withCredentials: true });
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
                 // After successfully updating, close the modal and fetch the updated data
                 setRequestModal(false);
                 getAllRequestList()
@@ -99,7 +115,11 @@ const DayOffManagement = () => {
     const getAllRequestList = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/get-all', { withCredentials: true });
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/get-all', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setRequestList(response.data.message);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -107,7 +127,11 @@ const DayOffManagement = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-request/get-all?inhaber_name=${userObject?.name}`, { withCredentials: true });
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-request/get-all?inhaber_name=${userObject?.name}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setRequestList(response.data.message);
             } catch (error) {
                 console.error('Error fetching data:', error);
