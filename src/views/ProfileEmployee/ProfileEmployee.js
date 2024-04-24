@@ -653,10 +653,10 @@ const ProfileEmployee = () => {
                 </div>
                 <div className="flex flex-row px-4 gap-4">
                     {exportState && (<button onClick={() => setFormAddDepartmentState(!formAddDepartmentState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
-                        <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Abteilung hinzufügen
+                        <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Filiale hinzufügen
                     </button>)}
                     {exportState && (<button onClick={() => setRemoveDepartmentFormState(true)} className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
-                        <img className="w-4 h-4" src={DeleteIcon} />Abteilung entfernen
+                        <img className="w-4 h-4" src={DeleteIcon} />Filiale entfernen
                     </button>)}
                     {exportState && (<button onClick={() => setChangeStatus(true)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
                         Inaktiv machen
@@ -1023,7 +1023,7 @@ const ProfileEmployee = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Abteilung hinzufügen</div>
+                                <div className="font-bold text-xl">Filiale hinzufügen</div>
                                 <div
                                     onClick={() => setFormAddDepartmentState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -1049,7 +1049,7 @@ const ProfileEmployee = () => {
                                             onChange={(e) => setSelectedDepartmentEmployee(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
+                                            <option value="" disabled className='italic text-sm'>Filiale auswählen*</option>
                                             {restDepartmentList?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                     {item}
@@ -1115,7 +1115,7 @@ const ProfileEmployee = () => {
                                     </div>
                                     <div
                                         className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
-                                        <button onClick={handleAddDepartmentForEmployee} type="button" className="w-full">Abteilung hinzufügen</button>
+                                        <button onClick={handleAddDepartmentForEmployee} type="button" className="w-full">Filiale hinzufügen</button>
                                     </div>
                                 </div>
                             </div>
@@ -1205,7 +1205,7 @@ const ProfileEmployee = () => {
                     <div className="w-full h-full">
                         <div className="flex flex-col mt-8">
                             <div className="flex flex-row justify-between px-8 items-center">
-                                <div className="font-bold text-xl">Abteilung entfernen</div>
+                                <div className="font-bold text-xl">Filiale entfernen</div>
                                 <div
                                     onClick={() => setRemoveDepartmentFormState(false)}
                                     className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
@@ -1231,7 +1231,7 @@ const ProfileEmployee = () => {
                                             onChange={(e) => setSelectedDepartmentRemove(e.target.value)}
                                             required
                                         >
-                                            <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
+                                            <option value="" disabled className='italic text-sm'>Filiale auswählen*</option>
                                             {user && user[0]?.department?.map((item, index) => (
                                                 <option className='text-sm text-textColor w-full' key={index} value={item.name}>
                                                     {item.name}
@@ -1241,7 +1241,7 @@ const ProfileEmployee = () => {
                                     </div>
                                     <div
                                         className=" bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-red-800 w-full">
-                                        <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Abteilung entfernen</button>
+                                        <button onClick={handleRemoveDepartmentForEmployee} type="button" className="w-full">Filiale entfernen</button>
                                     </div>
                                 </div>
                             </div>
