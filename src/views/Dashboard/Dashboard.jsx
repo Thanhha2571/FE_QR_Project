@@ -19,7 +19,7 @@ function Dashboard() {
     // const [inputYear, setInputYear] = useState("")
     // const [inputDay, setInputDay] = useState("")
     const [checkAdmin, setCheckAdmin] = useState(false)
-    const [checkManager, setCheckManager] = useState(false)
+    // const [checkManager, setCheckManager] = useState(false)
     const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
     const [departmentMenu, setDepartmentMenu] = useState(false)
@@ -55,9 +55,9 @@ function Dashboard() {
             setCheckAdmin(true)
         }
 
-        if (userObject?.role === "Manager") {
-            setCheckManager(true)
-        }
+        // if (userObject?.role === "Manager") {
+        //     setCheckManager(true)
+        // }
     }, [userObject?.role])
 
     const handleLogOut = async () => {
@@ -320,43 +320,40 @@ function Dashboard() {
                     });
 
                 setDepartmentList(response.data);
-                
+
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-        // const getEmployeeByDateAndShift = async () => {
-        //     // if (inputDay === "" && inputMonth === "" && inputYear === "" && selectedDepartment === "Abteilung auswählen") {
-        //     setLoading(true)
-        //     if (currentDate && userObject?.role === "Admin") {
-        //         try {
-        //             const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-all-schedules?year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
-        //             setUserListToday(response.data.message);
-        //         } catch (error) {
-        //             console.error('Error fetching employees by date and shift:', error);
-        //         } finally {
-        //             setLoading(false)
-        //         }
-        //     }
-        //     if (currentDate && userObject?.role === "Inhaber") {
-        //         try {
-        //             const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-all-schedules?inhaber_name=${userObject?.name}&year=${year}&month=${month}&date=${currentDate}`, { withCredentials: true });
-        //             setUserListToday(response.data.message);
-        //         } catch (error) {
-        //             console.error('Error fetching employees by date and shift:', error);
-        //         } finally {
-        //             setLoading(false)
-        //         }
-        //     }
-        // }
-        // };
-        // getEmployeeByDateAndShift();
         getAllDepartments();
 
     }, [currentDate, datePicker]);
     // console.log(currentDate);
     // console.log(date);
-    console.log('userList', userListToday);
+    // console.log('userList', userListToday);
+    const PAGE_SIZE_WORKING = 20
+    const [currentPageWorking, setCurrentPageWorking] = useState(1);
+    const indexOfLastItemWorking = currentPageWorking * PAGE_SIZE_WORKING;
+    const indexOfFirstItemWorking = indexOfLastItemWorking - PAGE_SIZE_WORKING;
+    const currentWorkings = userListToday?.slice(indexOfFirstItemWorking, indexOfLastItemWorking);
+
+    const totalPageWorking = Math.ceil(userListToday?.length / PAGE_SIZE_WORKING);
+
+    const handlePageWorkingChange = (page) => {
+        setCurrentPageWorking(page);
+    };
+    
+    const PAGE_SIZE_ATTEND = 20
+    const [currentPageAttend, setCurrentPageAttend] = useState(1);
+    const indexOfLastItemAttend = currentPageAttend * PAGE_SIZE_ATTEND;
+    const indexOfFirstItemAttend = indexOfLastItemAttend - PAGE_SIZE_ATTEND;
+    const currentAttends = userAttendListToday?.slice(indexOfFirstItemAttend, indexOfLastItemAttend);
+
+    const totalPageAttend = Math.ceil(userAttendListToday?.length / PAGE_SIZE_WORKING);
+
+    const handlePageAttendChange = (page) => {
+        setCurrentPageAttend(page);
+    };
     return (
         <>
             <div className="relative ml-[260px] h-auto flex flex-col font-Changa text-textColor gap-5">
@@ -384,21 +381,20 @@ function Dashboard() {
                         <h1 className="font-bold text-3xl">Dashboard</h1>
                     </div>
                 </div>
-                <div className="border border-solid border-t-[#6c757d]"></div>
                 {/* <div className="p-5 w-full flex flex-col gap-10">
                     <Space direction="vertical" size={12}>
                         <DatePicker onChange={handleDateChange} className="w-1/6 h-10 " format={dateFormat} />
                     </Space>
                 </div> */}
                 <div className="p-5 w-full flex flex-col gap-10">
-                    <div className="z-10 flex flex-row mt-10 justify-between h-[50px] gap-8">
+                    <div className="z-10 flex flex-row justify-between h-[50px] gap-8">
                         <Space className="w-1/5" direction="vertical" size={12}>
                             <DatePicker onChange={handleDateChange} className="w-full h-[50px] text-base text-placeholderTextColor" format={dateFormat} />
                         </Space>
                         <div className="flex flex-row gap-20 w-full">
                             {checkAdmin && (<div
                                 onClick={handleDepartmentMenu}
-                                className="w-1/5 h-[50px] text-base cursor-pointer">
+                                className="w-5/10 h-[50px] text-base cursor-pointer">
                                 <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px]">
                                     <div className="flex flex-row items-center justify-around w-full">
                                         <div className="ml-4">{selectedDepartment}</div>
@@ -427,7 +423,7 @@ function Dashboard() {
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
                             <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
-                            {Array.isArray(userListToday) && userListToday?.length === 0 ? (
+                            {Array.isArray(currentWorkings) && currentWorkings?.length === 0 ? (
                                 <div className="font-bold text-2xl text-textColor mb-8">Kein Mitarbeiter</div>
                             ) : (
                                 <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Arbeitsliste
@@ -455,7 +451,7 @@ function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {userListToday?.map(({ employee_id, employee_name, shift_code, position, time_slot, department_name }) => (
+                                        {currentWorkings?.map(({ employee_id, employee_name, shift_code, position, time_slot, department_name }) => (
                                             <EmployeeTodayItem
                                                 key={employee_id}
                                                 employee_name={employee_name}
@@ -469,12 +465,28 @@ function Dashboard() {
                                     </tbody>
                                 </table>
                             </div>
+                            <div className="flex justify-center mt-4">
+                                {totalPageWorking > 1 && (
+                                    <div className="flex flex-row gap-2">
+                                        {Array.from({ length: totalPageWorking }).map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handlePageWorkingChange(index + 1)}
+                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                            >
+                                                {index + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
                             <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
-                            {Array.isArray(userAttendListToday) && userAttendListToday?.length === 0 ? (
+                            {Array.isArray(currentAttends) && currentAttends?.length === 0 ? (
                                 <div className="font-bold text-2xl text-textColor mb-8">Keine Anwesenheit</div>
                             ) : (
                                 <div className="font-bold text-2xl text-textColor mb-8 flex flex-col">Anwesenheitsliste
@@ -501,7 +513,7 @@ function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {userAttendListToday?.map(({ _id, employee_name, employee_id, position, department_name, shift_info, status }) => (
+                                        {currentAttends?.map(({ _id, employee_name, employee_id, position, department_name, shift_info, status }) => (
                                             <EmployeeAttendItem
                                                 key={_id}
                                                 employee_id={employee_id}
@@ -514,6 +526,22 @@ function Dashboard() {
                                         ))}
                                     </tbody>
                                 </table>
+                            </div>
+                            <div className="flex justify-center mt-4">
+                                {totalPageAttend > 1 && (
+                                    <div className="flex flex-row gap-2">
+                                        {Array.from({ length: totalPageAttend }).map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => handlePageAttendChange(index + 1)}
+                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
+                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                            >
+                                                {index + 1}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

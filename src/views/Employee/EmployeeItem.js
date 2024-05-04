@@ -58,7 +58,7 @@ const EmployeeItem = (props) => {
             </td>
 
             <td className="p-2"></td>
-            <td className="p-2 flex flex-row gap-2 items-center w-full h-full mt-2">
+            <td className="p-2 flex flex-row gap-2 items-center w-full h-full mt-2 mr-2">
                 {status === "active" &&(<img className="w-4 h-4" src={IconActice} />)}
                 {status === "inactive" &&(<img className="w-4 h-4" src={IconInactive} />)}
                 <span className={`${status === "active" ? "text-buttonColor2" : "text-red-600"}`}>{status}</span>

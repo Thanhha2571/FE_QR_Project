@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import DeleteIcon from "../../assets/images/icon-delete.png"
 import ProfileIcon from "../../assets/images/icon-profile.png"
 import IconActive from "../../assets/images/icon-active.png"
+import IconInactive from "../../assets/images/icon-inactive.png"
 import { positionList } from "assets/data/data"
 import { roleList, roleListForInhaber } from "assets/data/data"
 import { genderList } from "assets/data/data"
@@ -690,10 +691,14 @@ const ProfileEmployee = () => {
                             <img src={ProfileIcon} className="w-32 h-32" />
                             <span className="mt-3 font-bold text-xl">{name}</span>
                             <span className="text-base">Employee's ID: {id}</span>
-                            <div className="flex gap-2 justify-center items-center w-full h-full">
+                            {user[0]?.status === "active" && (<div className="flex gap-2 justify-center items-center w-full h-full">
                                 <img className="w-4 h-4" src={IconActive} />
                                 <span className="text-buttonColor2">{user[0]?.status}</span>
-                            </div>
+                            </div>)}
+                            {user[0]?.status === "inactive" && (<div className="flex gap-2 justify-center items-center w-full h-full">
+                                <img className="w-4 h-4" src={IconInactive} />
+                                <span className="text-buttonColor2">{user[0]?.status}</span>
+                            </div>)}
                             <div className="w-full flex flex-col justify-center items-center gap-1 mt-3 text-base">
                                 <div className="flex flex-wrap w-full items-center justify-center">
                                     <span className="text-[#6c757d] w-1/3 text-right px-3">Name</span>

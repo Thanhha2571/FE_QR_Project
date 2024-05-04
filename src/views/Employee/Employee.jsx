@@ -710,7 +710,7 @@ function Employee() {
                 {/* //---------------------------------------------------------------- SEARCH ----------------------------------------------------------------// */}
                 <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
                     <input
-                        className="w-1/3 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColorw-1/4 text-base px-4 py-3 placeholder:text-placeholderTextColor"
+                        className="w-1/4 border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColorw-1/4 text-base px-4 py-3 placeholder:text-placeholderTextColor"
                         type="text"
                         placeholder="Suchen nach name, ID, position"
                         value={inputSearch}
@@ -718,7 +718,7 @@ function Employee() {
                     />
                     {checkAdminAndInhaber && (<div
                         onClick={handleRoleMenu}
-                        className="w-1/6 h-[50px] text-base cursor-pointer">
+                        className="w-1/5 h-[50px] text-base cursor-pointer">
                         <div className="flex flex-col w-full py-3 px-2 border border-solid text-placeholderTextColorw-2/3 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor">
                             <div className="flex flex-row items-center justify-around w-full">
                                 <div className="ml-4">{selectedRole}</div>
@@ -737,7 +737,7 @@ function Employee() {
 
                     {checkRole && (<div
                         onClick={handleDepartmetnnMenu}
-                        className="w-1/6 h-[50px] text-base cursor-pointer">
+                        className="w-1/5 h-[50px] text-base cursor-pointer">
                         <div className="flex flex-col w-full py-3 px-2 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor border border-solid">
                             <div className="flex flex-row items-center justify-around w-full">
                                 <div className="ml-4">{selectedDepartment}</div>
@@ -790,7 +790,7 @@ function Employee() {
                                 <th className="p-2 text-left">
                                     <span className="table-title-role"></span>
                                 </th>
-                                <th className="p-2 text-left">
+                                <th className="p-2 text-left mr-2">
                                     <span className="table-title-status">Status</span>
                                 </th>
                             </tr>

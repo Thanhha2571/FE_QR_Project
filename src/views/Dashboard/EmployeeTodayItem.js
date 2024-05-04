@@ -9,7 +9,7 @@ const EmployeeTodayItem = (props) => {
                     {/* <Link className="img-table-item-block" to={`viewprofile/${uuid}`}>
                         <img className="img-table-item" src={imageUrl} alt="" />
                     </Link> */}
-                    <Link className="cursor-pointer flex flex-col" to={`employee/view-profile/${employee_id}/${employee_name}`}>{employee_name}
+                    <Link className="cursor-pointer flex flex-col" to={`/employee/view-profile/${employee_id}/${employee_name}`}>{employee_name}
                         <span className="text-xs text-neutral-400">{employee_id}</span>
                     </Link>
                 </h2>
