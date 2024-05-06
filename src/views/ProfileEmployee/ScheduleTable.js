@@ -828,7 +828,8 @@ const ScheduleTable = (props) => {
             }
         }
 
-        if (userObject?.role === 'Inhaber') {
+        if (userObject?.role === 'Inhaber' && statusAttendance !== "missing") {
+            console.log("no missing check");
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
@@ -1146,8 +1147,8 @@ const ScheduleTable = (props) => {
                                 <form
                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                     onSubmit={handleSubmit}>
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -1392,8 +1393,8 @@ const ScheduleTable = (props) => {
                                                                 <form
                                                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                                                     onSubmit={handleSubmitCreateAttendanceInfo}>
-                                                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                                        <div className="loader"></div>
+                                                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                                                        <div className="loader_search"></div>
                                                                     </div>)}
                                                                     <div className="w-full h-auto flex flex-col gap-2">
                                                                         <div className="flex flex-row gap-2">
@@ -1521,8 +1522,8 @@ const ScheduleTable = (props) => {
                                                                         <form
                                                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                                                             onSubmit={handleSubmitChangeAttendancInfo}>
-                                                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                                                <div className="loader"></div>
+                                                                            {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                                                                <div className="loader_search"></div>
                                                                             </div>)}
                                                                             <div className="w-full h-auto flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">

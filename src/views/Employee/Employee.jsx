@@ -414,6 +414,7 @@ function Employee() {
         }
         if (userObject.role === 'Inhaber') {
             if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
+                setLoadingSearching(true)
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
@@ -423,13 +424,17 @@ function Employee() {
                     });
                     // console.log(query);
                     setUserList(response.data.message);
-                } catch (error) {
+                    setLoadingSearching(false)
+                } catch (err) {
                     // if(error.)
                     setUserList([])
+                    setLoadingSearching(false)
+                    alert(err.response?.data?.message)
                     // console.error('Error fetching data:', error);
                 }
             }
             if (inputSearch === "" && selectedRole !== "Wählen Sie Rolle aus") {
+                setLoadingSearching(true)
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, {
@@ -439,13 +444,17 @@ function Employee() {
                     });
                     // console.log(query);
                     setUserList(response.data.message);
-                } catch (error) {
+                    setLoadingSearching(false)
+                } catch (err) {
                     // if(error.)
                     setUserList([])
+                    setLoadingSearching(false)
+                    alert(err.response?.data?.message)
                     // console.error('Error fetching data:', error);
                 }
             }
             if (inputSearch !== "" && selectedRole === "Wählen Sie Rolle aus") {
+                setLoadingSearching(true)
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, {
@@ -455,13 +464,17 @@ function Employee() {
                     });
                     // console.log(query);
                     setUserList(response.data.message);
-                } catch (error) {
+                    setLoadingSearching(false)
+                } catch (err) {
                     // if(error.)
                     setUserList([])
+                    setLoadingSearching(false)
+                    alert(err.response?.data?.message)
                     // console.error('Error fetching data:', error);
                 }
             }
             if (inputSearch !== "" && selectedRole !== "Wählen Sie Rolle aus") {
+                setLoadingSearching(true)
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, {
@@ -471,9 +484,12 @@ function Employee() {
                     });
                     // console.log(query);
                     setUserList(response.data.message);
-                } catch (error) {
+                    setLoadingSearching(false)
+                } catch (err) {
                     // if(error.)
                     setUserList([])
+                    setLoadingSearching(false)
+                    alert(err.response?.data?.message)
                     // console.error('Error fetching data:', error);
                 }
             }
@@ -487,6 +503,7 @@ function Employee() {
         }
         if (userObject.role === 'Manager') {
             if (inputSearch !== "") {
+                setLoadingSearching(true)
                 setUserList([])
                 try {
                     const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, {
@@ -496,9 +513,12 @@ function Employee() {
                     });
                     // console.log(query);
                     setUserList(response.data.message);
-                } catch (error) {
+                    setLoadingSearching(false)
+                } catch (err) {
                     // if(error.)
                     setUserList([])
+                    setLoadingSearching(false)
+                    alert(err.response?.data?.message)
                     // console.error('Error fetching data:', error);
                 }
             }
@@ -852,7 +872,7 @@ function Employee() {
                                         className="flex flex-col gap-6 w-full justify-center items-center"
                                         onSubmit={handleSubmit}>
                                         {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                            <div className="loader"></div>
+                                            <div className="loader_search"></div>
                                         </div>)}
                                         <div className="w-full h-auto flex flex-col gap-2 mt-4">
                                             <div className="flex flex-row gap-2">

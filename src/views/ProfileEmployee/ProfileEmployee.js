@@ -27,6 +27,7 @@ const ProfileEmployee = () => {
     // console.log("Name:"+name+"fsdfd");
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [loadingChange, setLoadingChange] = useState(false)
     const [profileState, setProfileState] = useState(true);
     const [scheduleState, setScheduleState] = useState(false);
     const [departmentList, setDepartmentList] = useState()
@@ -83,7 +84,7 @@ const ProfileEmployee = () => {
 
     const handleAddDepartmentForEmployee = async () => {
         if (userObject?.role === "Admin") {
-            setLoading(true);
+            setLoadingChange(true);
             try {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/add-member/${selectedDepartmentEmployee}`,
                     {
@@ -102,7 +103,7 @@ const ProfileEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
-                setLoading(false);
+                setLoadingChange(false);
                 getUser();
                 setFormAddDepartmentState(false)
                 setSelectedDepartmentEmployee('')
@@ -110,7 +111,7 @@ const ProfileEmployee = () => {
         }
 
         if (userObject?.role === "Inhaber") {
-            setLoading(true);
+            setLoadingChange(true);
             try {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-department/add-member/${selectedDepartmentEmployee}?inhaber_name=${userObject?.name}`,
                     {
@@ -129,7 +130,7 @@ const ProfileEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
-                setLoading(false);
+                setLoadingChange(false);
                 getUser();
                 setFormAddDepartmentState(false)
                 setSelectedDepartmentEmployee('')
@@ -139,7 +140,7 @@ const ProfileEmployee = () => {
     }
     const handleRemoveDepartmentForEmployee = async () => {
         if (userObject?.role === "Admin") {
-            setLoading(true);
+            setLoadingChange(true);
             try {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/remove-member/${selectedDepartmentRemove}`,
                     {
@@ -157,7 +158,7 @@ const ProfileEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
-                setLoading(false);
+                setLoadingChange(false);
                 getUser();
                 setRemoveDepartmentFormState(false)
                 setSelectedDepartmentRemove('')
@@ -165,7 +166,7 @@ const ProfileEmployee = () => {
         }
 
         if (userObject?.role === "Inhaber") {
-            setLoading(true);
+            setLoadingChange(true);
             try {
                 const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-department/remove-member/${selectedDepartmentRemove}?inhaber_name=${userObject?.name}`,
                     {
@@ -183,7 +184,7 @@ const ProfileEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
-                setLoading(false);
+                setLoadingChange(false);
                 getUser();
                 setRemoveDepartmentFormState(false)
                 setSelectedDepartmentRemove('')
@@ -196,10 +197,10 @@ const ProfileEmployee = () => {
         if (userObject?.role === 'Admin') {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -214,10 +215,10 @@ const ProfileEmployee = () => {
         if (userObject?.role === 'Inhaber') {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -233,10 +234,10 @@ const ProfileEmployee = () => {
         if (userObject?.role === 'Manager') {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 console.log(response.data.message);
                 setUser(response.data.message);
                 // setDepartmentDefined(response.data.message[0]?.department)
@@ -247,10 +248,6 @@ const ProfileEmployee = () => {
             }
         }
     };
-    // useEffect(() => {
-    //     setUserObject(userObject)
-    //     console.log(userObject);
-    // }, [])
 
     useEffect(() => {
         setLoading(true);
@@ -281,7 +278,6 @@ const ProfileEmployee = () => {
     // console.log("Department", restDepartmentList);
 
     useEffect(() => {
-        setLoading(true);
         const getAllDepartments = async () => {
             if (userObject?.role === "Admin") {
                 try {
@@ -300,14 +296,6 @@ const ProfileEmployee = () => {
     }, []);
 
     useEffect(() => {
-        // if (user && user[0]?.role !== "Employee") {
-        //     setCheckRole(false)
-        // }
-
-        // if (user && user[0]?.role === "Employee") {
-        //     setCheckRole(true)
-        // }
-
         if (userObject?.role === 'Admin') {
             setCheckAdmin(true)
             setCheckInhaber(false)
@@ -369,7 +357,6 @@ const ProfileEmployee = () => {
         }
     };
     useEffect(() => {
-        // Update editingData whenever user changes
         if (user) {
             setEditingData({
                 name: user[0]?.name || '',
@@ -539,7 +526,7 @@ const ProfileEmployee = () => {
         }
     }
     const handleChangeStatus = async () => {
-        setLoading(true);
+        setLoadingChange(true);
 
         if (userObject?.role === "Admin") {
             try {
@@ -606,7 +593,7 @@ const ProfileEmployee = () => {
     //console.log(positionListAddPositionToDepartment);
 
     const handleAddPositionToDepartment = async () => {
-        setLoading(true);
+        setLoadingChange(true);
 
         if (userObject?.role === "Admin") {
             try {
@@ -627,7 +614,7 @@ const ProfileEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
             } finally {
-                setLoading(false);
+                setLoadingChange(false);
                 setFormAddPositionToDepartment(false);
                 setDepartmentChangePosition("")
                 getUser()
@@ -640,9 +627,6 @@ const ProfileEmployee = () => {
 
     return (
         <div className="ml-[260px] flex flex-col font-Changa text-textColor">
-            {loading && (<div className="absolute flex w-full h-full justify-center mt-52">
-                <div className="loader"></div>
-            </div>)}
             <div className="p-5 flex flex-row items-center justify-between">
                 <div>
                     <h1 className="font-bold text-3xl">Employee's Information</h1>
@@ -728,283 +712,288 @@ const ProfileEmployee = () => {
                         </div>
                     </div>)}
                     {profileState && (<div className="bg-white h-auto w-2/3 flex flex-col p-4 rounded-md">
-                        <div className="flex flex-col gap-1 mt-4">
-                            <div className="text-xl font-bold">Employee's Information</div>
-                            <div
-                                className="ml-20 mt-10 flex flex-col gap-4"
-                            // onSubmit={handleSubmit}
-                            >
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="name">Name:</label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.name}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="id">Employee's ID:</label>
-                                    <input
-                                        type="text"
-                                        id="id"
-                                        name="id"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.id}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Geschlecht:</label>
-                                    <select
-                                        id="gender"
-                                        name="gender"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.gender}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled>
-                                            {editingData.gender || 'Select Gender'}
-                                        </option>
-                                        {genderList?.map(({ index, name }) => (
-                                            <option key={index} value={name}>
-                                                {name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="dob">Geburtsdatum:</label>
-                                    <input
-                                        type="text"
-                                        id="dob"
-                                        name="dob"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.dob}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="email">Email:</label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.email}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="address">Adresse:</label>
-                                    <input
-                                        type="text"
-                                        id="address"
-                                        name="address"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.address}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                {checkAdmin && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
-                                    <select
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.role}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled>
-                                            {editingData.role || 'Select Role'}
-                                        </option>
-                                        {adminListRole?.map(({ index, role }) => (
-                                            <option key={index} value={role}>
-                                                {role}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>}
-                                {checkInhaber && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
-                                    <select
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.role}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="" disabled>
-                                            {editingData.role || 'Select Role'}
-                                        </option>
-                                        {inhaberListRole?.map(({ index, role }) => (
-                                            <option key={index} value={role}>
-                                                {role}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>}
-                                {checkManager && <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
-                                    <input
-                                        type="text"
-                                        id="role"
-                                        name="role"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.role}
-                                        readOnly
-                                    // onChange={handleChange}
-                                    />
-                                </div>}
-                                {checkAdmin && <div className="flex flex-col w-[600px] items-center">
+                        <div className="relative w-full h-full">
+                            {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                <div className="loader_search"></div>
+                            </div>)}
+                            <div className="flex flex-col gap-1 mt-4">
+                                <div className="text-xl font-bold">Employee's Information</div>
+                                <div
+                                    className="ml-20 mt-10 flex flex-col gap-4"
+                                // onSubmit={handleSubmit}
+                                >
                                     <div className="flex flex-wrap w-[600px] items-center">
-                                        <div className="flex flex-row"></div>
-                                        <label className="w-1/4 text-right p-4">Filiale:</label>
-                                        <div className="flex flex-row gap-4">
-                                            {user[0]?.department?.map((item, index) => (
-                                                <span className={`cursor-pointer ${selectedDepartment === item.name ? 'text-buttonColor1 underline decoration-buttonColor1' : ''
-                                                    }`} onClick={() => handleShiftClick(item.name)} key={index}>{item.name}</span>
+                                        <label className="w-1/4 text-right p-4" htmlFor="name">Name:</label>
+                                        <input
+                                            type="text"
+                                            id="name"
+                                            name="name"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.name}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="id">Employee's ID:</label>
+                                        <input
+                                            type="text"
+                                            id="id"
+                                            name="id"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.id}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Geschlecht:</label>
+                                        <select
+                                            id="gender"
+                                            name="gender"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.gender}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>
+                                                {editingData.gender || 'Select Gender'}
+                                            </option>
+                                            {genderList?.map(({ index, name }) => (
+                                                <option key={index} value={name}>
+                                                    {name}
+                                                </option>
                                             ))}
-                                        </div>
+                                        </select>
                                     </div>
-                                    {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
-                                        <label className="w-1/4 text-right p-4">Position:</label>
-                                        <div className="flex flex-row gap-4">
-                                            {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
-                                                .map((filteredItem, index) => (
-                                                    <div className="flex flex-col gap-3 justify-center">
-                                                        <div key={index}>
-                                                            {filteredItem?.position?.join(", ")}
-                                                        </div>
-                                                        <div className="flex flex-row gap-4">
-                                                            {exportState && (<button
-                                                                onClick={() => {
-                                                                    setFormAddPositionToDepartment(true)
-                                                                    setDepartmentChangePosition(selectedDepartment)
-                                                                    //console.log(departmentChangePosition);
-                                                                    setPositionInDepartmentDefined(filteredItem?.position)
-                                                                    //console.log(positionInDepartmentDefined);
-                                                                }}
-                                                                className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
-                                                                <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Change Position
-                                                            </button>)}
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    </div>)}
-                                </div>}
-                                {checkInhaber && <div className="flex flex-col w-[600px] items-center">
                                     <div className="flex flex-wrap w-[600px] items-center">
-                                        <div className="flex flex-row"></div>
-                                        <label className="w-1/4 text-right p-4">Filiale:</label>
-                                        <div className="flex flex-row gap-4">
-                                            {user[0]?.department
-                                                // ?.filter((item) => item.name === userObject?.department_name)
-                                                ?.map((item, index) => (
-                                                    <span
-                                                        className={`cursor-pointer ${selectedDepartment === item.name
-                                                            ? 'text-buttonColor1 underline decoration-buttonColor1'
-                                                            : ''
-                                                            }`}
-                                                        onClick={() => handleShiftClick(item.name)}
-                                                        key={index}
-                                                    >
-                                                        {item.name}
-                                                    </span>
-                                                ))}
-                                        </div>
+                                        <label className="w-1/4 text-right p-4" htmlFor="dob">Geburtsdatum:</label>
+                                        <input
+                                            type="text"
+                                            id="dob"
+                                            name="dob"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.dob}
+                                            onChange={handleChange}
+                                        />
                                     </div>
-                                    {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
-                                        <label className="w-1/4 text-right p-4">Position:</label>
-                                        <div className="flex flex-row gap-4">
-                                            {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
-                                                .map((filteredItem, index) => (<div key={index}>
-                                                    {filteredItem?.position?.join(", ")}
-                                                </div>))
-                                            }
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="email">Email:</label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            name="email"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.email}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="address">Adresse:</label>
+                                        <input
+                                            type="text"
+                                            id="address"
+                                            name="address"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.address}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    {checkAdmin && <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
+                                        <select
+                                            id="role"
+                                            name="role"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.role}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>
+                                                {editingData.role || 'Select Role'}
+                                            </option>
+                                            {adminListRole?.map(({ index, role }) => (
+                                                <option key={index} value={role}>
+                                                    {role}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>}
+                                    {checkInhaber && <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
+                                        <select
+                                            id="role"
+                                            name="role"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.role}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="" disabled>
+                                                {editingData.role || 'Select Role'}
+                                            </option>
+                                            {inhaberListRole?.map(({ index, role }) => (
+                                                <option key={index} value={role}>
+                                                    {role}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>}
+                                    {checkManager && <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Rolle:</label>
+                                        <input
+                                            type="text"
+                                            id="role"
+                                            name="role"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.role}
+                                            readOnly
+                                        // onChange={handleChange}
+                                        />
+                                    </div>}
+                                    {checkAdmin && <div className="flex flex-col w-[600px] items-center">
+                                        <div className="flex flex-wrap w-[600px] items-center">
+                                            <div className="flex flex-row"></div>
+                                            <label className="w-1/4 text-right p-4">Filiale:</label>
+                                            <div className="flex flex-row gap-4">
+                                                {user[0]?.department?.map((item, index) => (
+                                                    <span className={`cursor-pointer ${selectedDepartment === item.name ? 'text-buttonColor1 underline decoration-buttonColor1' : ''
+                                                        }`} onClick={() => handleShiftClick(item.name)} key={index}>{item.name}</span>
+                                                ))}
+                                            </div>
                                         </div>
+                                        {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
+                                            <label className="w-1/4 text-right p-4">Position:</label>
+                                            <div className="flex flex-row gap-4">
+                                                {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
+                                                    .map((filteredItem, index) => (
+                                                        <div className="flex flex-col gap-3 justify-center">
+                                                            <div key={index}>
+                                                                {filteredItem?.position?.join(", ")}
+                                                            </div>
+                                                            <div className="flex flex-row gap-4">
+                                                                {exportState && (<button
+                                                                    onClick={() => {
+                                                                        setFormAddPositionToDepartment(true)
+                                                                        setDepartmentChangePosition(selectedDepartment)
+                                                                        //console.log(departmentChangePosition);
+                                                                        setPositionInDepartmentDefined(filteredItem?.position)
+                                                                        //console.log(positionInDepartmentDefined);
+                                                                    }}
+                                                                    className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
+                                                                    <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Change Position
+                                                                </button>)}
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>)}
+                                    </div>}
+                                    {checkInhaber && <div className="flex flex-col w-[600px] items-center">
+                                        <div className="flex flex-wrap w-[600px] items-center">
+                                            <div className="flex flex-row"></div>
+                                            <label className="w-1/4 text-right p-4">Filiale:</label>
+                                            <div className="flex flex-row gap-4">
+                                                {user[0]?.department
+                                                    // ?.filter((item) => item.name === userObject?.department_name)
+                                                    ?.map((item, index) => (
+                                                        <span
+                                                            className={`cursor-pointer ${selectedDepartment === item.name
+                                                                ? 'text-buttonColor1 underline decoration-buttonColor1'
+                                                                : ''
+                                                                }`}
+                                                            onClick={() => handleShiftClick(item.name)}
+                                                            key={index}
+                                                        >
+                                                            {item.name}
+                                                        </span>
+                                                    ))}
+                                            </div>
+                                        </div>
+                                        {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
+                                            <label className="w-1/4 text-right p-4">Position:</label>
+                                            <div className="flex flex-row gap-4">
+                                                {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
+                                                    .map((filteredItem, index) => (<div key={index}>
+                                                        {filteredItem?.position?.join(", ")}
+                                                    </div>))
+                                                }
+                                            </div>
+                                        </div>)}
+                                    </div>}
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Gesamtstunde (pro Monat):</label>
+                                        <input
+                                            type="text"
+                                            id="total_time_per_month"
+                                            name="total_time_per_month"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.total_time_per_month}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="phone">Freie Tage (pro Jahr):</label>
+                                        <input
+                                            type="text"
+                                            id="default_day_off"
+                                            name="default_day_off"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.default_day_off}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="phone">Ruhetage frei:</label>
+                                        <input
+                                            type="text"
+                                            id="realistic_day_off"
+                                            name="realistic_day_off"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.realistic_day_off}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="phone">Hausvermietung:</label>
+                                        <input
+                                            type="text"
+                                            id="house_rent_money"
+                                            name="house_rent_money"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.house_rent_money}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Status:</label>
+                                        <input
+                                            type="text"
+                                            id="status"
+                                            name="status"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={editingData.status}
+                                            readOnly
+                                        // onChange={handleChange}
+                                        />
+                                    </div>
+                                    {editingData.status === "inactive" && (<div className="flex flex-wrap w-[600px] items-center">
+                                        <label className="w-1/4 text-right p-4" htmlFor="department">Inactive Day:</label>
+                                        <input
+                                            type="text"
+                                            id="inactive_day"
+                                            name="inactive_day"
+                                            className="w-3/4 rounded-[6px] border-[#d9d9d9]"
+                                            value={inactive}
+                                            readOnly
+                                        // onChange={handleChange}
+                                        />
                                     </div>)}
-                                </div>}
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="total_time_per_month">Gesamtstunde (pro Monat):</label>
-                                    <input
-                                        type="text"
-                                        id="total_time_per_month"
-                                        name="total_time_per_month"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.total_time_per_month}
-                                        onChange={handleChange}
-                                    />
+                                    {exportState && (<div className="flex flex-row w-full justify-center gap-6">
+                                        <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                                            Stornieren
+                                        </button>
+                                        <button type="button" onClick={handleSubmit} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                                            Änderungen speichern
+                                        </button>
+                                    </div>)}
                                 </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Freie Tage (pro Jahr):</label>
-                                    <input
-                                        type="text"
-                                        id="default_day_off"
-                                        name="default_day_off"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.default_day_off}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Ruhetage frei:</label>
-                                    <input
-                                        type="text"
-                                        id="realistic_day_off"
-                                        name="realistic_day_off"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.realistic_day_off}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="phone">Hausvermietung:</label>
-                                    <input
-                                        type="text"
-                                        id="house_rent_money"
-                                        name="house_rent_money"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.house_rent_money}
-                                        onChange={handleChange}
-                                    />
-                                </div>
-                                <div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Status:</label>
-                                    <input
-                                        type="text"
-                                        id="status"
-                                        name="status"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={editingData.status}
-                                        readOnly
-                                    // onChange={handleChange}
-                                    />
-                                </div>
-                                {editingData.status === "inactive" && (<div className="flex flex-wrap w-[600px] items-center">
-                                    <label className="w-1/4 text-right p-4" htmlFor="department">Inactive Day:</label>
-                                    <input
-                                        type="text"
-                                        id="inactive_day"
-                                        name="inactive_day"
-                                        className="w-3/4 rounded-[6px] border-[#d9d9d9]"
-                                        value={inactive}
-                                        readOnly
-                                    // onChange={handleChange}
-                                    />
-                                </div>)}
-                                {exportState && (<div className="flex flex-row w-full justify-center gap-6">
-                                    <button onClick={handleCancel} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                                        Stornieren
-                                    </button>
-                                    <button type="button" onClick={handleSubmit} className="mt-10 w-1/3 bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                                        Änderungen speichern
-                                    </button>
-                                </div>)}
                             </div>
                         </div>
                     </div>)
@@ -1038,8 +1027,8 @@ const ProfileEmployee = () => {
                                 <div
                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                 >
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loadingChange && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -1169,8 +1158,8 @@ const ProfileEmployee = () => {
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             <div className="flex flex-col px-8 w-full mt-7 items-center justify-center">
                                 <div className="flex flex-col gap-6 w-full">
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loadingChange && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className=" flex flex-row gap-3 items-center">
                                         <div className="flex flex-row gap-2">
@@ -1220,8 +1209,8 @@ const ProfileEmployee = () => {
                                 <div
                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                 >
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loadingChange && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -1272,8 +1261,8 @@ const ProfileEmployee = () => {
                                 <div
                                     className="flex flex-col gap-6 w-full justify-center items-center"
                                 >
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loadingChange && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
