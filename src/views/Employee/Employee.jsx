@@ -23,6 +23,7 @@ function Employee() {
     const [exportEmployee, setExportEmployee] = useState(false)
 
     const [loading, setLoading] = useState(false);
+    const [loadingSearching, setLoadingSearching] = useState(false);
     const [userList, setUserList] = useState()
     const [userObject, setUserObject] = useState()
 
@@ -339,13 +340,6 @@ function Employee() {
         }
     };
 
-    const handlePositionMenu = () => {
-        setPositionMenu(!positionMenu)
-        setDepartmentMenu(false)
-        setRoleMenu(false)
-
-    }
-
     const handleDepartmetnnMenu = () => {
         setDepartmentMenu(!departmentMenu)
         setPositionMenu(false)
@@ -356,10 +350,6 @@ function Employee() {
         setRoleMenu(!roleMenu)
         setPositionMenu(false)
         setDepartmentMenu(false)
-    }
-
-    const handleChangeSelectedPosition = (item) => {
-        setSelectedPosition(item)
     }
 
     const handleChangeSelectedDepartment = (item) => {
@@ -374,6 +364,7 @@ function Employee() {
         //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
         if (userObject.role === 'Admin') {
             setUserList([])
+            setLoadingSearching(true)
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
                     headers: {
@@ -382,9 +373,12 @@ function Employee() {
                 });
                 // console.log(query);
                 setUserList(response.data.message);
-            } catch (error) {
+                setLoadingSearching(false)
+            } catch (err) {
                 // if(error.)
                 setUserList([])
+                setLoadingSearching(false)
+                alert(err.response?.data?.message)
                 // console.error('Error fetching data:', error);
             }
         }
@@ -582,7 +576,7 @@ function Employee() {
 
     }
     const getAllUsers = async () => {
-        setLoading(true);
+        setLoadingSearching(true);
         try {
             if (userObject?.role === 'Admin') {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific', {
@@ -615,7 +609,7 @@ function Employee() {
             alert(err.response?.data?.message)
         }
         finally {
-            setLoading(false);
+            setLoadingSearching(false);
         }
     };
 
@@ -818,6 +812,10 @@ function Employee() {
                             </tbody>)}
                     </table>
                 </div>
+                {loadingSearching && (<div className="flex w-full h-full items-center justify-center">
+                    <div className="loader_search"></div>
+                </div>)}
+
                 <div className="flex justify-center">
                     {totalPages > 1 && (
                         <div className="flex flex-row gap-2">

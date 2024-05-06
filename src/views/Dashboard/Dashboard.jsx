@@ -14,22 +14,21 @@ const dateFormat = 'MM/DD/YYYY';
 
 function Dashboard() {
     document.title = "Dashboard";
+
     const nav = useNavigate()
-    // const [inputMonth, setInputMonth] = useState("")
-    // const [inputYear, setInputYear] = useState("")
-    // const [inputDay, setInputDay] = useState("")
+
     const [checkAdmin, setCheckAdmin] = useState(false)
-    // const [checkManager, setCheckManager] = useState(false)
+
     const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
     const [departmentMenu, setDepartmentMenu] = useState(false)
+
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
 
     const [currentDate, setCurrentDate] = useState("");
-    // const [year, setYear] = useState()
-    // const [month, setMonth] = useState()
     const [datePicker, setDatePicker] = useState("")
+
     const [loading, setLoading] = useState(false);
 
     const [userListToday, setUserListToday] = useState()
@@ -38,7 +37,6 @@ function Dashboard() {
     const [logOutMenu, setLogOutMenu] = useState(false)
 
     const handleDateChange = (date, dateString) => {
-        console.log('Selected Date:', dateString);
         setDatePicker(dateString)
     };
 
@@ -54,27 +52,20 @@ function Dashboard() {
         if (userObject?.role === "Admin") {
             setCheckAdmin(true)
         }
-
-        // if (userObject?.role === "Manager") {
-        //     setCheckManager(true)
-        // }
     }, [userObject?.role])
 
     const handleLogOut = async () => {
-        if (userObject?.role === "Admin") {
-            try {
-                const response = await axios.post("https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/logout-admin", { withCredentials: true });
-                nav("/login")
-            }
-            catch (err) {
-                alert("Couldn't log out");
-            }
-
+        try {
+            const response = await axios.post("https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/logout-admin", { withCredentials: true });
+            nav("/login")
+        }
+        catch (err) {
+            alert("Couldn't log out");
         }
     }
     const handleSeacrh = () => {
         const getEmployeeByManyDateAndShift = async () => {
-            // setLoading(true)
+            setLoading(true)
             if (userObject?.role === "Admin") {
                 if (selectedDepartment === "Abteilung auswählen") {
                     setUserListToday([])
@@ -193,7 +184,7 @@ function Dashboard() {
             }
         };
         const getAttendanceEmployeeByManyDateAndShift = async () => {
-            // setLoading(true)
+            setLoading(true)
             if (userObject?.role === "Admin") {
                 if (selectedDepartment === "Abteilung auswählen") {
                     try {
@@ -229,7 +220,6 @@ function Dashboard() {
                     setCurrentDate(`${datePicker}`)
                 }
             }
-
             if (userObject?.role === "Inhaber") {
                 if (selectedDepartment === "Abteilung auswählen") {
                     setUserAttendListToday([])
@@ -325,12 +315,17 @@ function Dashboard() {
                 console.error('Error fetching data:', error);
             }
         };
-        getAllDepartments();
 
-    }, [currentDate, datePicker]);
-    // console.log(currentDate);
-    // console.log(date);
-    // console.log('userList', userListToday);
+        if (userObject?.role === "Admin") {
+            getAllDepartments();
+        }
+
+        if (userObject?.role == "Inhaber" || userObject?.role == "Manager") {
+            const arrayFilter = userObject?.department?.map((item => ({ name: item.name })))
+            setDepartmentList(arrayFilter)
+        }
+    }, [userObject?.role]);
+
     const PAGE_SIZE_WORKING = 20
     const [currentPageWorking, setCurrentPageWorking] = useState(1);
     const indexOfLastItemWorking = currentPageWorking * PAGE_SIZE_WORKING;
@@ -342,7 +337,7 @@ function Dashboard() {
     const handlePageWorkingChange = (page) => {
         setCurrentPageWorking(page);
     };
-    
+
     const PAGE_SIZE_ATTEND = 20
     const [currentPageAttend, setCurrentPageAttend] = useState(1);
     const indexOfLastItemAttend = currentPageAttend * PAGE_SIZE_ATTEND;
@@ -367,7 +362,7 @@ function Dashboard() {
                                 <div>{userObject?.role}</div>
                             </div>
                             <div onClick={() => setLogOutMenu(!logOutMenu)} className={`cursor-pointer w-4 h-4 flex justify-center items-center ${logOutMenu ? "rotate-180" : ""}`}>
-                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" className="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
                             </div>
                         </div>
                         {logOutMenu && (<div onClick={handleLogOut} className="hover:font-bold cursor-pointer text-black bg-white border border-solid border-placeholderTextColor absolute p-2 h-[40px] w-[160px] mt-[110px] flex flex-row gap-4 items-center justify-center">
@@ -394,12 +389,12 @@ function Dashboard() {
                         <div className="flex flex-row gap-20 w-full">
                             {checkAdmin && (<div
                                 onClick={handleDepartmentMenu}
-                                className="w-5/10 h-[50px] text-base cursor-pointer">
+                                className="w-1/4 h-[50px] text-base cursor-pointer">
                                 <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px]">
-                                    <div className="flex flex-row items-center justify-around w-full">
+                                    <div className="flex flex-row items-center justify-around w-full gap-3">
                                         <div className="ml-4">{selectedDepartment}</div>
                                         <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
-                                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" className="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
                                         </div>
                                     </div>
                                 </div>
@@ -412,14 +407,11 @@ function Dashboard() {
                             </div>)}
                             <div
                                 onClick={handleSeacrh}
-                                className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
+                                className="w-1/4 bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700">
                                 <button className="search-btn">Suchen</button>
                             </div>
                         </div>
                     </div>
-                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                        <div className="loader"></div>
-                    </div>)}
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
                             <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
@@ -451,9 +443,9 @@ function Dashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {currentWorkings?.map(({ employee_id, employee_name, shift_code, position, time_slot, department_name }) => (
+                                        {currentWorkings?.map(({ _id, employee_id, employee_name, shift_code, position, time_slot, department_name }) => (
                                             <EmployeeTodayItem
-                                                key={employee_id}
+                                                key={_id}
                                                 employee_name={employee_name}
                                                 employee_id={employee_id}
                                                 position={position}
@@ -483,6 +475,9 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
+                    {loading && (<div className="flex w-full h-full items-center justify-center">
+                        <div className="loader_search"></div>
+                    </div>)}
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
                             <div className="text-xl italic text-textColor mb-8">{currentDate}</div>
@@ -545,6 +540,9 @@ function Dashboard() {
                             </div>
                         </div>
                     </div>
+                    {loading && (<div className="flex w-full h-full items-center justify-center">
+                        <div className="loader_search"></div>
+                    </div>)}
                 </div>
             </div>
         </>
