@@ -623,7 +623,7 @@ const ProfileEmployee = () => {
 
         if (userObject?.role === "Inhaber") {
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/update-basic?employeeID=${id}&employeeName=${name}`,
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/update-position?employeeID=${id}&employeeName=${name}`,
                     {
                         departmentName: departmentChangePosition,
                         newPosition: positionInDepartmentDefined
