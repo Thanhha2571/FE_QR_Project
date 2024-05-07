@@ -22,7 +22,7 @@ const WorkingSchedule = () => {
     const [timeEndCreate, setTimeEndCreate] = useState("")
     const [timeStartEdit, setTimeStartEdit] = useState("")
     const [timeEndEdit, setTimeEndEdit] = useState("")
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [exportState, setExportState] = useState(false)
 
     const userString = localStorage.getItem('user');
@@ -35,44 +35,51 @@ const WorkingSchedule = () => {
     }, [userObject?.role])
 
     const getAllShifts = async () => {
+        setLoading(true)
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
+                setLoading(false)
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false)
             }
         }
 
         if (userObject?.role === "Inhaber") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
+                setLoading(false)
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false)
             }
         }
         if (userObject?.role === "Manager") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setShiftList(response.data.message);
+                setLoading(false)
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false)
             }
         }
     };
@@ -141,18 +148,18 @@ const WorkingSchedule = () => {
 
             if (userObject?.role === "Admin") {
                 response = await axios.post('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/create', shiftData, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
             }
 
             if (userObject?.role === "Inhaber") {
                 response = await axios.post('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/create', shiftData, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
             }
 
             // Fetch the updated list of shifts after creating a new shift
@@ -186,18 +193,18 @@ const WorkingSchedule = () => {
 
             if (userObject?.role === "Admin") {
                 response = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/delete?code=${selectedShiftDelete}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
             }
 
             if (userObject?.role === "Inhaber") {
                 response = await axios.delete(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/delete?code=${selectedShiftDelete}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
             }
 
             // Fetch the updated list of shifts after creating a new shift
@@ -228,10 +235,10 @@ const WorkingSchedule = () => {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/update?code=${selectedShiftEdit}`, {
                     name: formEdit.name_edit
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -242,10 +249,10 @@ const WorkingSchedule = () => {
                         end_time: timeEndEdit
                     },
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -257,10 +264,10 @@ const WorkingSchedule = () => {
                         end_time: timeEndEdit
                     },
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -268,10 +275,10 @@ const WorkingSchedule = () => {
                 response = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/update?code=${selectedShiftEdit}`, {
                     name: formEdit.name_edit
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -282,10 +289,10 @@ const WorkingSchedule = () => {
                         end_time: timeEndEdit
                     },
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -297,10 +304,10 @@ const WorkingSchedule = () => {
                         end_time: timeEndEdit
                     },
                 }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
 
             }
 
@@ -375,8 +382,8 @@ const WorkingSchedule = () => {
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             <div className="flex flex-col px-8 w-full mt-7">
                                 <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full justify-center items-center">
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -466,8 +473,8 @@ const WorkingSchedule = () => {
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             <div className="flex flex-col px-8 w-full mt-7">
                                 <form onSubmit={handleDeleteShiftSubmit} className="flex flex-col gap-6 w-full justify-center items-center">
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -516,8 +523,8 @@ const WorkingSchedule = () => {
                             <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
                             <div className="flex flex-col px-8 w-full mt-7">
                                 <form onSubmit={handleEditShiftSubmit} className="flex flex-col gap-6 w-full justify-center items-center">
-                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                        <div className="loader"></div>
+                                    {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
+                                        <div className="loader_search"></div>
                                     </div>)}
                                     <div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
@@ -612,6 +619,9 @@ const WorkingSchedule = () => {
                         </tbody>
                     )}
                 </table>
+                {loading && (<div className="flex w-full h-full items-center justify-center mt-10">
+                    <div className="loader_search"></div>
+                </div>)}
             </div>)}
         </div>
     )

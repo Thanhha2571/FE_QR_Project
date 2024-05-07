@@ -620,6 +620,32 @@ const ProfileEmployee = () => {
                 getUser()
             }
         }
+
+        if (userObject?.role === "Inhaber") {
+            try {
+                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/update-basic?employeeID=${id}&employeeName=${name}`,
+                    {
+                        departmentName: departmentChangePosition,
+                        newPosition: positionInDepartmentDefined
+                    },
+
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    },
+                );
+
+
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoadingChange(false);
+                setFormAddPositionToDepartment(false);
+                setDepartmentChangePosition("")
+                getUser()
+            }
+        }
     }
 
     // console.log(positionInDepartmentDefined);
@@ -908,13 +934,35 @@ const ProfileEmployee = () => {
                                         </div>
                                         {selectedDepartment && (<div className="flex flex-wrap w-[600px] items-center">
                                             <label className="w-1/4 text-right p-4">Position:</label>
-                                            <div className="flex flex-row gap-4">
+                                            {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
+                                                .map((filteredItem, index) => (
+                                                    <div className="flex flex-col gap-3 justify-center">
+                                                        <div key={index}>
+                                                            {filteredItem?.position?.join(", ")}
+                                                        </div>
+                                                        <div className="flex flex-row gap-4">
+                                                            {exportState && (<button
+                                                                onClick={() => {
+                                                                    setFormAddPositionToDepartment(true)
+                                                                    setDepartmentChangePosition(selectedDepartment)
+                                                                    //console.log(departmentChangePosition);
+                                                                    setPositionInDepartmentDefined(filteredItem?.position)
+                                                                    //console.log(positionInDepartmentDefined);
+                                                                }}
+                                                                className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-lime-800">
+                                                                <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>Change Position
+                                                            </button>)}
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            }
+                                            {/* <div className="flex flex-row gap-4">
                                                 {user[0]?.department?.filter((item) => item?.name === selectedDepartment)
                                                     .map((filteredItem, index) => (<div key={index}>
                                                         {filteredItem?.position?.join(", ")}
                                                     </div>))
                                                 }
-                                            </div>
+                                            </div> */}
                                         </div>)}
                                     </div>}
                                     <div className="flex flex-wrap w-[600px] items-center">
