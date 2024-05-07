@@ -55,30 +55,35 @@ const Car = () => {
     }, [userObject?.role])
 
     const getAllCars = async () => {
+        setLoading(true)
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setCarList(response?.data?.message);
+                setLoading(false);
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false);
             }
         }
         if (userObject?.role === "Inhaber") {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 // console.log(response.data.message);
                 setCarList(response?.data?.message);
+                setLoading(false);
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false);
             }
         }
     };
@@ -88,10 +93,10 @@ const Car = () => {
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
                 setDepartmentList(response.data);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -123,10 +128,10 @@ const Car = () => {
             setRegisterDateOfCar("")
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarEdit}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -138,10 +143,10 @@ const Car = () => {
             setRegisterDateOfCar("")
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarDelete}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -153,10 +158,10 @@ const Car = () => {
             setRegisterDateOfCar("")
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -168,24 +173,24 @@ const Car = () => {
             setRegisterDateOfCar("")
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
                 alert(err.response);
             }
         }
-        
+
         if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -196,10 +201,10 @@ const Car = () => {
         if (userObject?.role === "Admin" && selectedCarRemoveDepartment !== "") {
             try {
                 const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    })
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
                 console.log(response.data.message);
                 setFilterCarById(response.data.message)
             } catch (err) {
@@ -294,7 +299,9 @@ const Car = () => {
                     car_number: editingCarData.car_number,
                     register_date: registerDateOfCar
                 }, {
-                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 })
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -312,7 +319,9 @@ const Car = () => {
                     car_number: editingCarData.car_number,
                     register_date: registerDateOfCar
                 }, {
-                    withCredentials: true,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
                 })
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -482,11 +491,11 @@ const Car = () => {
             setLoading(true);
             try {
                 const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/add-car/${selectedCarAddDepartment}`,
-                {
-                    departmentName: selectedDepartment,
-                },
+                    {
+                        departmentName: selectedDepartment,
+                    },
 
-                {
+                    {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -511,11 +520,11 @@ const Car = () => {
             setLoading(true);
             try {
                 const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/remove-car/${selectedCarRemoveDepartment}`,
-                {
-                    departmentName: selectedDepartment,
-                },
+                    {
+                        departmentName: selectedDepartment,
+                    },
 
-                {
+                    {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -577,7 +586,7 @@ const Car = () => {
                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                             onSubmit={handleSubmit}>
                                             {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
-                                                <div className="loader"></div>
+                                                <div className="loader_search"></div>
                                             </div>)}
                                             <div className="w-full h-auto flex flex-col gap-2 mt-4">
                                                 <div className="flex flex-row gap-2">
@@ -758,7 +767,7 @@ const Car = () => {
                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                             onSubmit={handleSubmitEditCar}>
                                             {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
-                                                <div className="loader"></div>
+                                                <div className="loader_search"></div>
                                             </div>)}
                                             <div className="w-full h-auto flex flex-col gap-2 mt-4">
                                                 <div className="flex flex-row gap-2">
@@ -853,7 +862,7 @@ const Car = () => {
                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                         >
                                             {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                <div className="loader"></div>
+                                                <div className="loader_search"></div>
                                             </div>)}
                                             <div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
@@ -906,7 +915,7 @@ const Car = () => {
                                             className="flex flex-col gap-6 w-full justify-center items-center"
                                         >
                                             {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                                <div className="loader"></div>
+                                                <div className="loader_search"></div>
                                             </div>)}
                                             <div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
@@ -992,6 +1001,9 @@ const Car = () => {
                                 </tbody>
                             )}
                         </table>
+                        {loading && (<div className="flex w-full h-full items-center justify-center mt-10">
+                            <div className="loader_search"></div>
+                        </div>)}
                     </div>
                 </div>
             ) : (
