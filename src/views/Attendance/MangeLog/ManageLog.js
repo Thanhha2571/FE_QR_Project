@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import LogItem from "./LogItem";
 import { Link } from "react-router-dom";
+import "./ManageLog.css"
 
 const ManageLog = () => {
     document.title = "Log Management";
     const [logList, setLogList] = useState([]);
     const [checkAdmin, setCheckAdmin] = useState(false);
+
+    const [loading, setLoading] = useState(false);
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -24,6 +27,7 @@ const ManageLog = () => {
 
     const getAllLogs = async () => {
         if (userObject?.role === "Admin") {
+            setLoading(true)
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-logs/get?type_update=Update attendance', {
                     headers: {
@@ -31,8 +35,11 @@ const ManageLog = () => {
                     }
                 });
                 setLogList(response.data.message);
+                setLoading(false)
             } catch (error) {
                 console.error('Error fetching data:', error);
+                alert(error?.response?.data?.message);
+                setLoading(false)
             }
         }
     };
@@ -113,6 +120,9 @@ const ManageLog = () => {
                             )}
                         </table>
                     </div>
+                    {loading && (<div className="flex w-full h-full items-center justify-center mt-10">
+                        <div className="loader_search"></div>
+                    </div>)}
                     <div className="flex justify-center">
                         {totalPages > 1 && (
                             <div className="flex flex-row gap-2">
