@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ReportFormItem from "./ReportFormItem";
+import "./ReportForm.css"
 import { DatePicker, Space } from 'antd';
 const { RangePicker } = DatePicker;
 const dateFormat = 'MM/DD/YYYY';
@@ -40,7 +41,8 @@ const ReportForm = () => {
         }
     }, [userObject?.role])
 
-    const getAllForms = async () => {
+    const getAllForms = async () => { 
+        setLoading(true)
         if (userObject?.role === "Admin") {
             try {
                 const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', {
@@ -50,8 +52,10 @@ const ReportForm = () => {
                 });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
+                setLoading(false)
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false)
             }
         }
         if (userObject?.role === "Inhaber") {
@@ -63,8 +67,10 @@ const ReportForm = () => {
                 });
                 // console.log(response.data.message);
                 setFormList(response?.data?.message);
+                setLoading(false)
             } catch (err) {
                 alert(err.response?.data?.message)
+                setLoading(false)
             }
         }
     };
@@ -117,6 +123,7 @@ const ReportForm = () => {
     };
 
     const handleSeacrh = async () => {
+        setLoading(true)
         if (userObject?.role === "Admin") {
             setFormList([])
             if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
@@ -127,10 +134,13 @@ const ReportForm = () => {
                         }
                     })
                     setFormList(response?.data?.message);
+                    setLoading(false)
                 } catch (err) {
                     alert(err.response?.data?.message)
+                    setLoading(false)
                 } finally {
                     setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
                 }
             }
 
@@ -142,10 +152,13 @@ const ReportForm = () => {
                         }
                     })
                     setFormList(response?.data?.message);
+                    setLoading(false)
                 } catch (err) {
                     alert(err.response?.data?.message)
+                    setLoading(false)
                 } finally {
                     setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
                 }
             }
             if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
@@ -156,10 +169,69 @@ const ReportForm = () => {
                         }
                     })
                     setFormList(response?.data?.message);
+                    setLoading(false)
                 } catch (err) {
                     alert(err.response?.data?.message)
+                    setLoading(false)
                 } finally {
                     setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
+                }
+            }
+        }
+
+        if (userObject?.role === "Inhaber") {
+            setFormList([])
+            if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
+                    setFormList(response?.data?.message);
+                    setLoading(false)
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setLoading(false)
+                } finally {
+                    setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
+                }
+            }
+
+            if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&department_name=${selectedDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
+                    setFormList(response?.data?.message);
+                    setLoading(false)
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setLoading(false)
+                } finally {
+                    setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
+                }
+            }
+            if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
+                try {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    })
+                    setFormList(response?.data?.message);
+                    setLoading(false)
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setLoading(false)
+                } finally {
+                    setSelectedDepartment("Abteilung auswählen")
+                    setLoading(false)
                 }
             }
         }
@@ -181,7 +253,7 @@ const ReportForm = () => {
                     {/* //----------------------------------------------------------------FORM MANAGEMENT------------------------------------------------------------------------------------// */}
 
                     <div className="p-5 w-full flex flex-col gap-10">
-                        <div className="z-10 flex flex-row mt-10 justify-between h-[50px] gap-8">
+                        <div className="z-10 flex flex-row mt-10 justify-between h-[50px] gap-8 w-full">
                             <Space className="w-2/5" direction="vertical" size={12}>
                                 <RangePicker
                                     className="w-full h-[50px] text-base text-placeholderTextColor"
@@ -189,12 +261,12 @@ const ReportForm = () => {
                                     format={dateFormat}
                                 />
                             </Space>
-                            <div className="flex flex-row gap-20 w-full">
+                            <div className="flex flex-row gap-10 w-1/2">
                                 {checkAdmin && (<div
                                     onClick={handleDepartmentMenu}
-                                    className="text-base w-3/10 h-[50px] cursor-pointer">
-                                    <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px]">
-                                        <div className="flex flex-row items-center justify-around w-full gap-2">
+                                    className="text-base w-2/5 h-[50px] cursor-pointer">
+                                    <div className="flex flex-col w-full py-3 px-2 border border-solid border-[#d9d9d9] text-placeholderTextColor rounded-[6px] justify-center items-center">
+                                        <div className="flex flex-row items-center justify-center w-full gap-3">
                                             <div className="ml-4">{selectedDepartment}</div>
                                             <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
                                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
@@ -275,6 +347,9 @@ const ReportForm = () => {
                                 </tbody>
                             )}
                         </table>
+                        {loading && (<div className="flex w-full h-full items-center justify-center mt-10">
+                            <div className="loader_search"></div>
+                        </div>)}
                     </div>
                     <div className="flex justify-center">
                         {totalPages > 1 && (

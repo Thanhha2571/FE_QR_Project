@@ -60,7 +60,7 @@ h2 {
 .day-off {
     padding: 5px;
     background-color: #FFA07A;
-    text-color: #FFFFE0;
+    /* text-color: #FFFFE0; */
 }
 .loader {
     border: 8px solid #f3f3f3;

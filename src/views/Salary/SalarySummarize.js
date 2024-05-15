@@ -99,6 +99,7 @@ const SalarySummarizie = () => {
             }
         }
         if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId === "" && inputName === "") {
+            setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
@@ -245,11 +246,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new: formData.user.a,
-                            b_new: formData.user.b,
-                            c_new: formData.user.c,
-                            d_new: formData.user.d,
-                            f_new: formData.user.f
+                            a_new : Number(formData.user.a),
+                            b_new : Number(formData.user.b),
+                            c_new : Number(formData.user.c),
+                            d_new : Number(formData.user.d),
+                            f_new : Number(formData.user.f)
                         },
                         {
                             headers: {
@@ -284,11 +285,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new: formData.user.a,
-                            b_new: formData.user.b,
-                            c_new: formData.user.c,
-                            d_new: formData.user.d,
-                            f_new: formData.user.f
+                            a_new : Number(formData.user.a),
+                            b_new : Number(formData.user.b),
+                            c_new : Number(formData.user.c),
+                            d_new : Number(formData.user.d),
+                            f_new : Number(formData.user.f)
                         },
                         {
                             headers: {
