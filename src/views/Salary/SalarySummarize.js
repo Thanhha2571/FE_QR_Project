@@ -151,7 +151,7 @@ const SalarySummarizie = () => {
 
     useEffect(() => {
         const getUserList = async () => {
-            if (userObject.role === 'Admin', formData?.user?.id !== "") {
+            if (userObject.role === 'Admin' && formData?.user?.id !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${formData?.user?.id}`,
@@ -168,7 +168,7 @@ const SalarySummarizie = () => {
                     // alert("No salary recorded")
                 }
             }
-            if (userObject.role === 'Inhaber', formData?.user?.id !== "") {
+            if (userObject.role === 'Inhaber' && formData?.user?.id !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${formData?.user?.id}`,
@@ -187,7 +187,7 @@ const SalarySummarizie = () => {
             }
         }
         const getUserListSearch = async () => {
-            if (userObject.role === 'Admin', inputId !== "") {
+            if (userObject.role === 'Admin'&& inputId !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
@@ -204,7 +204,7 @@ const SalarySummarizie = () => {
                     // alert("No salary recorded")
                 }
             }
-            if (userObject.role === 'Inhaber', inputId !== "") {
+            if (userObject.role === 'Inhaber' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,

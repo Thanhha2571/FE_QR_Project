@@ -23,10 +23,27 @@ const History = () => {
     }, [userObject?.role]);
 
     const handleSeacrh = async () => {
-        if (userObject.role === 'Admin', inputId !== "", inputName !== "") {
+        if (userObject.role === 'Admin' && inputId !== "" && inputName !== "") {
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?employeeID=${inputId}&employeeName=${inputName}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setSalaryListByMonth(data?.message)
+                // console.log("data", data?.message);
+                // console.log(data?.);
+            } catch (err) {
+                // alert("No salary recorded")
+            }
+        }
+        if (userObject.role === 'Inhaber'&& inputId !== "" && inputName !== "") {
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -44,15 +61,15 @@ const History = () => {
 
     useEffect(() => {
         const getUserList = async () => {
-            if (userObject.role === 'Admin', inputId !== "") {
+            if (userObject.role === 'Admin' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
                         {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
                         }
-                    }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);
@@ -61,15 +78,15 @@ const History = () => {
                     // alert("No salary recorded")
                 }
             }
-            if (userObject.role === 'Inhaber', inputId !== "") {
+            if (userObject.role === 'Inhaber' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
                         {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
                         }
-                    }
                     );
                     setUserList(data?.message)
                     // console.log("data", data?.message);
@@ -165,7 +182,7 @@ const History = () => {
                             <div className="no-result-text text-center">NO RESULT</div>
                         ) : (
                             <tbody className="tbody">
-                                {salaryListByMonth?.map(({ employee_id, employee_name, year, month,a_parameter, b_parameter, c_parameter, d_parameter, f_parameter }) => (
+                                {salaryListByMonth?.map(({ employee_id, employee_name, year, month, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter }) => (
                                     <tr className="tr-item" key={employee_id}>
                                         <td className="p-2 hover:text-buttonColor2">
                                             <h2 className="text-left">
