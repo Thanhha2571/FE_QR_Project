@@ -36,7 +36,7 @@ const ScheduleTable = (props) => {
     const [selectedShiftType, setSelectedShiftType] = useState()
     const [shiftList, setShiftList] = useState()
     const [selectedShiftAddShiftForm, setSelectedShiftAddShiftForm] = useState("")
-    const [changeAttendanceFormState, setChangeAttendanceFormState] = useState(false)
+    const [changeAttendanceFormState, setChangeAttendanceFormState] = useState([])
     const [selectedCheckInStatus, setSelectedCheckInStatus] = useState("")
     const [selectedCheckOutStatus, setSelectedCheckOutStatus] = useState("")
     const [attendanceId, setAttendanceId] = useState("")
@@ -1098,6 +1098,14 @@ const ScheduleTable = (props) => {
 
         }
     }
+
+    const handleFormChangeAttend = (index) => {
+        setChangeAttendanceFormState(prevState => {
+          const newState = [...prevState];
+          newState[index] = !newState[index];
+          return newState;
+        });
+      };
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
             <h2 className="text-2xl font-bold">Schedule Calendar</h2>
@@ -1465,7 +1473,7 @@ const ScheduleTable = (props) => {
 
                                         ) : (
                                             attendanceDataByDate?.filter((item) => item?.shift_info?.shift_code === selectedShift)
-                                                .map((filteredItem) => (
+                                                .map((filteredItem, index) => (
                                                     <div className="flex flex-col gap-4" key={filteredItem._id}>
                                                         {filteredItem?.status === "missing" ? (
                                                             <div className="text-center font-bold text-red-600 text-xl" key={filteredItem._id}>STATUS: Fehlen</div>
@@ -1506,13 +1514,14 @@ const ScheduleTable = (props) => {
                                                         <div className="flex flex-col">
                                                             <button onClick={() => {
                                                                 setAttendanceId(filteredItem?._id)
-                                                                setChangeAttendanceFormState(!changeAttendanceFormState)
+                                                                // setChangeAttendanceFormState(!changeAttendanceFormState)
+                                                                handleFormChangeAttend(index)
                                                                 setStatusAttendance(filteredItem?.status)
                                                             }
                                                             } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                                                                 Anwesenheitsinformationen ändern
                                                             </button>
-                                                            {changeAttendanceFormState && (<div className="w-full h-full">
+                                                            {changeAttendanceFormState[index] && (<div className="w-full h-full">
                                                                 <div className="flex flex-col mt-8">
                                                                     <div className="flex flex-row justify-between px-8 items-center">
                                                                         <div className="font-bold text-xl">Anwesenheitsinformationen ändern</div>
