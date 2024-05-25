@@ -296,13 +296,13 @@ const SalaryEmployee = () => {
                         {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
                             <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                             <div className="flex flex-wrap w-full">
-                                {user && user[0]?.attendance_stats?.map(({ _id, date_late, date_missing, date_on_time, department_name }) => (
+                                {user && user[0]?.attendance_stats?.map(({ _id, shift_on_time, shift_late, shift_missing, department_name }) => (
                                     <div className="flex flex-col w-1/2 py-4 gap-2">
                                         <div className="text-xl font-semibold leading-6">Department: {department_name}</div>
                                         <div key={_id} className="flex flex-col gap-2">
-                                            <span>Date Late: {date_late}</span>
-                                            <span>Date Missing: {date_missing}</span>
-                                            <span>Date On Time: {date_on_time}</span>
+                                            <span>Date Late: {shift_late}</span>
+                                            <span>Date Missing: {shift_missing}</span>
+                                            <span>Date On Time: {shift_on_time}</span>
                                         </div>
                                     </div>
                                 ))}
