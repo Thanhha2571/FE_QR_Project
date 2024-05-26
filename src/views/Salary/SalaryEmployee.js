@@ -47,6 +47,96 @@ const SalaryEmployee = () => {
 
     }, [userObject?.role]);
 
+    useEffect(() => {
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear();
+        const currentMonth = currentDate.getMonth() + 1; 
+        setSalaryInfoState(true)
+
+        const handleApi = async () => {
+            if (userObject?.role === 'Admin') {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setSalaryListByMonth(data?.message)
+                    // console.log(data?.);
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setSalaryListByMonth([])
+                } finally {
+                    setLoading(false)
+                }
+    
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setUser(data?.message)
+                    // console.log(data?.);
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    setLoading(false)
+                }
+            }
+    
+            if (userObject?.role === 'Inhaber') {
+                try {
+                    setSalaryInfoState(true)
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${currentYear}&month=${currentMonth}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setSalaryListByMonth(data?.message)
+                    // console.log(data?.);
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    setLoading(false)
+                }
+    
+                try {
+                    setSalaryInfoState(true)
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setUser(data?.message)
+                    console.log("user", data?.message);
+                } catch (error) {
+                    // Handle error
+                    console.error("Error submitting form:", error);
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }   
+
+        handleApi()
+
+    }, [userObject?.role]);
+
     const handleSeacrh = async () => {
         setLoading(true);
         if (userObject.role === 'Admin' && monthPicker !== "") {
@@ -161,9 +251,11 @@ const SalaryEmployee = () => {
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", headers: {
+                    {
+                        responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
-                        } }
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -191,9 +283,11 @@ const SalaryEmployee = () => {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-attendance?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", headers: {
+                    {
+                        responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
-                        } }
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -209,9 +303,11 @@ const SalaryEmployee = () => {
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-attendance?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
-                    { responseType: "arraybuffer", headers: {
+                    {
+                        responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
-                        } }
+                        }
+                    }
                 );
 
                 const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
@@ -284,7 +380,7 @@ const SalaryEmployee = () => {
                     </div>
                 </div>
 
-                {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times }) =>
+                {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times, month,  year }) =>
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         {salaryInfoState && (<div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                             <div className="flex flex-col justify-center items-center gap-1 mt-4">
@@ -293,11 +389,12 @@ const SalaryEmployee = () => {
                                 <span className="text-base">Employee's ID: {employee_id}</span>
                             </div>
                         </div>)}
-                        {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
+                        {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-2 rounded-md">
                             <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                             <div className="flex flex-wrap w-full">
-                                {user && user[0]?.attendance_stats?.map(({ _id, shift_on_time, shift_late, shift_missing, department_name }) => (
+                                {user && user[0]?.attendance_stats?.map(({ _id, shift_on_time, shift_late, shift_missing, department_name, month, year }) => (
                                     <div className="flex flex-col w-1/2 py-4 gap-2">
+                                        <span>Time: {month}/{year}</span>
                                         <div className="text-xl font-semibold leading-6">Department: {department_name}</div>
                                         <div key={_id} className="flex flex-col gap-2">
                                             <span>Date Late: {shift_late}</span>
@@ -310,6 +407,7 @@ const SalaryEmployee = () => {
                         </div>}
                         {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
                             <div className="text-2xl font-semibold leading-6">SUMMARIZE</div>
+                            <span>Time: {month}/{year}</span>
                             <div className="flex flex-col gap-3">
                                 <div>Default Working Time: {default_schedule_times}</div>
                                 <div>Rest Working Time: {realistic_schedule_times}</div>
