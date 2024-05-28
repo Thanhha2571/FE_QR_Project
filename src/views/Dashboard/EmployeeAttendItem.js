@@ -17,13 +17,20 @@ const EmployeeAttendItem = (props) => {
             <td className="p-2">{department_name}</td>
             {/* <td className="p-2">{position}</td> */}
             <td className="p-2">{shift_info?.shift_code}</td>
-            {status === "missing" ? (<td className="p-2 flex flex-col">
-                <span>{status}</span>
-            </td>) :
-            (<td className="p-2 flex flex-col">
-                <span>{shift_info?.time_slot?.check_in_time}</span>
-                <span className="italic">{shift_info?.time_slot?.check_in_status}</span>
-            </td>)}
+            <td className="p-2 flex flex-col">
+                {status === "missing" ? (<span className="p-2">{status}</span>) :
+                    (<div className="p-2 flex flex-col">
+                        <span>{shift_info?.time_slot?.check_in_time}</span>
+                        <span className="italic">{shift_info?.time_slot?.check_in_status}</span>
+                    </div>)}
+            </td>
+            <td className="p-2"></td>
+            <td className="p-2 flex flex-col">
+                <div className="p-2 flex flex-col">
+                    <span>{shift_info?.time_slot?.check_out_time}</span>
+                    <span className="italic">{shift_info?.time_slot?.check_out_status}</span>
+                </div>
+            </td>
         </tr>
     )
 }

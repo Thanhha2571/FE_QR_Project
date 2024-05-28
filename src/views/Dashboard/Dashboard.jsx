@@ -505,6 +505,12 @@ function Dashboard() {
                                             <th className="p-2 text-left">
                                                 <span className="table-title-role">Check-in-Informationen</span>
                                             </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role"></span>
+                                            </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Check-in-Informationen</span>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
