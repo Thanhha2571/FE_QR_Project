@@ -217,7 +217,9 @@ const DayOffManagement = () => {
                                                 <td className="p-2">{`${String(new Date(request_dayOff_start).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_start).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_start).getFullYear()}`}</td>
                                                 <td className="p-2">{`${String(new Date(request_dayOff_end).getDate()).padStart(2, '0')}-${String(new Date(request_dayOff_end).getMonth() + 1).padStart(2, '0')}-${new Date(request_dayOff_end).getFullYear()}`}</td>
                                                 {request_content === "Sick day" ? (<td className="p-2">Krankheitstage mit AU-Bescheinigung</td>) : (<td className="p-2">Urlaub</td>)}
-                                                <td className="p-2 cursor-pointer hover:text-buttonColor2" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>
+                                                {answer_status === "approved" && (<td className="p-2 cursor-pointer text-buttonColor2" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
+                                                {answer_status === "pending" && (<td className="p-2 cursor-pointer text-amber-900" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
+                                                {answer_status === "denied" && (<td className="p-2 cursor-pointer text-red-600" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
                                             </tr>
                                         ))}
                                     </tbody>

@@ -707,7 +707,7 @@ const ProfileEmployee = () => {
                             </div>)}
                             {user[0]?.status === "inactive" && (<div className="flex gap-2 justify-center items-center w-full h-full">
                                 <img className="w-4 h-4" src={IconInactive} />
-                                <span className="text-buttonColor2">{user[0]?.status}</span>
+                                <span className="text-red-600">{user[0]?.status}</span>
                             </div>)}
                             <div className="w-full flex flex-col justify-center items-center gap-1 mt-3 text-base">
                                 <div className="flex flex-wrap w-full items-center justify-center">
