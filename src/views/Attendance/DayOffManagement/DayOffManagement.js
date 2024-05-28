@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
+// import { Link } from "react-router-dom";
 import DayOffItem from "./DayOffItem";
 
 const DayOffManagement = () => {
@@ -199,10 +200,13 @@ const DayOffManagement = () => {
                                             <th className="p-2 text-left">
                                                 <span className="table-title-role">Status</span>
                                             </th>
+                                            <th className="p-2 text-left">
+                                                <span className="table-title-role">Image</span>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="tbody">
-                                        {currentDayOffLists?.map(({ _id, employee_id, employee_name, answer_status, request_content, request_dayOff_start, request_dayOff_end }) => (
+                                        {currentDayOffLists?.map(({ _id, employee_id, employee_name, answer_status, request_content, request_dayOff_start, request_dayOff_end, image }) => (
                                             <tr className="tr-item">
                                                 <td className="p-2 hover:text-buttonColor2">
                                                     <h2 className="text-left">
@@ -220,6 +224,9 @@ const DayOffManagement = () => {
                                                 {answer_status === "approved" && (<td className="p-2 cursor-pointer text-buttonColor2" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
                                                 {answer_status === "pending" && (<td className="p-2 cursor-pointer text-amber-900" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
                                                 {answer_status === "denied" && (<td className="p-2 cursor-pointer text-red-600" onClick={() => handleRequest(answer_status, _id)}>{answer_status}</td>)}
+                                                <td className="p-2">
+                                                    {image && (<Link target="blank" to={`${image}`} className="hover:text-buttonColor2">Link</Link>)}
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
