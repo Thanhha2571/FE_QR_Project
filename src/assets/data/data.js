@@ -131,3 +131,15 @@ export const managerListRole = [
         role: "Employee",
     },
 ]
+
+export const statusRequestList = [
+    {
+        name: "pending",
+    },
+    {
+        name: "approved",
+    },
+    {
+        name: "denied",
+    }
+]
