@@ -46,10 +46,10 @@ export const roleList = [
         name: "Inhaber",
     },
     {
-        name:"Manager",
+        name: "Manager",
     },
     {
-        name:"Employee"
+        name: "Employee"
     }
 ];
 
@@ -58,10 +58,10 @@ export const roleListForInhaber = [
     //     name: "Inhaber",
     // },
     {
-        name:"Manager",
+        name: "Manager",
     },
     {
-        name:"Employee"
+        name: "Employee"
     }
 ];
 
@@ -73,19 +73,19 @@ export const roleListForManager = [
     //     name:"Manager",
     // },
     {
-        name:"Employee"
+        name: "Employee"
     }
 ];
 
 export const shiftType = [
     {
-        name:"normal",
-    }, 
+        name: "normal",
+    },
 ]
 
 export const statusList = [
     {
-        name:"active",
+        name: "active",
     },
     // {
     //     name:"inactive"
@@ -97,7 +97,7 @@ export const attendanceStatus = [
         name: "on time"
     },
     {
-        name:"late"
+        name: "late"
     }
 ]
 

@@ -296,6 +296,9 @@ const ReportForm = () => {
                                         <span className="font-bold">Date</span>
                                     </th>
                                     <th className="p-4 text-left">
+                                        <span className="font-bold">Time</span>
+                                    </th>
+                                    <th className="p-4 text-left">
                                         <span className="table-title-id">Name</span>
                                     </th>
                                     <th className="p-4 text-left">
@@ -322,7 +325,7 @@ const ReportForm = () => {
                                 <div className="no-result-text">NO RESULT</div>
                             ) : (
                                 <tbody className="tbody">
-                                    {currentForms?.filter((item) => item.position === "Lito" || item.position === "Service" || item.position === "Autofahrer")?.map(({ date, employee_id, department_name, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
+                                    {currentForms?.filter((item) => item.position === "Lito" || item.position === "Service" || item.position === "Autofahrer")?.map(({ date,created_at, employee_id, department_name, employee_name, position, car_info, check_in_km, check_out_km, bar, kredit_karte, kassen_schniff, gesamt_ligerbude, results, gesamt_liegerando, gesamt, trinked_ec, trink_geld, auf_rechnung }) => (
                                         <ReportFormItem
                                             date={date}
                                             employee_id={employee_id}
@@ -342,6 +345,7 @@ const ReportForm = () => {
                                             trink_geld={trink_geld}
                                             auf_rechnung={auf_rechnung}
                                             department_name={department_name}
+                                            time={created_at}
                                         />
                                     ))}
                                 </tbody>
