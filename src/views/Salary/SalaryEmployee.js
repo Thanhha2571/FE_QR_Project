@@ -397,9 +397,9 @@ const SalaryEmployee = () => {
                                         <span>Time: {month}/{year}</span>
                                         <div className="text-xl font-semibold leading-6">Department: {department_name}</div>
                                         <div key={_id} className="flex flex-col gap-2">
-                                            <span>Date Late: {shift_late}</span>
-                                            <span>Date Missing: {shift_missing}</span>
-                                            <span>Date On Time: {shift_on_time}</span>
+                                            <span>Shift Late: {shift_late}</span>
+                                            <span>Shift Missing: {shift_missing}</span>
+                                            <span>Shift On Time: {shift_on_time}</span>
                                         </div>
                                     </div>
                                 ))}

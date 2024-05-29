@@ -25,8 +25,19 @@ const WorkingSchedule = () => {
     const [loading, setLoading] = useState(true);
     const [exportState, setExportState] = useState(false)
 
+    const [selectedShiftId, setSelectedShiftId] = useState("Select Shift Code")
+    const [shiftIdMenu, setShiftIdMenu] = useState(false)
+
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
+
+    const handleChangeSelectedShiftIdMenu = (item) => {
+        setSelectedShiftId(item)
+    }
+
+    const handleShiftIdList = () => {
+        setShiftIdMenu(!shiftIdMenu)
+    }
 
     useEffect(() => {
         if (userObject?.role === 'Admin' || userObject?.role === 'Inhaber') {
@@ -332,6 +343,23 @@ const WorkingSchedule = () => {
 
         }
     };
+
+    const handleSeacrh = async () => {
+        if (userObject?.role === "Admin" && selectedShiftId !== "Select Shift Code") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-by-code?code=${selectedShiftId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                setShiftList(response?.data?.message);
+            } catch (error) {
+                alert(error.response?.data?.messageror);
+            }
+        }
+    };
+
     return (
         <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
             <div className="flex flex-row items-center justify-between">
@@ -364,6 +392,32 @@ const WorkingSchedule = () => {
                 </div>
             </div>
             <div className="text-xl font-semibold leading-6">Schichtplan</div>
+            <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
+                <div
+                    onClick={handleShiftIdList}
+                    className="w-1/5 h-[50px] text-base cursor-pointer">
+                    <div className="flex flex-col w-full py-3 px-2 border border-solid text-placeholderTextColorw-2/3 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor">
+                        <div className="flex flex-row items-center justify-around w-full">
+                            <div className="ml-4">{selectedShiftId}</div>
+                            <div className={`w-4 h-4 flex justify-center items-center ${shiftIdMenu ? "rotate-180" : ""}`}>
+                                <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    {shiftIdMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll h-[300px]">
+                        {shiftList.map(({ index, code }) => {
+                            return <div onClick={() => handleChangeSelectedShiftIdMenu(code)} className="w-full text-center hover:underline">{code}</div>
+                        })}
+                    </div>)}
+                </div>
+                <div
+                    onClick={handleSeacrh}
+                    className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
+                    <button className="search-btn">Suchen</button>
+                </div>
+            </div>
+
             {/* //---------------------------------------------------------------- CREATE SHIFT ------------------------------------------------------------------------------------// */}
 
             {createShiftFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
