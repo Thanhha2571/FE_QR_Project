@@ -24,7 +24,7 @@ const ReportForm = () => {
     const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
 
-    const PAGE_SIZE = 30
+    const PAGE_SIZE = 50
     const [currentPage, setCurrentPage] = useState(1);
     const indexOfLastItem = currentPage * PAGE_SIZE;
     const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;

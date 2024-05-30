@@ -11,6 +11,7 @@ const format = 'HH:mm';
 const WorkingSchedule = () => {
     document.title = 'Working Schedule';
     const [shiftList, setShiftList] = useState()
+    const [shiftListConst, setShiftListConst] = useState()
     const [shiftManageState, setShiftManageState] = useState(true)
 
     const [createShiftFormState, setCreateShiftFormState] = useState(false)
@@ -95,8 +96,59 @@ const WorkingSchedule = () => {
         }
     };
 
+    const getAllShiftsConst = async () => {
+        setLoading(true)
+        if (userObject?.role === "Admin") {
+            try {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                // console.log(response.data.message);
+                setShiftListConst(response.data.message);
+                setLoading(false)
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setLoading(false)
+            }
+        }
+
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                // console.log(response.data.message);
+                setShiftListConst(response.data.message);
+                setLoading(false)
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setLoading(false)
+            }
+        }
+        if (userObject?.role === "Manager") {
+            try {
+                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                // console.log(response.data.message);
+                setShiftListConst(response.data.message);
+                setLoading(false)
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setLoading(false)
+            }
+        }
+    };
+
     useEffect(() => {
         getAllShifts();
+        getAllShiftsConst();
     }, []);
 
     const handleTimeStartCreateShift = (time) => {
@@ -405,9 +457,9 @@ const WorkingSchedule = () => {
                         </div>
                     </div>
 
-                    {shiftIdMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll h-[300px]">
-                        {shiftList.map(({ index, code }) => {
-                            return <div onClick={() => handleChangeSelectedShiftIdMenu(code)} className="w-full text-center hover:underline">{code}</div>
+                    {shiftIdMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black w-full overflow-y-scroll h-[300px]">
+                        {shiftListConst.map(({ index, code }) => {
+                            return <div onClick={() => handleChangeSelectedShiftIdMenu(code)} className="w-full text-center hover:underline mt-3">{code}</div>
                         })}
                     </div>)}
                 </div>

@@ -16,15 +16,20 @@ const SalaryEmployee = () => {
     const [inputYear, setInputYear] = useState("")
     const [user, setUser] = useState()
     const [loading, setLoading] = useState(false);
-    const [salaryInfoState, setSalaryInfoState] = useState(false);
+    const [salaryInfoState, setSalaryInfoState] = useState(true);
+    const [attendanceState, setAttendanceState] = useState(false);
     const [exportAttendanceStatEmployee, setExportAttendanceStatEmployee] = useState(false)
     const [exportAttendanceHistory, setExportAttendanceHistory] = useState(false)
     const [salaryListByMonth, setSalaryListByMonth] = useState()
+    const [attendanceListByMonth, setAttendanceListByMonth] = useState()
     const [filterEmployeeById, setFilterEmployeeById] = useState()
     const [userSalarybyMonthInfoState, setUserSalaryByMonthInfoState] = useState(false)
     const [userSalarybyMonth, setUserSalaryByMonth] = useState()
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkManager, setCheckManager] = useState(false)
+
+    const [month, setMonth] = useState()
+    const [year, setYear] = useState()
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -50,10 +55,13 @@ const SalaryEmployee = () => {
     useEffect(() => {
         const currentDate = new Date();
         const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1; 
+        const currentMonth = currentDate.getMonth() + 1;
         setSalaryInfoState(true)
 
         const handleApi = async () => {
+            setMonth(currentMonth)
+            setYear(currentYear)
+
             if (userObject?.role === 'Admin') {
                 try {
                     const { data } = await axios.get(
@@ -72,7 +80,7 @@ const SalaryEmployee = () => {
                 } finally {
                     setLoading(false)
                 }
-    
+
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
@@ -90,8 +98,9 @@ const SalaryEmployee = () => {
                 } finally {
                     setLoading(false)
                 }
+
             }
-    
+
             if (userObject?.role === 'Inhaber') {
                 try {
                     setSalaryInfoState(true)
@@ -111,7 +120,7 @@ const SalaryEmployee = () => {
                 } finally {
                     setLoading(false)
                 }
-    
+
                 try {
                     setSalaryInfoState(true)
                     const { data } = await axios.get(
@@ -131,15 +140,60 @@ const SalaryEmployee = () => {
                     setLoading(false)
                 }
             }
-        }   
+        }
 
+        const getAttendanceHistoryByMonth = async () => {
+            if (userObject?.role === 'Admin') {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setAttendanceListByMonth(data?.message)
+                    // console.log(data?.);
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setAttendanceListByMonth([])
+                } finally {
+                    setLoading(false)
+                }
+            }
+
+            if (userObject?.role === 'Inhaber') {
+                try {
+                    const { data } = await axios.get(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setAttendanceListByMonth(data?.message)
+                    // console.log(data?.);
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                    setAttendanceListByMonth([])
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }
         handleApi()
+        getAttendanceHistoryByMonth()
 
     }, [userObject?.role]);
 
     const handleSeacrh = async () => {
         setLoading(true);
+        setMonth(monthPicker.substring(0, 2))
+        setYear(monthPicker.substring(3, 7))
         if (userObject.role === 'Admin' && monthPicker !== "") {
+            setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
@@ -150,6 +204,7 @@ const SalaryEmployee = () => {
                     }
                 );
                 setSalaryListByMonth(data?.message)
+                setSalaryInfoState(false)
                 // console.log(data?.);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -160,6 +215,7 @@ const SalaryEmployee = () => {
         }
 
         if (userObject.role === 'Admin' && monthPicker !== "") {
+            setUser([])
             try {
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
@@ -173,16 +229,38 @@ const SalaryEmployee = () => {
                 // console.log(data?.);
             } catch (error) {
                 // Handle error
-                console.error("Error submitting form:", error);
+                alert(error.response?.data?.message)
+                setSalaryInfoState(false)
             } finally {
                 setLoading(false)
             }
         }
-        setSalaryInfoState(true)
+
+        if (userObject?.role === 'Admin' && monthPicker !== "") {
+            setAttendanceListByMonth([])
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setAttendanceListByMonth(data?.message)
+                // console.log(data?.);
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setAttendanceListByMonth([])
+                setSalaryInfoState(false)
+            } finally {
+                setLoading(false)
+            }
+        }
 
         if (userObject.role === 'Inhaber' && monthPicker !== "") {
+            setSalaryListByMonth([])
             try {
-                setSalaryInfoState(true)
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
@@ -195,15 +273,16 @@ const SalaryEmployee = () => {
                 // console.log(data?.);
             } catch (error) {
                 // Handle error
-                console.error("Error submitting form:", error);
+                alert(error.response?.data?.message)
+                setSalaryInfoState(false)
             } finally {
                 setLoading(false)
             }
         }
 
         if (userObject.role === 'Inhaber' && monthPicker !== "") {
+            setUser([])
             try {
-                setSalaryInfoState(true)
                 const { data } = await axios.get(
                     `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
@@ -216,12 +295,32 @@ const SalaryEmployee = () => {
                 console.log("user", data?.message);
             } catch (error) {
                 // Handle error
-                console.error("Error submitting form:", error);
+                alert(error.response?.data?.message)
+                setSalaryInfoState(false)
             } finally {
                 setLoading(false)
             }
         }
-        console.log(salaryInfoState);
+        if (userObject?.role === 'Inhaber' && monthPicker !== "") {
+            setAttendanceListByMonth([])
+            try {
+                const { data } = await axios.get(
+                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setAttendanceListByMonth(data?.message)
+                // console.log(data?.);
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setAttendanceListByMonth([])
+            } finally {
+                setLoading(false)
+            }
+        }
     }
 
 
@@ -373,22 +472,37 @@ const SalaryEmployee = () => {
                         <button className="search-btn">Seacrh</button>
                     </div>
                 </div>
-
+                <h1 className="text-xl">Time: {month}/{year}</h1>
                 <div className="bg-white h-auto w-full flex flex-col rounded-md mt-5">
                     <div className="flex flex-row gap-4 text-xl">
-                        <div className={`hover:text-buttonColor1 cursor-pointer ${salaryInfoState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Salary Information</div>
+                        <div
+                            onClick={() => {
+                                setAttendanceState(false)
+                                setSalaryInfoState(true)
+                            }}
+                            className={`hover:text-buttonColor1 cursor-pointer ${salaryInfoState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
+                        >
+                            Attendance Overview</div>
+                        <div
+                            onClick={() => {
+                                setAttendanceState(true)
+                                setSalaryInfoState(false)
+                            }}
+                            className={`hover:text-buttonColor1 cursor-pointer ${attendanceState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
+                        >
+                            Attendance History</div>
                     </div>
                 </div>
 
-                {salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times, month,  year }) =>
+                {salaryInfoState ? (salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times, month, year }) => (
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
-                        {salaryInfoState && (<div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
+                        <div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                             <div className="flex flex-col justify-center items-center gap-1 mt-4">
                                 <img src={ProfileIcon} className="w-32 h-32" />
                                 <span className="mt-3 font-bold text-xl">{employee_name}</span>
                                 <span className="text-base">Employee's ID: {employee_id}</span>
                             </div>
-                        </div>)}
+                        </div>
                         {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-2 rounded-md">
                             <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
                             <div className="flex flex-wrap w-full">
@@ -414,8 +528,67 @@ const SalaryEmployee = () => {
                                 <div> Working Time: {attendance_total_times}</div>
                             </div>
                         </div>}
-                    </div>
-                )}
+                    </div>))) : <div className="text-center font-extrabold">NO RESULTS</div>}
+
+                {attendanceState && (<div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
+                    <table className="w-full table">
+                        <thead className="">
+                            <tr className="">
+                                <th className="p-2 text-left">
+                                    <span className="font-bold">Date</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-id">Department</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-id">Shift Code</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Positon</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Check in Information</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status"></span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Check out Information</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        {Array.isArray(attendanceListByMonth) && attendanceListByMonth?.length === 0 ? (
+                            <div className="no-result-text text-center">NO RESULT</div>
+                        ) : (
+                            <tbody className="tbody">
+                                {attendanceListByMonth?.map(({ _id, date, department_name, position, shift_info, status }) => (
+                                    <tr className="tr-item" key={_id}>
+                                        <td className="p-2">{new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCFullYear()}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCMonth() + 1).padStart(2, '0')}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCDate()).padStart(2, '0')}</td>
+                                        <td className="p-2">{department_name}</td>
+                                        <td className="p-2">{shift_info?.shift_code}</td>
+                                        <td className="p-2">{position}</td>
+                                        <td className="p-2 flex flex-col">
+                                            {status === "missing" ? (<span className="p-2">{status}</span>) :
+                                                (<div className="p-2 flex flex-col">
+                                                    <span>{shift_info?.time_slot?.check_in_time}</span>
+                                                    <span className="italic">{shift_info?.time_slot?.check_in_status}</span>
+                                                </div>)}
+                                        </td>
+                                        <td className="p-2"></td>
+                                        <td className="p-2 flex flex-col">
+                                            <div className="p-2 flex flex-col">
+                                                <span>{shift_info?.time_slot?.check_out_time}</span>
+                                                <span className="italic">{shift_info?.time_slot?.check_out_status}</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        )}
+                    </table>
+                </div>)}
+
+
                 {exportAttendanceStatEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                     <div
                         onClick={() => setExportAttendanceStatEmployee(false)}

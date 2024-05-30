@@ -326,7 +326,7 @@ function Dashboard() {
         }
     }, [userObject?.role]);
 
-    const PAGE_SIZE_WORKING = 20
+    const PAGE_SIZE_WORKING = 30
     const [currentPageWorking, setCurrentPageWorking] = useState(1);
     const indexOfLastItemWorking = currentPageWorking * PAGE_SIZE_WORKING;
     const indexOfFirstItemWorking = indexOfLastItemWorking - PAGE_SIZE_WORKING;
@@ -338,7 +338,7 @@ function Dashboard() {
         setCurrentPageWorking(page);
     };
 
-    const PAGE_SIZE_ATTEND = 20
+    const PAGE_SIZE_ATTEND = 30
     const [currentPageAttend, setCurrentPageAttend] = useState(1);
     const indexOfLastItemAttend = currentPageAttend * PAGE_SIZE_ATTEND;
     const indexOfFirstItemAttend = indexOfLastItemAttend - PAGE_SIZE_ATTEND;
