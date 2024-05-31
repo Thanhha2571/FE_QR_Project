@@ -356,6 +356,7 @@ const ProfileEmployee = () => {
             });
         }
     };
+    
     useEffect(() => {
         if (user) {
             setEditingData({

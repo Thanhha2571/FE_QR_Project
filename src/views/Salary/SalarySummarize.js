@@ -58,10 +58,6 @@ const SalarySummarizie = () => {
 
     }, [userObject?.role]);
 
-    useEffect(() => {
-
-    }, [])
-
     const handleSeacrh = async () => {
         if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
             try {
@@ -232,12 +228,30 @@ const SalarySummarizie = () => {
 
     useEffect(() => {
         const getUseVariableCoutingSalary = async () => {
-            setLoading(true);
-            if (formData?.user?.id && selectedUserName) {
+            if (formData?.user?.id && selectedUserName && monthCountingPikcer) {
                 if (userObject?.role == 'Admin') {
+                    setLoading(true);
                     try {
                         const { data } = await axios.get(
-                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/api/admin/manage-salary/get?year=2024&month=4&employeeID=QIB&employeeName=Quanginhabertest`,
+                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                                }
+                            }
+                        );
+                        setVariableCountingSalary(data?.message)
+                        setLoading(false);
+                    } catch (err) {
+                        alert(err.response?.data?.message)
+                        setLoading(false);
+                    }
+                }
+                if (userObject?.role == 'Inhaber') {
+                    setLoading(true);
+                    try {
+                        const { data } = await axios.get(
+                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}&inhaber_name=${userObject?.name}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -255,8 +269,9 @@ const SalarySummarizie = () => {
         }
         getUseVariableCoutingSalary()
 
-    }, [formData?.user?.id, selectedUserName])
+    }, [formData?.user?.id, selectedUserName, monthCountingPikcer])
 
+    console.log(variableCountingSalary);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -268,7 +283,18 @@ const SalarySummarizie = () => {
     };
 
     useEffect(() => {
-    
+        if (variableCountingSalary) {
+            setFormData({
+                user: {
+                    ...formData.user,
+                    a: variableCountingSalary[0]?.a_parameter,
+                    b: variableCountingSalary[0]?.b_parameter,
+                    c: variableCountingSalary[0]?.c_parameter,
+                    d: variableCountingSalary[0]?.d_parameter,
+                    f: variableCountingSalary[0]?.f_parameter
+                }
+            })
+        }
     }, [variableCountingSalary])
 
     const handleSubmit = (e) => {
@@ -416,6 +442,22 @@ const SalarySummarizie = () => {
         }
     }
 
+    const handleCancelFormCountingSalary = () => {
+        setSalaryCountingFormState(false)
+        setFormData({
+            user: {
+                id: '',
+                month: '',
+                year: '',
+                a: '',
+                b: '',
+                c: '',
+                d: '0.25',
+                f: ''
+            },
+        })
+        setSelectedUserName("")
+    }
     return (
         <div>
             {checkManager ? (<div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>) : (<div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
@@ -583,7 +625,8 @@ const SalarySummarizie = () => {
                                 <div className="flex flex-row justify-between px-8 items-center">
                                     <div className="font-bold text-xl">Gehaltszählung</div>
                                     <div
-                                        onClick={() => setSalaryCountingFormState(false)}
+                                        onClick={handleCancelFormCountingSalary}
+                                        // onClick={() => setSalaryCountingFormState(false)}
                                         className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                 </div>
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
@@ -592,7 +635,7 @@ const SalarySummarizie = () => {
                                         className="flex flex-col gap-6 w-full justify-center items-center"
                                         onSubmit={handleSubmit}>
                                         {loading && (<div className="absolute flex w-full h-full items-center justify-center">
-                                            <div className="loader"></div>
+                                            <div className="loader_auto"></div>
                                         </div>)}
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
