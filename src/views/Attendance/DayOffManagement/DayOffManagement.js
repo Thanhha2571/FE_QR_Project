@@ -85,7 +85,7 @@ const DayOffManagement = () => {
                 setRequestModal(false);
                 getAllRequestList()
             } catch (error) {
-                console.error('Error approving request:', error);
+                alert(error.response?.data?.messageror);
             }
         }
         if (userObject?.role === "Inhaber") {
@@ -104,7 +104,7 @@ const DayOffManagement = () => {
                 setRequestModal(false);
                 getAllRequestList()
             } catch (error) {
-                console.error('Error approving request:', error);
+                alert(error.response?.data?.messageror);
             }
         }
     };
@@ -126,7 +126,7 @@ const DayOffManagement = () => {
                 setRequestModal(false);
                 getAllRequestList()
             } catch (error) {
-                console.error('Error approving request:', error);
+                alert(error.response?.data?.messageror);
             }
         }
 
@@ -146,7 +146,7 @@ const DayOffManagement = () => {
                 setRequestModal(false);
                 getAllRequestList()
             } catch (error) {
-                console.error('Error approving request:', error);
+                alert(error.response?.data?.messageror);
             }
         }
     };

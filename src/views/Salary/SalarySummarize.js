@@ -19,6 +19,7 @@ const SalarySummarizie = () => {
     const [salaryListByMonth, setSalaryListByMonth] = useState()
     const [monthPicker, setMonthPicker] = useState("")
     const [monthCountingPikcer, setMonthCountingPikcer] = useState("")
+    const [variableCountingSalary, setVariableCountingSalary] = useState()
 
     const userString = localStorage.getItem('user');
     const userObject = userString ? JSON.parse(userString) : null;
@@ -57,6 +58,9 @@ const SalarySummarizie = () => {
 
     }, [userObject?.role]);
 
+    useEffect(() => {
+
+    }, [])
 
     const handleSeacrh = async () => {
         if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
@@ -165,7 +169,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    // alert("No salary recorded")
+                    alert(err.response?.data?.message)
                 }
             }
             if (userObject.role === 'Inhaber' && formData?.user?.id !== "") {
@@ -182,12 +186,12 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    // alert("No salary recorded")
+                    alert(err.response?.data?.message)
                 }
             }
         }
         const getUserListSearch = async () => {
-            if (userObject.role === 'Admin'&& inputId !== "") {
+            if (userObject.role === 'Admin' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
@@ -201,7 +205,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    // alert("No salary recorded")
+                    alert(err.response?.data?.message)
                 }
             }
             if (userObject.role === 'Inhaber' && inputId !== "") {
@@ -218,13 +222,40 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    // alert("No salary recorded")
+                    alert(err.response?.data?.message)
                 }
             }
         }
         getUserList()
         getUserListSearch()
     }, [formData?.user?.id, inputId]);
+
+    useEffect(() => {
+        const getUseVariableCoutingSalary = async () => {
+            setLoading(true);
+            if (formData?.user?.id && selectedUserName) {
+                if (userObject?.role == 'Admin') {
+                    try {
+                        const { data } = await axios.get(
+                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/api/admin/manage-salary/get?year=2024&month=4&employeeID=QIB&employeeName=Quanginhabertest`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                                }
+                            }
+                        );
+                        setVariableCountingSalary(data?.message)
+                        setLoading(false);
+                    } catch (err) {
+                        alert(err.response?.data?.message)
+                        setLoading(false);
+                    }
+                }
+            }
+        }
+        getUseVariableCoutingSalary()
+
+    }, [formData?.user?.id, selectedUserName])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -236,6 +267,10 @@ const SalarySummarizie = () => {
         }));
     };
 
+    useEffect(() => {
+    
+    }, [variableCountingSalary])
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -246,11 +281,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new : Number(formData.user.a),
-                            b_new : Number(formData.user.b),
-                            c_new : Number(formData.user.c),
-                            d_new : Number(formData.user.d),
-                            f_new : Number(formData.user.f)
+                            a_new: Number(formData.user.a),
+                            b_new: Number(formData.user.b),
+                            c_new: Number(formData.user.c),
+                            d_new: Number(formData.user.d),
+                            f_new: Number(formData.user.f)
                         },
                         {
                             headers: {
@@ -285,11 +320,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new : Number(formData.user.a),
-                            b_new : Number(formData.user.b),
-                            c_new : Number(formData.user.c),
-                            d_new : Number(formData.user.d),
-                            f_new : Number(formData.user.f)
+                            a_new: Number(formData.user.a),
+                            b_new: Number(formData.user.b),
+                            c_new: Number(formData.user.c),
+                            d_new: Number(formData.user.d),
+                            f_new: Number(formData.user.f)
                         },
                         {
                             headers: {
@@ -459,9 +494,9 @@ const SalarySummarizie = () => {
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">Total funktionsfähig</span>
                                 </th>
-                                <th className="p-2 text-left">
+                                {/* <th className="p-2 text-left">
                                     <span className="table-title-status">Im Laufe der Zeit</span>
-                                </th>
+                                </th> */}
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">netto</span>
                                 </th>
@@ -508,7 +543,7 @@ const SalarySummarizie = () => {
                                             </div>
                                         </td>
                                         <td className="p-2">{total_hour_work}</td>
-                                        <td className="p-2">{total_hour_overtime}</td>
+                                        {/* <td className="p-2">{total_hour_overtime}</td> */}
                                         <td className="p-2">{a_parameter}</td>
                                         <td className="p-2">{b_parameter}</td>
                                         <td className="p-2">{c_parameter}</td>

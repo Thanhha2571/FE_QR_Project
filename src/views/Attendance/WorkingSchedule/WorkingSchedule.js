@@ -410,6 +410,32 @@ const WorkingSchedule = () => {
                 alert(error.response?.data?.messageror);
             }
         }
+        if (userObject?.role === "Inhaber" && selectedShiftId !== "Select Shift Code") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-by-code?code=${selectedShiftId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                setShiftList(response?.data?.message);
+            } catch (error) {
+                alert(error.response?.data?.messageror);
+            }
+        }
+        if (userObject?.role === "Manager" && selectedShiftId !== "Select Shift Code") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-by-code?code=${selectedShiftId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                setShiftList(response?.data?.message);
+            } catch (error) {
+                alert(error.response?.data?.messageror);
+            }
+        }
     };
 
     return (
