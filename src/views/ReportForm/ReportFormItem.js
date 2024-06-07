@@ -58,7 +58,7 @@ const ReportFormItem = (props) => {
                     <div className="flex flex-col">
                         <span>Bar: {bar}</span>
                         <span>Kreditkarte: {kredit_karte}</span>
-                        <span>Kassen-Schniff: {kassen_schniff}</span>
+                        <span>Kassenschnitt: {kassen_schniff}</span>
                         <span>Gesamt Liegerbude: {gesamt_ligerbude}</span>
                         <span>Gesamt Lieferando: {gesamt_liegerando}</span>
                         <span>results: {results}</span>
