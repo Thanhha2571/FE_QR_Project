@@ -184,7 +184,7 @@ const ReportForm = () => {
             setFormList([])
             if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -202,7 +202,7 @@ const ReportForm = () => {
 
             if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -219,7 +219,7 @@ const ReportForm = () => {
             }
             if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
