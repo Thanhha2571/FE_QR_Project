@@ -528,7 +528,7 @@ const SalaryEmployee = () => {
                                 <div> Working Time: {attendance_total_times}</div>
                             </div>
                         </div>}
-                    </div>))) : <div className="text-center font-extrabold">NO RESULTS</div>}
+                    </div>))) : <div className="text-center font-extrabold"></div>}
 
                 {attendanceState && (<div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                     <table className="w-full table">
@@ -555,13 +555,25 @@ const SalaryEmployee = () => {
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">Check out Information</span>
                                 </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Check in Km</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Check out Km</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Total Km</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Result (serivce, lito)</span>
+                                </th>
                             </tr>
                         </thead>
                         {Array.isArray(attendanceListByMonth) && attendanceListByMonth?.length === 0 ? (
-                            <div className="no-result-text text-center">NO RESULT</div>
+                            <div className="no-result-text text-center"></div>
                         ) : (
                             <tbody className="tbody">
-                                {attendanceListByMonth?.map(({ _id, date, department_name, position, shift_info, status }) => (
+                                {attendanceListByMonth?.map(({ _id, date, department_name, position, shift_info, status, check_in_km, check_out_km, total_km, results }) => (
                                     <tr className="tr-item" key={_id}>
                                         <td className="p-2">{new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCFullYear()}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCMonth() + 1).padStart(2, '0')}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCDate()).padStart(2, '0')}</td>
                                         <td className="p-2">{department_name}</td>
@@ -580,6 +592,14 @@ const SalaryEmployee = () => {
                                                 <span>{shift_info?.time_slot?.check_out_time}</span>
                                                 <span className="italic">{shift_info?.time_slot?.check_out_status}</span>
                                             </div>
+                                        </td>
+                                        {position === "Autofahrer" && (<td className="p-2">{check_in_km}</td>)}
+                                        {position === "Autofahrer" && (<td className="p-2">{check_out_km}</td>)}
+                                        {position === "Autofahrer" && (<td className="p-2">{total_km}</td>)}
+                                        <td>
+                                            {(position === "Service" || position === "Lito") && (
+                                                <div className="p-2">{results}</div>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
