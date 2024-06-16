@@ -741,6 +741,60 @@ const ScheduleTable = (props) => {
                     setSelectedCheckOutStatus("")
                 }
             }
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
         }
         if (userObject?.role === 'Admin' && statusAttendance === "missing") {
             try {
@@ -774,7 +828,6 @@ const ScheduleTable = (props) => {
         }
 
         if (userObject?.role === 'Inhaber' && statusAttendance !== "missing") {
-            console.log("no missing check");
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
@@ -1046,11 +1099,21 @@ const ScheduleTable = (props) => {
 
     const handleFormChangeAttend = (index) => {
         setChangeAttendanceFormState(prevState => {
-            const newState = [...prevState];
+            // Ensure prevState is always an array.
+            const newState = Array.isArray(prevState) ? [...prevState] : [];
+
+            // Initialize the state for the given index if it doesn't exist.
+            if (newState[index] === undefined) {
+                newState[index] = false;
+            }
+
+            // Toggle the boolean value at the specified index.
             newState[index] = !newState[index];
+
             return newState;
         });
     };
+
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
             <h2 className="text-2xl font-bold">Schedule Calendar</h2>
@@ -1542,7 +1605,7 @@ const ScheduleTable = (props) => {
                                                                                     ))}
                                                                                 </select>
                                                                             </div>
-                                                                            {filteredItem?.status === "missing" && (<div className="w-full h-auto flex flex-col gap-2">
+                                                                            <div className="w-full h-auto flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
                                                                                     <span className="">Abreisezeit</span>
@@ -1555,8 +1618,8 @@ const ScheduleTable = (props) => {
                                                                                     onChange={handleChangeAttendanceData}
                                                                                 /> */}
                                                                                 <TimePicker onChange={handleTimeCheckOutStatusMissing} className="w-full h-[42px]" format={formatTimePicker} />
-                                                                            </div>)}
-                                                                            {filteredItem?.status === "missing" && (<div className="w-full flex flex-col gap-2">
+                                                                            </div>
+                                                                            <div className="w-full flex flex-col gap-2">
                                                                                 <div className="flex flex-row gap-2">
                                                                                     <span className="text-rose-500">*</span>
                                                                                     <span className="">Überprüfen Sie den Status</span>
@@ -1576,7 +1639,7 @@ const ScheduleTable = (props) => {
                                                                                         </option>
                                                                                     ))}
                                                                                 </select>
-                                                                            </div>)}
+                                                                            </div>
                                                                             <div
                                                                                 className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                                                                 <button type="submit" className="w-full">Änderungen speichern</button>
