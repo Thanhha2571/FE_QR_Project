@@ -53,6 +53,9 @@ const ScheduleTable = (props) => {
     const [checkOutTimeMissing, setCheckOutTimeMissing] = useState("")
     const [checkInTimeCreate, setCheckInTimeCreate] = useState("")
     const [checkOutTimeCreate, setCheckOutTimeCreate] = useState("")
+    const [checkInKm, setCheckInKm] = useState(0)
+    const [checkOutKm, setCheckOutKm] = useState(0)
+    const [checkRole, setCheckRole] = useState("")
     const [shiftCodeDelete, setShiftCodeDelete] = useState("")
     const [departmentShiftCodeDelete, setDepartmentShiftCodeDelete] = useState("")
     const [dateShiftCodeDelete, setDateShiftCodeDelete] = useState("")
@@ -796,6 +799,124 @@ const ScheduleTable = (props) => {
                 }
             }
         }
+        if (userObject?.role === 'Admin' && statusAttendance !== "missing" && checkRole === "Autofahrer") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        {
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+        }
         if (userObject?.role === 'Admin' && statusAttendance === "missing") {
             try {
                 const { data } = await axios.put(
@@ -904,6 +1025,126 @@ const ScheduleTable = (props) => {
                 } finally {
                     setLoading(false);
                     setChangeAttendanceFormState(false);
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+        }
+        if (userObject?.role === 'Inhaber' && statusAttendance !== "missing" && checkRole === "Autofahrer") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        {
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
                     setCheckOutTimeMissing("")
                     setSelectedCheckInStatus("")
                     setSelectedCheckOutStatus("")
@@ -1525,6 +1766,9 @@ const ScheduleTable = (props) => {
                                                                 // setChangeAttendanceFormState(!changeAttendanceFormState)
                                                                 handleFormChangeAttend(index)
                                                                 setStatusAttendance(filteredItem?.status)
+                                                                setCheckInKm(filteredItem?.check_in_km)
+                                                                setCheckOutKm(filteredItem?.check_out_km)
+                                                                setCheckRole(filteredItem?.position)
                                                             }
                                                             } className="bg-red-600 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-red-800">
                                                                 Anwesenheitsinformationen ändern
@@ -1640,6 +1884,32 @@ const ScheduleTable = (props) => {
                                                                                     ))}
                                                                                 </select>
                                                                             </div>
+                                                                            {filteredItem?.position === "Autofahrer" && (<div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check In Km</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="id"
+                                                                                    value={checkInKm}
+                                                                                    onChange={(e) => setCheckInKm(e.target.value)}
+                                                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                                                />
+                                                                            </div>)}
+                                                                            {filteredItem?.position === "Autofahrer" && (<div className="w-full h-auto flex flex-col gap-2">
+                                                                                <div className="flex flex-row gap-2">
+                                                                                    <span className="text-rose-500">*</span>
+                                                                                    <span className="">Check Out Km</span>
+                                                                                </div>
+                                                                                <input
+                                                                                    type="text"
+                                                                                    name="id"
+                                                                                    value={checkOutKm}
+                                                                                    onChange={(e) => setCheckOutKm(e.target.value)}
+                                                                                    className="rounded-[6px] border-[#d9d9d9] hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                                                />
+                                                                            </div>)}
                                                                             <div
                                                                                 className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                                                                 <button type="submit" className="w-full">Änderungen speichern</button>
