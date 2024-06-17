@@ -149,6 +149,29 @@ const SalarySummarizie = () => {
         },
     });
 
+    const convertCommaStringToNumber = (str) => {
+        // Check if the input is a string and not empty
+        if (typeof str !== 'string' || !str.trim()) {
+            console.error("Invalid input: Not a string or empty", str);
+            return str; // Handle invalid input as needed
+        }
+    
+        // Replace all commas with dots
+        const dotString = str.replace(/,/g, '.');
+    
+        // Convert to a float
+        const number = parseFloat(dotString);
+    
+        // Check if the conversion was successful (NaN check)
+        if (isNaN(number)) {
+            console.error("Invalid number format:", str);
+            return null; // Handle invalid number format as needed
+        }
+    
+        return number;
+    };
+
+
     useEffect(() => {
         const getUserList = async () => {
             if (userObject.role === 'Admin' && formData?.user?.id !== "") {
@@ -307,11 +330,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new: Number(formData.user.a),
-                            b_new: Number(formData.user.b),
-                            c_new: Number(formData.user.c),
-                            d_new: Number(formData.user.d),
-                            f_new: Number(formData.user.f)
+                            a_new: convertCommaStringToNumber(formData.user.a),
+                            b_new: convertCommaStringToNumber(formData.user.b),
+                            c_new: convertCommaStringToNumber(formData.user.c),
+                            d_new: convertCommaStringToNumber(formData.user.d),
+                            f_new: convertCommaStringToNumber(formData.user.f)
                         },
                         {
                             headers: {
@@ -334,6 +357,7 @@ const SalarySummarizie = () => {
                     setMonthCountingPikcer("")
                     setSalaryCountingFormState(false)
                 } catch (err) {
+                    console.log(err);
                     alert(err.response?.data?.message)
                     setLoading(false)
                 } finally {
@@ -346,11 +370,11 @@ const SalarySummarizie = () => {
                     const { data } = await axios.post(
                         `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
-                            a_new: Number(formData.user.a),
-                            b_new: Number(formData.user.b),
-                            c_new: Number(formData.user.c),
-                            d_new: Number(formData.user.d),
-                            f_new: Number(formData.user.f)
+                            a_new: convertCommaStringToNumber(formData.user.a),
+                            b_new: convertCommaStringToNumber(formData.user.b),
+                            c_new: convertCommaStringToNumber(formData.user.c),
+                            d_new: convertCommaStringToNumber(formData.user.d),
+                            f_new: convertCommaStringToNumber(formData.user.f)
                         },
                         {
                             headers: {
@@ -372,9 +396,10 @@ const SalarySummarizie = () => {
                     setSelectedUserName("")
                     setMonthCountingPikcer("")
                     setSalaryCountingFormState(false)
-                } catch (error) {
+                } catch (err) {
                     // Handle error
-                    console.error("Error submitting form:", error);
+                    alert(err.response?.data?.message);
+                    setLoading(false)
                 } finally {
                     handleSeacrh()
                 }
