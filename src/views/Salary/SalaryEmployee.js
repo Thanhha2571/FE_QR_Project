@@ -556,6 +556,9 @@ const SalaryEmployee = () => {
                                     <span className="table-title-status">Check out Information</span>
                                 </th>
                                 <th className="p-2 text-left">
+                                    <span className="table-title-status">Car Number</span>
+                                </th>
+                                <th className="p-2 text-left">
                                     <span className="table-title-status">Check in Km</span>
                                 </th>
                                 <th className="p-2 text-left">
@@ -573,7 +576,7 @@ const SalaryEmployee = () => {
                             <div className="no-result-text text-center"></div>
                         ) : (
                             <tbody className="tbody">
-                                {attendanceListByMonth?.map(({ _id, date, department_name, position, shift_info, status, check_in_km, check_out_km, total_km, results }) => (
+                                {attendanceListByMonth?.map(({ _id, date, department_name, position, shift_info, status, car_info, check_in_km, check_out_km, total_km, results }) => (
                                     <tr className="tr-item" key={_id}>
                                         <td className="p-2">{new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCFullYear()}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCMonth() + 1).padStart(2, '0')}-{String(new Date(new Date(date).getTime() + 2 * 60 * 60 * 1000).getUTCDate()).padStart(2, '0')}</td>
                                         <td className="p-2">{department_name}</td>
@@ -593,13 +596,14 @@ const SalaryEmployee = () => {
                                                 <span className="italic">{shift_info?.time_slot?.check_out_status}</span>
                                             </div>
                                         </td>
-                                        {position === "Autofahrer" && (<td className="p-2">{check_in_km}</td>)}
-                                        {position === "Autofahrer" && (<td className="p-2">{check_out_km}</td>)}
-                                        {position === "Autofahrer" && (<td className="p-2">{total_km}</td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{car_info?.car_number}</td>) : (<td className="p-2"></td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{check_in_km}</td>) : (<td className="p-2"></td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{check_out_km}</td>) :(<td className="p-2"></td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{total_km}</td>) :(<td className="p-2"></td>)}
                                         <td>
-                                            {(position === "Service" || position === "Lito") && (
+                                            {(position === "Service" || position === "Lito") ? (
                                                 <div className="p-2">{results}</div>
-                                            )}
+                                            ): <div className="p-2"></div>}
                                         </td>
                                     </tr>
                                 ))}
