@@ -718,6 +718,7 @@ const SalarySummarizie = () => {
                                                 // required
                                                 value={formData.user.a}
                                                 onChange={handleChange}
+                                                placeholder="12,34"
                                             />
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
@@ -732,6 +733,7 @@ const SalarySummarizie = () => {
                                                 // required
                                                 value={formData.user.b}
                                                 onChange={handleChange}
+                                                placeholder="12,34"
                                             />
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
@@ -746,6 +748,7 @@ const SalarySummarizie = () => {
                                                 // required
                                                 value={formData.user.c}
                                                 onChange={handleChange}
+                                                placeholder="12,34"
                                             />
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
@@ -760,6 +763,7 @@ const SalarySummarizie = () => {
                                                 // required
                                                 value={formData.user.d}
                                                 onChange={handleChange}
+                                                placeholder="12,34"
                                             />
                                         </div>
                                         <div className="w-full h-auto flex flex-col gap-2">
@@ -774,6 +778,7 @@ const SalarySummarizie = () => {
                                                 // required
                                                 value={formData.user.f}
                                                 onChange={handleChange}
+                                                placeholder="12,34"
                                             />
                                         </div>
                                         <div
