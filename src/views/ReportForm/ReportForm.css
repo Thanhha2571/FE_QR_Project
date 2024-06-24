@@ -29,3 +29,9 @@
         transform: rotate(360deg);
     }
 }
+
+.active {
+    background-color: #4caf50; /* Change this to your desired color */
+    color: white;
+    border-color: #4caf50; /* Optional: Matches the button color */
+}

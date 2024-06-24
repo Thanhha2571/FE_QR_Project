@@ -362,8 +362,7 @@ const ReportForm = () => {
                                     <button
                                         key={index}
                                         onClick={() => handlePageChange(index + 1)}
-                                        className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                    // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
+                                        className={`text-xl border border-solid py-2 px-4 hover:bg-[#4caf50] ${currentPage === index + 1 ? 'active' : ''}`}
                                     >
                                         {index + 1}
                                     </button>
