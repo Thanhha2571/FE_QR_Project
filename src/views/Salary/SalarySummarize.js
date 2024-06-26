@@ -188,7 +188,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    alert(err.response?.data?.message)
+                    // alert(err.response?.data?.message)
                 }
             }
             if (userObject.role === 'Inhaber' && formData?.user?.id !== "") {
@@ -205,7 +205,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    alert(err.response?.data?.message)
+                    // alert(err.response?.data?.message)
                 }
             }
         }
@@ -224,7 +224,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    alert(err.response?.data?.message)
+                    // alert(err.response?.data?.message)
                 }
             }
             if (userObject.role === 'Inhaber' && inputId !== "") {
@@ -241,7 +241,7 @@ const SalarySummarizie = () => {
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
-                    alert(err.response?.data?.message)
+                    // alert(err.response?.data?.message)
                 }
             }
         }
