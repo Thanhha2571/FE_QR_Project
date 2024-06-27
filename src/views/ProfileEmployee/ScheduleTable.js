@@ -1630,7 +1630,6 @@ const ScheduleTable = (props) => {
                                 </div>
                                 {exportState && (selectedShift && (
                                     <div>
-                                        {attendanceDataByDate?.length === 0 ? (
                                             <div className="flex flex-col gap-3">
                                                 <div className="text-center font-bold text-gray-600 text-xl mt-4">Keine Anwesenheitsdaten verfügbar</div>
                                                 <div className="flex flex-col">
@@ -1720,8 +1719,7 @@ const ScheduleTable = (props) => {
                                                 </div>
                                             </div>
 
-                                        ) : (
-                                            attendanceDataByDate?.filter((item) => item?.shift_info?.shift_code === selectedShift)
+                                            {attendanceDataByDate?.filter((item) => item?.shift_info?.shift_code === selectedShift)
                                                 .map((filteredItem, index) => (
                                                     <div className="flex flex-col gap-4" key={filteredItem._id}>
                                                         {filteredItem?.status === "missing" ? (
@@ -1922,7 +1920,7 @@ const ScheduleTable = (props) => {
                                                     </div>
                                                     //     </div>
                                                     // </div>
-                                                )))}
+                                                ))}
                                     </div>
                                 ))}
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>

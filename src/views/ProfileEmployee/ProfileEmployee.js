@@ -757,7 +757,8 @@ const ProfileEmployee = () => {
                                             name="name"
                                             className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                             value={editingData.name}
-                                            onChange={handleChange}
+                                            // onChange={handleChange}
+                                            readOnly
                                         />
                                     </div>
                                     <div className="flex flex-wrap w-[600px] items-center">
@@ -768,7 +769,8 @@ const ProfileEmployee = () => {
                                             name="id"
                                             className="w-3/4 rounded-[6px] border-[#d9d9d9]"
                                             value={editingData.id}
-                                            onChange={handleChange}
+                                            // onChange={handleChange}
+                                            readOnly
                                         />
                                     </div>
                                     <div className="flex flex-wrap w-[600px] items-center">

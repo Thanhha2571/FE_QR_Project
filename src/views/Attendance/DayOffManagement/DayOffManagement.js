@@ -66,6 +66,19 @@ const DayOffManagement = () => {
                 alert(error.response?.data?.messageror);
             }
         }
+        if (userObject?.role === "Inhaber" && selectedStatus !== "Select Status") {
+            try {
+                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/search?inhaber_name=${userObject?.name}&answer_status=${selectedStatus}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                setRequestList(response.data.message);
+            } catch (error) {
+                alert(error.response?.data?.messageror);
+            }
+        }
     };
 
     const handleApproveRequest = async () => {
