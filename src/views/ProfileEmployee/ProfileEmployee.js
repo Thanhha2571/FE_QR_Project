@@ -338,21 +338,21 @@ const ProfileEmployee = () => {
     const handleCancel = () => {
         if (user) {
             setEditingData({
-                name: user[0]?.name || '',
-                id: user[0]?.id || '',
-                email: user[0]?.email || '',
-                department: user[0]?.department_name || '',
-                position: user[0]?.position || '',
-                status: user[0]?.status || '',
-                gender: user[0]?.gender || '',
-                dob: user[0]?.dob || '',
-                address: user[0]?.address || '',
-                role: user[0]?.role || '',
-                default_day_off: user[0]?.default_day_off || '',
-                house_rent_money: user[0]?.house_rent_money || '',
-                realistic_day_off: user[0]?.realistic_day_off || '',
-                total_time_per_month: user[0]?.total_time_per_month || '',
-                // inactive_day: user[0]?.inactive_day || '',
+                name: user[0]?.name,
+                id: user[0]?.id ,
+                email: user[0]?.email ,
+                department: user[0]?.department_name ,
+                position: user[0]?.position ,
+                status: user[0]?.status ,
+                gender: user[0]?.gender ,
+                dob: user[0]?.dob ,
+                address: user[0]?.address ,
+                role: user[0]?.role ,
+                default_day_off: user[0]?.default_day_off ,
+                house_rent_money: user[0]?.house_rent_money ,
+                realistic_day_off: user[0]?.realistic_day_off ,
+                total_time_per_month: user[0]?.total_time_per_month ,
+                // inactive_day: user[0]?.inactive_day ,
             });
         }
     };
@@ -360,21 +360,21 @@ const ProfileEmployee = () => {
     useEffect(() => {
         if (user) {
             setEditingData({
-                name: user[0]?.name || '',
-                id: user[0]?.id || '',
-                email: user[0]?.email || '',
-                department: user[0]?.department_name || '',
-                position: user[0]?.position || '',
-                role: user[0]?.role || '',
-                status: user[0]?.status || '',
-                gender: user[0]?.gender || '',
-                dob: user[0]?.dob || '',
-                address: user[0]?.address || '',
-                default_day_off: user[0]?.default_day_off || '',
-                house_rent_money: user[0]?.house_rent_money || '',
-                realistic_day_off: user[0]?.realistic_day_off || '',
-                inactive_day: user[0]?.inactive_day || '',
-                total_time_per_month: user[0]?.total_time_per_month || '',
+                name: user[0]?.name ,
+                id: user[0]?.id ,
+                email: user[0]?.email ,
+                department: user[0]?.department_name ,
+                position: user[0]?.position ,
+                role: user[0]?.role ,
+                status: user[0]?.status ,
+                gender: user[0]?.gender ,
+                dob: user[0]?.dob ,
+                address: user[0]?.address ,
+                default_day_off: user[0]?.default_day_off ,
+                house_rent_money: user[0]?.house_rent_money ,
+                realistic_day_off: user[0]?.realistic_day_off ,
+                inactive_day: user[0]?.inactive_day ,
+                total_time_per_month: user[0]?.total_time_per_month ,
             });
         }
         if (user) {
