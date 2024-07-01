@@ -162,19 +162,19 @@ const History = () => {
                                     <span className="table-title-status">Year</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">a_parameter</span>
+                                    <span className="table-title-status">netto</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">b_parameter</span>
+                                    <span className="table-title-status">überweisung</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">c_parameter</span>
+                                    <span className="table-title-status">optional</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">d_parameter</span>
+                                    <span className="table-title-status">€/km (0,25)</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">f_parameter</span>
+                                    <span className="table-title-status">über s x</span>
                                 </th>
                             </tr>
                         </thead>
