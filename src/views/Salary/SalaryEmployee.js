@@ -524,7 +524,7 @@ const SalaryEmployee = () => {
                             <span>Time: {month}/{year}</span>
                             <div className="flex flex-col gap-3">
                                 <div>Default Working Time: {default_schedule_times}</div>
-                                <div>Rest Working Time: {realistic_schedule_times}</div>
+                                {/* <div>Rest Working Time: {realistic_schedule_times}</div> */}
                                 <div> Working Time: {attendance_total_times}</div>
                             </div>
                         </div>}
