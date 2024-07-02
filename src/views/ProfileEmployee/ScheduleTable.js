@@ -10,6 +10,7 @@ import { attendanceStatus } from "assets/data/data";
 import { useRef } from "react";
 import DatePicker from "react-multi-date-picker"
 import { TimePicker } from 'antd';
+import { baseUrl } from "components/api/httpService";
 const formatTimePicker = 'HH:mm:ss';
 
 const ScheduleTable = (props) => {
@@ -129,7 +130,7 @@ const ScheduleTable = (props) => {
     const fetchScheduleEmployyee = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -143,7 +144,7 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -157,7 +158,7 @@ const ScheduleTable = (props) => {
         }
         if (userObject?.role === "Manager") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -179,7 +180,7 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -199,7 +200,7 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Manager" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&manager_name=${userObject?.name}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&manager_name=${userObject?.name}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -219,7 +220,7 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Inhaber" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&inhaber_name=${userObject?.name}&employeeName=${name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-stats/get?year=${year}&month=${month}&employeeID=${id}&inhaber_name=${userObject?.name}&employeeName=${name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -265,7 +266,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-attendance/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -289,7 +290,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -344,7 +345,7 @@ const ScheduleTable = (props) => {
 
         if (userObject?.role === "Admin" && year !== "" && month !== "" && day !== "" && date !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-date-design/get-by-specific?employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -371,7 +372,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-date-design/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -396,7 +397,7 @@ const ScheduleTable = (props) => {
                 const month = selectedDate.substring(5, 7);
                 const day = selectedDate.substring(8, 10)
                 const date = `${month}/${day}/${year}`
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-date-design/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -420,7 +421,7 @@ const ScheduleTable = (props) => {
         const getAllShifts = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-shift/get-all', {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-shift/get-all`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -434,7 +435,7 @@ const ScheduleTable = (props) => {
 
             if (userObject?.role === "Inhaber") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-shift/get-all', {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-shift/get-all`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -447,7 +448,7 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Manager") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-shift/get-all', {
+                    const response = await axios.get(`${baseUrl}/api/manager/manage-shift/get-all`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -465,7 +466,7 @@ const ScheduleTable = (props) => {
         const fetchData = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-employee/get-byId?employeeID=${id}&employeeName=${name}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -479,7 +480,7 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Inhaber") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/get-byId?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -493,7 +494,7 @@ const ScheduleTable = (props) => {
             }
             if (userObject?.role === "Manager") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
+                    const response = await axios.get(`${baseUrl}/api/manager/manage-employee/get-byId?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -560,7 +561,7 @@ const ScheduleTable = (props) => {
                 setLoading(true)
                 const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}&employeeName=${name}`,
+                    `${baseUrl}/api/admin/manage-date-design/create-days?department_name=${selectedDepartmentEmployee}&employeeID=${id}&employeeName=${name}`,
                     {
                         dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
@@ -598,7 +599,7 @@ const ScheduleTable = (props) => {
                 setLoading(true)
                 const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
+                    `${baseUrl}/api/inhaber/manage-date-design/create-days?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
                     {
                         dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
@@ -637,7 +638,7 @@ const ScheduleTable = (props) => {
                 setLoading(true)
                 const formattedValues = datePicker.map(formatDate);
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/create-days?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
+                    `${baseUrl}/api/manager/manage-date-design/create-days?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${selectedDepartmentEmployee}`,
                     {
                         dates: formattedValues,
                         shift_code: selectedShiftAddShiftForm,
@@ -721,7 +722,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -747,7 +748,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
@@ -773,7 +774,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -803,7 +804,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -832,7 +833,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
@@ -861,7 +862,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -892,7 +893,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                        `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                         {
                             check_in_km: checkInKm,
                             check_out_km: checkOutKm,
@@ -920,7 +921,7 @@ const ScheduleTable = (props) => {
         if (userObject?.role === 'Admin' && statusAttendance === "missing") {
             try {
                 const { data } = await axios.put(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
+                    `${baseUrl}/api/admin/manage-attendance/update/${attendanceId}?editor_name=${userObject?.name}`,
                     {
                         "shift_info.time_slot.check_in_time": checkInTimeMissing,
                         "shift_info.time_slot.check_out_time": checkOutTimeMissing,
@@ -952,7 +953,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
@@ -981,7 +982,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -1007,7 +1008,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
@@ -1035,7 +1036,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
@@ -1067,7 +1068,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_in_time": checkInTimeMissing,
                             "shift_info.time_slot.check_in_status": selectedCheckInStatus,
@@ -1096,7 +1097,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             "shift_info.time_slot.check_out_time": checkOutTimeMissing,
                             "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
@@ -1125,7 +1126,7 @@ const ScheduleTable = (props) => {
             if (checkInTimeMissing === "" && checkOutTimeMissing === "") {
                 try {
                     const { data } = await axios.put(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                         {
                             check_in_km: checkInKm,
                             check_out_km: checkOutKm,
@@ -1154,7 +1155,7 @@ const ScheduleTable = (props) => {
         if (userObject?.role === 'Inhaber' && statusAttendance === "missing") {
             try {
                 const { data } = await axios.put(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/inhaber/manage-attendance/update/${attendanceId}?inhaber_name=${userObject?.name}`,
                     {
                         "shift_info.time_slot.check_in_time": checkInTimeMissing,
                         "shift_info.time_slot.check_out_time": checkOutTimeMissing,
@@ -1200,7 +1201,7 @@ const ScheduleTable = (props) => {
         if (userObject?.role === 'Admin') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
+                    `${baseUrl}/api/admin/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
                     {
                         "check_in_time": checkInTimeCreate,
                         "check_out_time": checkOutTimeCreate,
@@ -1230,7 +1231,7 @@ const ScheduleTable = (props) => {
         if (userObject?.role === 'Inhaber') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
+                    `${baseUrl}/api/inhaber/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
                     {
                         "check_in_time": checkInTimeCreate,
                         "check_out_time": checkOutTimeCreate,
@@ -1267,7 +1268,7 @@ const ScheduleTable = (props) => {
             console.log(shiftCodeDelete);
             try {
                 const { data } = await axios.put(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-date-design/delete?employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    `${baseUrl}/api/admin/manage-date-design/delete?employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
                     {
                         shift_code: shiftCodeDelete,
                         dates: arrayDateDelete
@@ -1293,7 +1294,7 @@ const ScheduleTable = (props) => {
             console.log(shiftCodeDelete);
             try {
                 const { data } = await axios.put(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-date-design/delete?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    `${baseUrl}/api/manager/manage-date-design/delete?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
                     {
                         shift_code: shiftCodeDelete,
                         dates: arrayDateDelete
@@ -1318,7 +1319,7 @@ const ScheduleTable = (props) => {
             console.log(shiftCodeDelete);
             try {
                 const { data } = await axios.put(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-date-design/delete?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
+                    `${baseUrl}/api/inhaber/manage-date-design/delete?inhaber_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&department_name=${departmentShiftCodeDelete}`,
                     {
                         shift_code: shiftCodeDelete,
                         dates: arrayDateDelete

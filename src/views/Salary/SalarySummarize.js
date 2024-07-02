@@ -7,6 +7,7 @@ import { message } from "antd";
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
+import { baseUrl } from "components/api/httpService";
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 
@@ -62,7 +63,7 @@ const SalarySummarizie = () => {
         if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -83,7 +84,7 @@ const SalarySummarizie = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
+                    `${baseUrl}/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -102,7 +103,7 @@ const SalarySummarizie = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -120,7 +121,7 @@ const SalarySummarizie = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
+                    `${baseUrl}/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -177,7 +178,7 @@ const SalarySummarizie = () => {
             if (userObject.role === 'Admin' && formData?.user?.id !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${formData?.user?.id}`,
+                        `${baseUrl}/api/admin/manage-all/search-specific?details=${formData?.user?.id}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -194,7 +195,7 @@ const SalarySummarizie = () => {
             if (userObject.role === 'Inhaber' && formData?.user?.id !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${formData?.user?.id}`,
+                        `${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${formData?.user?.id}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -213,7 +214,7 @@ const SalarySummarizie = () => {
             if (userObject.role === 'Admin' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
+                        `${baseUrl}/api/admin/manage-all/search-specific?details=${inputId}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -230,7 +231,7 @@ const SalarySummarizie = () => {
             if (userObject.role === 'Inhaber' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
+                        `${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -256,7 +257,7 @@ const SalarySummarizie = () => {
                     setLoading(true);
                     try {
                         const { data } = await axios.get(
-                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
+                            `${baseUrl}/api/admin/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -274,7 +275,7 @@ const SalarySummarizie = () => {
                     setLoading(true);
                     try {
                         const { data } = await axios.get(
-                            `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}&inhaber_name=${userObject?.name}`,
+                            `${baseUrl}/api/inhaber/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}&inhaber_name=${userObject?.name}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -328,7 +329,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Admin") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
+                        `${baseUrl}/api/admin/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
                             a_new: convertCommaStringToNumber(formData.user.a),
                             b_new: convertCommaStringToNumber(formData.user.b),
@@ -368,7 +369,7 @@ const SalarySummarizie = () => {
             if (userObject?.role === "Inhaber") {
                 try {
                     const { data } = await axios.post(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
+                        `${baseUrl}/api/inhaber/manage-salary/calculate/${formData.user.id}?employeeName=${selectedUserName}&year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}`,
                         {
                             a_new: convertCommaStringToNumber(formData.user.a),
                             b_new: convertCommaStringToNumber(formData.user.b),
@@ -413,7 +414,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -441,7 +442,7 @@ const SalarySummarizie = () => {
             try {
                 setLoading(true);
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`

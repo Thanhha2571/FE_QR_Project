@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { baseUrl } from "components/api/httpService";
 
 const GenerateQR = () => {
     document.title = 'Generate QR Code';
@@ -71,7 +72,7 @@ const GenerateQR = () => {
         const getAllDepartments = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-department/get-all`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }

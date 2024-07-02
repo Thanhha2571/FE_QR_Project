@@ -7,7 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import DeleteIcon from "../../assets/images/icon-delete.png"
 import "./Car.css"
 import CarItem from "./CarItem";
-
+import { baseUrl } from "components/api/httpService";
 dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
@@ -58,7 +58,7 @@ const Car = () => {
         setLoading(true)
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-car/get`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -73,7 +73,7 @@ const Car = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-car/get?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -92,7 +92,7 @@ const Car = () => {
     const getAllDepartments = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-department/get-all`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -127,7 +127,7 @@ const Car = () => {
         if (userObject?.role === "Admin" && selectedCarEdit !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarEdit}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-car/get-by-id/${selectedCarEdit}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -142,7 +142,7 @@ const Car = () => {
         if (userObject?.role === "Admin" && selectedCarDelete !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarDelete}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-car/get-by-id/${selectedCarDelete}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -157,7 +157,7 @@ const Car = () => {
         if (userObject?.role === "Inhaber" && selectedCarEdit !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-car/get-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -172,7 +172,7 @@ const Car = () => {
         if (userObject?.role === "Inhaber" && selectedCarDelete !== "") {
             setRegisterDateOfCar("")
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-car/get-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -186,7 +186,7 @@ const Car = () => {
 
         if (userObject?.role === "Admin" && selectedCarAddDepartment !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-car/get-by-id/${selectedCarAddDepartment}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -200,7 +200,7 @@ const Car = () => {
 
         if (userObject?.role === "Admin" && selectedCarRemoveDepartment !== "") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-car/get-by-id/${selectedCarRemoveDepartment}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -294,7 +294,7 @@ const Car = () => {
 
         if (userObject?.role === "Admin") {
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/update-by-id/${selectedCarEdit}`, {
+                const { data } = await axios.put(`${baseUrl}/api/admin/manage-car/update-by-id/${selectedCarEdit}`, {
                     car_name: editingCarData.car_name,
                     car_number: editingCarData.car_number,
                     register_date: registerDateOfCar
@@ -314,7 +314,7 @@ const Car = () => {
 
         if (userObject?.role === "Inhaber") {
             try {
-                const { data } = await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/update-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
+                const { data } = await axios.put(`${baseUrl}/api/inhaber/manage-car/update-by-id/${selectedCarEdit}?inhaber_name=${userObject?.name}`, {
                     car_name: editingCarData.car_name,
                     car_number: editingCarData.car_number,
                     register_date: registerDateOfCar
@@ -371,7 +371,7 @@ const Car = () => {
         if (userObject?.role === 'Admin') {
             try {
                 const { data } = await axios.post(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/create",
+                    `${baseUrl}/api/admin/manage-car/create`,
                     {
                         car_name: formData.car.car_name,
                         car_number: formData.car.car_number,
@@ -405,7 +405,7 @@ const Car = () => {
         if (userObject?.role === 'Inhaber') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/create?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/inhaber/manage-car/create?inhaber_name=${userObject?.name}`,
                     {
                         car_name: formData.car.car_name,
                         car_number: formData.car.car_number,
@@ -449,7 +449,7 @@ const Car = () => {
         if (userObject?.role === 'Admin') {
             try {
                 const { data } = await axios.delete(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/delete-by-id/${selectedCarDelete}`,
+                    `${baseUrl}/api/admin/manage-car/delete-by-id/${selectedCarDelete}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -468,7 +468,7 @@ const Car = () => {
         if (userObject?.role === 'Inhaber') {
             try {
                 const { data } = await axios.delete(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-car/delete-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/inhaber/manage-car/delete-by-id/${selectedCarDelete}?inhaber_name=${userObject?.name}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -490,7 +490,7 @@ const Car = () => {
         if (userObject?.role === "Admin") {
             setLoading(true);
             try {
-                const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/add-car/${selectedCarAddDepartment}`,
+                const { data } = await axios.post(`${baseUrl}/api/admin/manage-car/add-car/${selectedCarAddDepartment}`,
                     {
                         departmentName: selectedDepartment,
                     },
@@ -519,7 +519,7 @@ const Car = () => {
         if (userObject?.role === "Admin") {
             setLoading(true);
             try {
-                const { data } = await axios.post(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-car/remove-car/${selectedCarRemoveDepartment}`,
+                const { data } = await axios.post(`${baseUrl}/api/admin/manage-car/remove-car/${selectedCarRemoveDepartment}`,
                     {
                         departmentName: selectedDepartment,
                     },

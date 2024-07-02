@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import "./Salary.css"
 import * as XLSX from "xlsx";
-
+import { baseUrl } from "components/api/httpService";
 const History = () => {
     document.title = "History Counting"
     const [inputId, setInputId] = useState("")
@@ -26,7 +26,7 @@ const History = () => {
         if (userObject.role === 'Admin' && inputId !== "" && inputName !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-salary/get?employeeID=${inputId}&employeeName=${inputName}`,
+                    `${baseUrl}/api/admin/manage-salary/get?employeeID=${inputId}&employeeName=${inputName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -43,7 +43,7 @@ const History = () => {
         if (userObject.role === 'Inhaber'&& inputId !== "" && inputName !== "") {
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-salary/get?inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
+                    `${baseUrl}/api/inhaber/manage-salary/get?inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -64,7 +64,7 @@ const History = () => {
             if (userObject.role === 'Admin' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?details=${inputId}`,
+                        `${baseUrl}/api/admin/manage-all/search-specific?details=${inputId}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -81,7 +81,7 @@ const History = () => {
             if (userObject.role === 'Inhaber' && inputId !== "") {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
+                        `${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`

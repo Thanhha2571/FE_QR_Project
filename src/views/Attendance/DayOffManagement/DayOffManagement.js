@@ -4,7 +4,7 @@ import axios from "axios";
 import { statusRequestList } from "assets/data/data";
 // import { Link } from "react-router-dom";
 import DayOffItem from "./DayOffItem";
-
+import { baseUrl } from "components/api/httpService";
 const DayOffManagement = () => {
     document.title = "Day Off Management"
     const [requestList, setRequestList] = useState()
@@ -55,7 +55,7 @@ const DayOffManagement = () => {
     const handleSeacrh = async () => {
         if (userObject?.role === "Admin" && selectedStatus !== "Select Status") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/search?answer_status=${selectedStatus}`,
+                const response = await axios.get(`${baseUrl}/api/admin/manage-request/search?answer_status=${selectedStatus}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -68,7 +68,7 @@ const DayOffManagement = () => {
         }
         if (userObject?.role === "Inhaber" && selectedStatus !== "Select Status") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/search?inhaber_name=${userObject?.name}&answer_status=${selectedStatus}`,
+                const response = await axios.get(`${baseUrl}/api/admin/manage-request/search?inhaber_name=${userObject?.name}&answer_status=${selectedStatus}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -85,7 +85,7 @@ const DayOffManagement = () => {
         if (userObject?.role === "Admin") {
             try {
                 // Make a PUT request to update the answer_status to "approved"
-                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/handle/${requestId}`,
+                await axios.put(`${baseUrl}/api/admin/manage-request/handle/${requestId}`,
                     {
                         answer_status: "approved"
                     },
@@ -104,7 +104,7 @@ const DayOffManagement = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 // Make a PUT request to update the answer_status to "approved"
-                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-request/handle/${requestId}?inhaber_name=${userObject?.name}`,
+                await axios.put(`${baseUrl}/api/inhaber/manage-request/handle/${requestId}?inhaber_name=${userObject?.name}`,
                     {
                         answer_status: "approved"
                     },
@@ -126,7 +126,7 @@ const DayOffManagement = () => {
         if (userObject?.role === "Admin") {
             try {
                 // Make a PUT request to update the answer_status to "approved"
-                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/handle/${requestId}`,
+                await axios.put(`${baseUrl}/api/admin/manage-request/handle/${requestId}`,
                     {
                         answer_status: "denied"
                     },
@@ -146,7 +146,7 @@ const DayOffManagement = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 // Make a PUT request to update the answer_status to "approved"
-                await axios.put(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-request/handle/${requestId}?inhaber_name=${userObject?.name}`,
+                await axios.put(`${baseUrl}/api/inhaber/manage-request/handle/${requestId}?inhaber_name=${userObject?.name}`,
                     {
                         answer_status: "denied"
                     },
@@ -168,7 +168,7 @@ const DayOffManagement = () => {
     const getAllRequestList = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-request/get-all', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-request/get-all`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -180,7 +180,7 @@ const DayOffManagement = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-request/get-all?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-request/get-all?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

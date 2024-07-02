@@ -4,6 +4,7 @@ import axios from "axios";
 import ReportFormItem from "./ReportFormItem";
 import "./ReportForm.css"
 import { DatePicker, Space } from 'antd';
+import { baseUrl } from "components/api/httpService";
 const { RangePicker } = DatePicker;
 const dateFormat = 'MM/DD/YYYY';
 
@@ -45,7 +46,7 @@ const ReportForm = () => {
         setLoading(true)
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-form/get`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -60,7 +61,7 @@ const ReportForm = () => {
         }
         if (userObject?.role === "Inhaber") {
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -78,7 +79,7 @@ const ReportForm = () => {
     const getAllDepartments = async () => {
         if (userObject?.role === "Admin") {
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-department/get-all`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -128,7 +129,7 @@ const ReportForm = () => {
             setFormList([])
             if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -146,7 +147,7 @@ const ReportForm = () => {
 
             if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-form/get?department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -163,7 +164,7 @@ const ReportForm = () => {
             }
             if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-form/get?startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -184,7 +185,7 @@ const ReportForm = () => {
             setFormList([])
             if (datePicker !== "" && selectedDepartment === "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -202,7 +203,7 @@ const ReportForm = () => {
 
             if (datePicker === "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -219,7 +220,7 @@ const ReportForm = () => {
             }
             if (datePicker !== "" && selectedDepartment !== "Abteilung auswählen") {
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-form/get?inhaber_name=${userObject?.name}&startDate=${datePicker[0]}&endDate=${datePicker[1]}&department_name=${selectedDepartment}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }

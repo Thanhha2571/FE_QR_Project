@@ -3,6 +3,7 @@ import axios from "axios";
 import LogItem from "./LogItem";
 import { Link } from "react-router-dom";
 import "./ManageLog.css"
+import { baseUrl } from "components/api/httpService";
 
 const ManageLog = () => {
     document.title = "Log Management";
@@ -29,7 +30,7 @@ const ManageLog = () => {
         if (userObject?.role === "Admin") {
             setLoading(true)
             try {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-logs/get?type_update=Update attendance', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-logs/get?type_update=Update attendanc`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

@@ -7,6 +7,7 @@ import ProfileIcon from "../../assets/images/icon-profile.png"
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
+import { baseUrl } from "components/api/httpService";
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 const SalaryEmployee = () => {
@@ -65,7 +66,7 @@ const SalaryEmployee = () => {
             if (userObject?.role === 'Admin') {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        `${baseUrl}/api/admin/manage-stats/get?year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -83,7 +84,7 @@ const SalaryEmployee = () => {
 
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        `${baseUrl}/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -105,7 +106,7 @@ const SalaryEmployee = () => {
                 try {
                     setSalaryInfoState(true)
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${currentYear}&month=${currentMonth}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        `${baseUrl}/api/inhaber/manage-stats/get?year=${currentYear}&month=${currentMonth}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -124,7 +125,7 @@ const SalaryEmployee = () => {
                 try {
                     setSalaryInfoState(true)
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${currentYear}&month=${currentMonth}&employeeID=${employeeId}&employeeName=${employeeName}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -146,7 +147,7 @@ const SalaryEmployee = () => {
             if (userObject?.role === 'Admin') {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        `${baseUrl}/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -166,7 +167,7 @@ const SalaryEmployee = () => {
             if (userObject?.role === 'Inhaber') {
                 try {
                     const { data } = await axios.get(
-                        `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        `${baseUrl}/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -196,7 +197,7 @@ const SalaryEmployee = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/admin/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -218,7 +219,7 @@ const SalaryEmployee = () => {
             setUser([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/admin/manage-attendance/get-stats?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -240,7 +241,7 @@ const SalaryEmployee = () => {
             setAttendanceListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/admin/manage-attendance/get-by-specific?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -262,7 +263,7 @@ const SalaryEmployee = () => {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/inhaber/manage-stats/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -284,7 +285,7 @@ const SalaryEmployee = () => {
             setUser([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/inhaber/manage-attendance/get-stats?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -305,7 +306,7 @@ const SalaryEmployee = () => {
             setAttendanceListByMonth([])
             try {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    `${baseUrl}/api/inhaber/manage-attendance/get-by-specific?inhaber_name=${userObject?.name}&employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -328,7 +329,7 @@ const SalaryEmployee = () => {
         try {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/attendance-stats?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/admin/manage-xlsx/attendance-stats?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -349,7 +350,7 @@ const SalaryEmployee = () => {
 
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -381,7 +382,7 @@ const SalaryEmployee = () => {
         try {
             if (userObject?.role === "Admin") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-attendance?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/admin/manage-xlsx/employee-attendance?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -401,7 +402,7 @@ const SalaryEmployee = () => {
             }
             if (userObject?.role === "Inhaber") {
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-attendance?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                    `${baseUrl}/api/inhaber/manage-xlsx/employee-attendance?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`

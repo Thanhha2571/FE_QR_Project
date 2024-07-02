@@ -2,6 +2,7 @@ import axios from "axios";
 import { useRef, useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import useAuth from "hooks/useAuth";
+import { baseUrl } from "components/api/httpService";
 
 const Login = () => {
     document.title = "Login";
@@ -19,7 +20,7 @@ const Login = () => {
     const [password, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
-    let baseApiUrl = "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/";
+    // let baseApiUrl = "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/";
     const [selectedRole, setSelectedRole] = useState('admin');
 
     const handleRoleChange = (event) => {
@@ -41,7 +42,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const loginUrl = `${baseApiUrl}manage-${selectedRole}/login-${selectedRole}`;
+            const loginUrl = `${baseUrl}/api/auth/manage-${selectedRole}/login-${selectedRole}`;
             const res = await axios.post(
                 loginUrl, 
                 JSON.stringify({ name, password }),

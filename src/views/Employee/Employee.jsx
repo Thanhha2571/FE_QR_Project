@@ -6,6 +6,7 @@ import EmployeeItem from "./EmployeeItem";
 import "./Employee.css"
 import axios, { all } from "axios";
 import * as XLSX from "xlsx";
+import { baseUrl } from "components/api/httpService";
 // import { response, response } from "express";
 function Employee() {
     document.title = "Employee";
@@ -91,7 +92,7 @@ function Employee() {
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-employee",
+                    `${baseUrl}/api/auth/manage-admin/register-employee`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -136,7 +137,7 @@ function Employee() {
         if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/auth/manage-inhaber/register-employee?inhaber_name=${userObject?.name}`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -177,7 +178,7 @@ function Employee() {
         if (userObject?.role === 'Manager' && selectedRoleUser === 'Employee') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-manager/register-employee?manager_name=${userObject?.name}`,
+                    `${baseUrl}/api/auth/manage-manager/register-employee?manager_name=${userObject?.name}`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -218,7 +219,7 @@ function Employee() {
         if (userObject?.role === 'Inhaber' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/auth/manage-inhaber/register-manager?inhaber_name=${userObject?.name}`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -260,7 +261,7 @@ function Employee() {
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Inhaber') {
             try {
                 const { data } = await axios.post(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-inhaber",
+                    `${baseUrl}/api/auth/manage-admin/register-inhaber`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -302,7 +303,7 @@ function Employee() {
         if (userObject?.role === 'Admin' && selectedRoleUser === 'Manager') {
             try {
                 const { data } = await axios.post(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/auth/manage-admin/register-manager",
+                    `${baseUrl}/api/auth/manage-admin/register-manager`,
                     {
                         id: formData.user.id.trim(),
                         name: formData.user.name.trim(),
@@ -366,7 +367,7 @@ function Employee() {
             setUserList([])
             setLoadingSearching(true)
             try {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -417,7 +418,7 @@ function Employee() {
                 setLoadingSearching(true)
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -437,7 +438,7 @@ function Employee() {
                 setLoadingSearching(true)
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -457,7 +458,7 @@ function Employee() {
                 setLoadingSearching(true)
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -477,7 +478,7 @@ function Employee() {
                 setLoadingSearching(true)
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, {
+                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -506,7 +507,7 @@ function Employee() {
                 setLoadingSearching(true)
                 setUserList([])
                 try {
-                    const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, {
+                    const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -539,7 +540,7 @@ function Employee() {
                 setLoading(true);
 
                 const { data } = await axios.get(
-                    "https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-xlsx/employee-data",
+                    `${baseUrl}/api/admin/manage-xlsx/employee-data`,
                     {
                         responseType: "arraybuffer",
                         headers: {
@@ -569,7 +570,7 @@ function Employee() {
                 setLoading(true);
 
                 const { data } = await axios.get(
-                    `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
+                    `${baseUrl}/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -599,7 +600,7 @@ function Employee() {
         setLoadingSearching(true);
         try {
             if (userObject?.role === 'Admin') {
-                const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-all/search-specific', {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -608,7 +609,7 @@ function Employee() {
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -617,7 +618,7 @@ function Employee() {
                 setUserList(response.data.message);
             }
             if (userObject?.role === 'Manager') {
-                const response = await axios.get(`https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -647,7 +648,7 @@ function Employee() {
         const getAllDepartments = async () => {
             if (userObject?.role === "Admin") {
                 try {
-                    const response = await axios.get('https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/api/admin/manage-department/get-all', {
+                    const response = await axios.get(`${baseUrl}/api/admin/manage-department/get-all`, {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
                         }
@@ -656,7 +657,7 @@ function Employee() {
                 } catch (err) {
                     alert(err.response?.data?.message)
                 }
-            }
+            }   
         };
 
         getAllUsers();

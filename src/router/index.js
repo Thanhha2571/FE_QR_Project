@@ -61,7 +61,7 @@ const Router = () => {
                 <Route path="manage-log" element={<ManageLog />} />
                 <Route path="manage-car" element={<Car />} />
                 <Route path="manage-report-form" element={<ReportForm />} />
-                <Route path="attendance/summarize" element={<AttendanceHistory />} />
+                {/* <Route path="attendance/summarize" element={<AttendanceHistory />} /> */}
                 <Route path="generate_qr" element={<GenerateQR />} />
                 <Route path="Qr_link/:selectedDepartment" element={<QrLink />} />
 
