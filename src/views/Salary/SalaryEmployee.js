@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
 import { baseUrl } from "components/api/httpService";
+import History from "./History"
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 const SalaryEmployee = () => {
@@ -19,10 +20,12 @@ const SalaryEmployee = () => {
     const [loading, setLoading] = useState(false);
     const [salaryInfoState, setSalaryInfoState] = useState(true);
     const [attendanceState, setAttendanceState] = useState(false);
+    const [history, setHistory] = useState(false)
     const [exportAttendanceStatEmployee, setExportAttendanceStatEmployee] = useState(false)
     const [exportAttendanceHistory, setExportAttendanceHistory] = useState(false)
     const [salaryListByMonth, setSalaryListByMonth] = useState()
     const [attendanceListByMonth, setAttendanceListByMonth] = useState()
+    const [historyListByMonth, setHistoryListByMonth] = useState()
     const [filterEmployeeById, setFilterEmployeeById] = useState()
     const [userSalarybyMonthInfoState, setUserSalaryByMonthInfoState] = useState(false)
     const [userSalarybyMonth, setUserSalaryByMonth] = useState()
@@ -98,6 +101,22 @@ const SalaryEmployee = () => {
                     console.error("Error submitting form:", error);
                 } finally {
                     setLoading(false)
+                }
+
+                try {
+                    const { data } = await axios.get(
+                        `${baseUrl}/api/admin/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setHistoryListByMonth(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
                 }
 
             }
@@ -480,6 +499,7 @@ const SalaryEmployee = () => {
                             onClick={() => {
                                 setAttendanceState(false)
                                 setSalaryInfoState(true)
+                                setHistory(false)
                             }}
                             className={`hover:text-buttonColor1 cursor-pointer ${salaryInfoState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
                         >
@@ -488,10 +508,20 @@ const SalaryEmployee = () => {
                             onClick={() => {
                                 setAttendanceState(true)
                                 setSalaryInfoState(false)
+                                setHistory(false)
                             }}
                             className={`hover:text-buttonColor1 cursor-pointer ${attendanceState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
                         >
                             Attendance History</div>
+                        <div
+                            onClick={() => {
+                                setAttendanceState(false)
+                                setSalaryInfoState(false)
+                                setHistory(true)
+                            }}
+                            className={`hover:text-buttonColor1 cursor-pointer ${history ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
+                        >
+                            Salary History</div>
                     </div>
                 </div>
 
@@ -599,12 +629,12 @@ const SalaryEmployee = () => {
                                         </td>
                                         {position === "Autofahrer" ? (<td className="p-2">{car_info?.car_number}</td>) : (<td className="p-2"></td>)}
                                         {position === "Autofahrer" ? (<td className="p-2">{check_in_km}</td>) : (<td className="p-2"></td>)}
-                                        {position === "Autofahrer" ? (<td className="p-2">{check_out_km}</td>) :(<td className="p-2"></td>)}
-                                        {position === "Autofahrer" ? (<td className="p-2">{total_km}</td>) :(<td className="p-2"></td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{check_out_km}</td>) : (<td className="p-2"></td>)}
+                                        {position === "Autofahrer" ? (<td className="p-2">{total_km}</td>) : (<td className="p-2"></td>)}
                                         <td>
                                             {(position === "Service" || position === "Lito") ? (
                                                 <div className="p-2">{results}</div>
-                                            ): <div className="p-2"></div>}
+                                            ) : <div className="p-2"></div>}
                                         </td>
                                     </tr>
                                 ))}
@@ -613,6 +643,66 @@ const SalaryEmployee = () => {
                     </table>
                 </div>)}
 
+                {/* {history && (<div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
+                    <table className="w-full table">
+                        <thead className="">
+                            <tr className="">
+                                <th className="p-2 text-left">
+                                    <span className="font-bold">Name</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-id">Employee ID</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Month</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">Year</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">netto</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">überweisung</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">optional</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">€/km (0,25)</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">über s x</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        {Array.isArray(historyListByMonth) && historyListByMonth?.length === 0 ? (
+                            <div className="no-result-text text-center">NO RESULT</div>
+                        ) : (
+                            <tbody className="tbody">
+                                {historyListByMonth?.map(({ employee_id, employee_name, year, month, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter }) => (
+                                    <tr className="tr-item" key={employee_id}>
+                                        <td className="p-2 hover:text-buttonColor2">
+                                            <h2 className="text-left">
+                                                <div className="cursor-pointer flex flex-col">{employee_name}
+                                                </div>
+                                            </h2>
+                                        </td>
+                                        <td className="p-2">{employee_id}</td>
+                                        <td className="p-2">{month}</td>
+                                        <td className="p-2">{year}</td>
+                                        <td className="p-2">{a_parameter}</td>
+                                        <td className="p-2">{b_parameter}</td>
+                                        <td className="p-2">{c_parameter}</td>
+                                        <td className="p-2">{d_parameter}</td>
+                                        <td className="p-2">{f_parameter}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        )}
+                    </table>
+                </div>)} */}
+                {history && <History historyListByMonth={historyListByMonth}/>}
 
                 {exportAttendanceStatEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                     <div

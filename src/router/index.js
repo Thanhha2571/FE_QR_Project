@@ -56,7 +56,7 @@ const Router = () => {
                 <Route path="working-schedule" element={<WorkingSchedule />} />
                 <Route path="working-schedule/day-off-management" element={<DayOffManagement />} />
                 <Route path="salary/summarize" element={<SalarySummarize />} />
-                <Route path="salary/history_counting" element={<History />} />
+                {/* <Route path="salary/history_counting" element={<History />} /> */}
                 <Route path="salary/sumarize/:employeeId/:employeeName" element={<SalaryEmployee />} />
                 <Route path="manage-log" element={<ManageLog />} />
                 <Route path="manage-car" element={<Car />} />

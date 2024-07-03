@@ -152,7 +152,7 @@ const Navigation = () => {
                                     </span>
                                 </li>
                             </Link>
-                            <Link to="salary/history_counting">
+                            {/* <Link to="salary/history_counting">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
@@ -161,7 +161,7 @@ const Navigation = () => {
                                         </div>
                                     </span>
                                 </li>
-                            </Link>
+                            </Link> */}
                         </ul>)}
                     </div>
                     <div onClick={() => setLogMenu(!logMenu)}>
