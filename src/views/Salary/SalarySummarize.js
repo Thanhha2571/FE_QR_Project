@@ -449,8 +449,11 @@ const SalarySummarizie = () => {
         if (userObject?.role === "Admin") {
             try {
                 setLoading(true);
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/admin/manage-xlsx/salary-stats`,
+                    {
+                        salaries: salaryListByMonth
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -477,8 +480,11 @@ const SalarySummarizie = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 setLoading(true);
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-xlsx/salary-stats`,
+                    {
+                        salaries: salaryListByMonth
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
