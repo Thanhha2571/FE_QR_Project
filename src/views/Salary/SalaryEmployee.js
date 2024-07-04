@@ -159,6 +159,22 @@ const SalaryEmployee = () => {
                 } finally {
                     setLoading(false)
                 }
+
+                try {
+                    const { data } = await axios.get(
+                        `${baseUrl}/api/inhaber/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${currentYear}&month=${currentMonth}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+                    setHistoryListByMonth(data?.message)
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    // alert("No salary recorded")
+                }
             }
         }
 
@@ -212,7 +228,7 @@ const SalaryEmployee = () => {
         setLoading(true);
         setMonth(monthPicker.substring(0, 2))
         setYear(monthPicker.substring(3, 7))
-        if (userObject.role === 'Admin' && monthPicker !== "") {
+        if (userObject?.role === 'Admin' && monthPicker !== "") {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
@@ -234,7 +250,7 @@ const SalaryEmployee = () => {
             }
         }
 
-        if (userObject.role === 'Admin' && monthPicker !== "") {
+        if (userObject?.role === 'Admin' && monthPicker !== "") {
             setUser([])
             try {
                 const { data } = await axios.get(
@@ -278,7 +294,29 @@ const SalaryEmployee = () => {
             }
         }
 
-        if (userObject.role === 'Inhaber' && monthPicker !== "") {
+        if (userObject?.role === 'Admin' && monthPicker !== "") {
+            setAttendanceListByMonth([])
+            try {
+                const { data } = await axios.get(
+                    `${baseUrl}/api/admin/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setAttendanceListByMonth(data?.message)
+                // console.log(data?.);
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setHistoryListByMonth([])
+                setSalaryInfoState(false)
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (userObject?.role === 'Inhaber' && monthPicker !== "") {
             setSalaryListByMonth([])
             try {
                 const { data } = await axios.get(
@@ -300,7 +338,7 @@ const SalaryEmployee = () => {
             }
         }
 
-        if (userObject.role === 'Inhaber' && monthPicker !== "") {
+        if (userObject?.role === 'Inhaber' && monthPicker !== "") {
             setUser([])
             try {
                 const { data } = await axios.get(
@@ -337,6 +375,28 @@ const SalaryEmployee = () => {
             } catch (err) {
                 alert(err.response?.data?.message)
                 setAttendanceListByMonth([])
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        if (userObject?.role === 'Inhaber' && monthPicker !== "") {
+            setAttendanceListByMonth([])
+            try {
+                const { data } = await axios.get(
+                    `${baseUrl}/api/inhaber/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setAttendanceListByMonth(data?.message)
+                // console.log(data?.);
+            } catch (err) {
+                alert(err.response?.data?.message)
+                setHistoryListByMonth([])
+                setSalaryInfoState(false)
             } finally {
                 setLoading(false)
             }
