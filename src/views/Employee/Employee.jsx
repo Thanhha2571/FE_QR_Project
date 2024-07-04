@@ -551,8 +551,11 @@ function Employee() {
             try {
                 setLoading(true);
 
-                const { data } = await axios.get(
+                const { data } = await axios.post(
                     `${baseUrl}/api/admin/manage-xlsx/employee-data`,
+                    {
+                        employees: userList
+                    },
                     {
                         responseType: "arraybuffer",
                         headers: {
@@ -581,8 +584,11 @@ function Employee() {
             try {
                 setLoading(true);
 
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-xlsx/employee-data?inhaber_name=${userObject?.name}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-xlsx/employee-data`,
+                    {
+                        employees: userList
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
