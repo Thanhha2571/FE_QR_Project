@@ -284,6 +284,7 @@ const SalaryEmployee = () => {
                     }
                 );
                 setAttendanceListByMonth(data?.message)
+                // console.log("attendance list",data?.message)
                 // console.log(data?.);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -295,7 +296,7 @@ const SalaryEmployee = () => {
         }
 
         if (userObject?.role === 'Admin' && monthPicker !== "") {
-            setAttendanceListByMonth([])
+            setHistoryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `${baseUrl}/api/admin/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
@@ -305,7 +306,7 @@ const SalaryEmployee = () => {
                         }
                     }
                 );
-                setAttendanceListByMonth(data?.message)
+                setHistoryListByMonth(data?.message)
                 // console.log(data?.);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -381,7 +382,7 @@ const SalaryEmployee = () => {
         }
 
         if (userObject?.role === 'Inhaber' && monthPicker !== "") {
-            setAttendanceListByMonth([])
+            setHistoryListByMonth([])
             try {
                 const { data } = await axios.get(
                     `${baseUrl}/api/inhaber/manage-salary/history/get?employeeID=${employeeId}&employeeName=${employeeName}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
@@ -391,7 +392,7 @@ const SalaryEmployee = () => {
                         }
                     }
                 );
-                setAttendanceListByMonth(data?.message)
+                setHistoryListByMonth(data?.message)
                 // console.log(data?.);
             } catch (err) {
                 alert(err.response?.data?.message)
@@ -407,8 +408,11 @@ const SalaryEmployee = () => {
     const handleExportAttendanceStatEmloyeeFile = async () => {
         try {
             if (userObject?.role === "Admin") {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-xlsx/attendance-stats?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/admin/manage-xlsx/attendance-stats`,
+                    {
+                        employees:user
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -428,8 +432,11 @@ const SalaryEmployee = () => {
             }
 
             if (userObject?.role === "Inhaber") {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-xlsx/attendance-stats?inahber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${employeeId}&employeeName=${employeeName}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-xlsx/attendance-stats`,
+                    {
+                        employees: user
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -768,7 +775,7 @@ const SalaryEmployee = () => {
                     <div
                         onClick={() => setExportAttendanceStatEmployee(false)}
                         className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
-                    <div className="absolute w-[600px] h-[200px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                    <div className="absolute w-[600px] h-[250px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
