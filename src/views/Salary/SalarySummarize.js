@@ -146,7 +146,10 @@ const SalarySummarizie = () => {
             b: '',
             c: '',
             d: '0.25',
-            f: ''
+            f: '',
+            g: '',
+            h: '',
+            k: '',
         },
     });
 
@@ -315,7 +318,10 @@ const SalarySummarizie = () => {
                     b: variableCountingSalary[0]?.b_parameter,
                     c: variableCountingSalary[0]?.c_parameter,
                     d: variableCountingSalary[0]?.d_parameter,
-                    f: variableCountingSalary[0]?.f_parameter
+                    f: variableCountingSalary[0]?.f_parameter,
+                    g: variableCountingSalary[0]?.g_parameter,
+                    h: variableCountingSalary[0]?.h_parameter,
+                    k: variableCountingSalary[0]?.k_parameter
                 }
             })
         }
@@ -335,7 +341,10 @@ const SalarySummarizie = () => {
                             b_new: convertCommaStringToNumber(formData.user.b),
                             c_new: convertCommaStringToNumber(formData.user.c),
                             d_new: convertCommaStringToNumber(formData.user.d),
-                            f_new: convertCommaStringToNumber(formData.user.f)
+                            f_new: convertCommaStringToNumber(formData.user.f),
+                            g_new: convertCommaStringToNumber(formData.user.g),
+                            h_new: convertCommaStringToNumber(formData.user.h),
+                            k_new: convertCommaStringToNumber(formData.user.k)
                         },
                         {
                             headers: {
@@ -351,7 +360,10 @@ const SalarySummarizie = () => {
                             b: '',
                             c: '',
                             d: '0.25',
-                            f: ''
+                            f: '',
+                            g: '',
+                            h: '',
+                            k: ''
                         },
                     });
                     setSelectedUserName("")
@@ -375,7 +387,10 @@ const SalarySummarizie = () => {
                             b_new: convertCommaStringToNumber(formData.user.b),
                             c_new: convertCommaStringToNumber(formData.user.c),
                             d_new: convertCommaStringToNumber(formData.user.d),
-                            f_new: convertCommaStringToNumber(formData.user.f)
+                            f_new: convertCommaStringToNumber(formData.user.f),
+                            g_new: convertCommaStringToNumber(formData.user.g),
+                            h_new: convertCommaStringToNumber(formData.user.h),
+                            k_new: convertCommaStringToNumber(formData.user.k)
                         },
                         {
                             headers: {
@@ -391,7 +406,10 @@ const SalarySummarizie = () => {
                             b: '',
                             c: '',
                             d: '0.25',
-                            f: ''
+                            f: '',
+                            g: '',
+                            h: '',
+                            k: ''
                         },
                     });
                     setSelectedUserName("")
@@ -479,7 +497,10 @@ const SalarySummarizie = () => {
                 b: '',
                 c: '',
                 d: '0.25',
-                f: ''
+                f: '',
+                g: '',
+                h: '',
+                k: ''
             },
         })
         setSelectedUserName("")
@@ -572,13 +593,22 @@ const SalarySummarizie = () => {
                                     <span className="table-title-status">überweisung</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-status">optional</span>
+                                    <span className="table-title-status">vorschuss</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">€/km (0,25)</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">über s x</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">bonus</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">tip</span>
+                                </th>
+                                <th className="p-2 text-left">
+                                    <span className="table-title-status">optional</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-status">Total Km</span>
@@ -592,7 +622,7 @@ const SalarySummarizie = () => {
                             <div className="no-result-text text-center">NO RESULT</div>
                         ) : (
                             <tbody className="tbody">
-                                {currentUsers?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter, total_km, total_salary }) => (
+                                {currentUsers?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter,g_parameter, h_parameter, k_parameter, total_km, total_salary }) => (
                                     <tr className="tr-item" key={employee_id}>
                                         <td className="p-2 hover:text-buttonColor2">
                                             <h2 className="text-left">
@@ -617,6 +647,9 @@ const SalarySummarizie = () => {
                                         <td className="p-2">{c_parameter}</td>
                                         <td className="p-2">{d_parameter}</td>
                                         <td className="p-2">{f_parameter}</td>
+                                        <td className="p-2">{g_parameter}</td>
+                                        <td className="p-2">{h_parameter}</td>
+                                        <td className="p-2">{k_parameter}</td>
                                         <td className="p-2">{total_km}</td>
                                         <td className="p-2">{total_salary}</td>
                                     </tr>
@@ -740,7 +773,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 {/* <span className="text-rose-500">*</span> */}
-                                                <span className="">optional</span>
+                                                <span className="">vorschuss</span>
                                             </div>
                                             <input
                                                 type="text"
@@ -778,6 +811,51 @@ const SalarySummarizie = () => {
                                                 className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                                                 // required
                                                 value={formData.user.f}
+                                                onChange={handleChange}
+                                                placeholder="12,34"
+                                            />
+                                        </div>
+                                        <div className="w-full h-auto flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                {/* <span className="text-rose-500">*</span> */}
+                                                <span className="">bonus</span>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="g"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                // required
+                                                value={formData.user.g}
+                                                onChange={handleChange}
+                                                placeholder="12,34"
+                                            />
+                                        </div>
+                                        <div className="w-full h-auto flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                {/* <span className="text-rose-500">*</span> */}
+                                                <span className="">tip</span>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="h"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                // required
+                                                value={formData.user.h}
+                                                onChange={handleChange}
+                                                placeholder="12,34"
+                                            />
+                                        </div>
+                                        <div className="w-full h-auto flex flex-col gap-2">
+                                            <div className="flex flex-row gap-2">
+                                                {/* <span className="text-rose-500">*</span> */}
+                                                <span className="">optional</span>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="k"
+                                                className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] w-full text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                                // required
+                                                value={formData.user.k}
                                                 onChange={handleChange}
                                                 placeholder="12,34"
                                             />
