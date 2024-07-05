@@ -42,7 +42,8 @@ const ReportFormItem = (props) => {
             <td className="p-4 hover:text-buttonColor2">{formattedDate.substring(11,16)}</td>
             <td className="p-4 text-left">{employee_name}</td>
             <td className="p-4 text-left">{employee_id}</td>
-            <td className="p-4 text-left">{department_name}- {position}</td>
+            <td className="p-4 text-left">{department_name}</td>
+            <td className="p-4 text-left">{position}</td>
             <td className="p-4 text-left">
                 <div className="flex flex-col">
                     <span>{car_info?.car_number}</span>
