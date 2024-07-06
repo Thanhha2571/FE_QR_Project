@@ -106,12 +106,13 @@ const Login = () => {
                                 className="block w-full px-4 py-2 mt-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
                             />
                         </div>
-                        {/* <a
-                            href="#"
+                        <a
+                            href="/forgot-password"
+                            target="blank"
                             className="text-xs text-purple-600 hover:underline"
                         >
                             Forget Password?
-                        </a> */}
+                        </a>
                         <div className="mb-2">
                             <input id="admin" name="role" value="admin"
                                 type="radio" className="text-purple-500 m-2"

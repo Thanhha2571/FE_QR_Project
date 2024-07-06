@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import EmployeeTodayItem from "./EmployeeTodayItem";
 import EmployeeAttendItem from "./EmployeeAttendItem";
@@ -9,8 +9,8 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
 import ProfileIconDashboard from "../../assets/images/ProfileIconDashboard.png"
 import LogOutIcon from "../../assets/images/icon-logout.png"
+import ChangePassword from "../../assets/images/changePassword.png"
 import { baseUrl } from "components/api/httpService";
-import { Pagination } from 'antd';
 dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
@@ -391,9 +391,15 @@ function Dashboard() {
                                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" className="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
                             </div>
                         </div>
-                        {logOutMenu && (<div onClick={handleLogOut} className="hover:font-bold cursor-pointer text-black bg-white border border-solid border-placeholderTextColor absolute p-2 h-[40px] w-[160px] mt-[110px] flex flex-row gap-4 items-center justify-center">
-                            <div>Log Out</div>
-                            <img src={LogOutIcon} className="w-6 h-6" />
+                        {logOutMenu && (<div className=" hover:font-bold cursor-pointer text-black bg-white border border-solid border-placeholderTextColor absolute p-2 h-[80px] w-[180px] mt-[140px] flex flex-col gap-4 justify-center">
+                            <div className="flex flex-row gap-2 cursor-pointer hover:font-bold" onClick={handleLogOut}>
+                                <img src={LogOutIcon} className="w-6 h-6" />
+                                <div>Log Out</div>
+                            </div>
+                            <Link to="/change-password" target="blank" className="flex flex-row gap-2 cursor-pointer hover:font-bold">
+                                <img src={ChangePassword} className="w-6 h-6" />
+                                <div>Change Password</div>
+                            </Link>
                         </div>)}
                     </div>
                 </div>
