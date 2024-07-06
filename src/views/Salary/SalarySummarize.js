@@ -215,6 +215,7 @@ const SalarySummarizie = () => {
         }
         const getUserListSearch = async () => {
             if (userObject.role === 'Admin' && inputId !== "") {
+                setLoading(true)
                 try {
                     const { data } = await axios.get(
                         `${baseUrl}/api/admin/manage-all/search-specific?details=${inputId}`,
@@ -225,13 +226,16 @@ const SalarySummarizie = () => {
                         }
                     );
                     setUserListSearch(data?.message)
+                    setLoading(false)
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
+                    setLoading(false)
                     // alert(err.response?.data?.message)
                 }
             }
             if (userObject.role === 'Inhaber' && inputId !== "") {
+                setLoading(true)
                 try {
                     const { data } = await axios.get(
                         `${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
@@ -242,6 +246,7 @@ const SalarySummarizie = () => {
                         }
                     );
                     setUserListSearch(data?.message)
+                    setLoading(false)
                     // console.log("data", data?.message);
                     // console.log(data?.);
                 } catch (err) {
@@ -260,7 +265,7 @@ const SalarySummarizie = () => {
                     setLoading(true);
                     try {
                         const { data } = await axios.get(
-                            `${baseUrl}/api/admin/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
+                            `${baseUrl}/api/admin/manage-salary/get-latest?employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -278,7 +283,7 @@ const SalarySummarizie = () => {
                     setLoading(true);
                     try {
                         const { data } = await axios.get(
-                            `${baseUrl}/api/inhaber/manage-salary/get?year=${monthCountingPikcer.substring(3, 7)}&month=${monthCountingPikcer.substring(0, 2)}&employeeID=${formData?.user?.id}&employeeName=${selectedUserName}&inhaber_name=${userObject?.name}`,
+                            `${baseUrl}/api/inhaber/manage-salary/get-latest?employeeID=${formData?.user?.id}&employeeName=${selectedUserName}`,
                             {
                                 headers: {
                                     Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -314,14 +319,14 @@ const SalarySummarizie = () => {
             setFormData({
                 user: {
                     ...formData.user,
-                    a: variableCountingSalary[0]?.a_parameter,
-                    b: variableCountingSalary[0]?.b_parameter,
-                    c: variableCountingSalary[0]?.c_parameter,
-                    d: variableCountingSalary[0]?.d_parameter,
-                    f: variableCountingSalary[0]?.f_parameter,
-                    g: variableCountingSalary[0]?.g_parameter,
-                    h: variableCountingSalary[0]?.h_parameter,
-                    k: variableCountingSalary[0]?.k_parameter
+                    a: variableCountingSalary?.a_parameter,
+                    b: variableCountingSalary?.b_parameter,
+                    c: variableCountingSalary?.c_parameter,
+                    d: variableCountingSalary?.d_parameter,
+                    f: variableCountingSalary?.f_parameter,
+                    g: variableCountingSalary?.g_parameter,
+                    h: variableCountingSalary?.h_parameter,
+                    k: variableCountingSalary?.k_parameter
                 }
             })
         }
@@ -693,7 +698,7 @@ const SalarySummarizie = () => {
                                     <form
                                         className="flex flex-col gap-6 w-full justify-center items-center"
                                         onSubmit={handleSubmit}>
-                                        {loading && (<div className="absolute flex w-full h-full items-center justify-center">
+                                        {loading && (<div className="absolute flex w-full h-full items-center justify-center z-10">
                                             <div className="loader_auto"></div>
                                         </div>)}
                                         <div className="w-full h-auto flex flex-col gap-2">
