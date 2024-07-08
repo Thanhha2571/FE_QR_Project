@@ -30,7 +30,7 @@ const ManageLog = () => {
         if (userObject?.role === "Admin") {
             setLoading(true)
             try {
-                const response = await axios.get(`${baseUrl}/api/admin/manage-logs/get?type_update=Update attendanc`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-logs/get?type_update=Update attendance`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
