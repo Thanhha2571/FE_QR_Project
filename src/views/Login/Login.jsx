@@ -107,7 +107,7 @@ const Login = () => {
                             />
                         </div>
                         <a
-                            href="/forgot-password"
+                            href="/submit-email"
                             target="blank"
                             className="text-xs text-purple-600 hover:underline"
                         >

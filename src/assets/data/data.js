@@ -143,3 +143,15 @@ export const statusRequestList = [
         name: "denied",
     }
 ]
+
+export const roleItems = [
+    {
+        name:"Admin"
+    },
+    {
+        name:"Inhaber"
+    },
+    {
+        name:"Manager"
+    }
+]

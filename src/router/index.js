@@ -25,6 +25,7 @@ import GenerateQR from "views/GenerateQR/GenerateQR";
 import History from "views/Salary/History";
 import QrLink from "views/GenerateQR/QrLink";
 import SubmitEmail from "views/ForgotPassword/submitEmail";
+import ForgotPasswordForm from "views/ForgotPassword/ForgotPasswordForm";
 import LoadingLayout from "views/LoadingLayout/LoadingLayout";
 const titles = {
     '/': 'QR Checkin',
@@ -71,8 +72,8 @@ const Router = () => {
                 {/* missing route */}
                 <Route path="*" element={<Missing />} />
             </Route>
-            <Route path="forgot-password" element={<SubmitEmail />} />
-
+            <Route path="submit-email" element={<SubmitEmail />} />
+            <Route path="reset-password" element={<ForgotPasswordForm />} />
         </Routes>
 
     );
