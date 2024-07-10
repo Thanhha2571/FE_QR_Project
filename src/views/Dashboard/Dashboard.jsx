@@ -396,7 +396,7 @@ function Dashboard() {
                                 <img src={LogOutIcon} className="w-6 h-6" />
                                 <div>Log Out</div>
                             </div>
-                            <Link to="/change-password" target="blank" className="flex flex-row gap-2 cursor-pointer hover:font-bold">
+                            <Link to="/change-password" className="flex flex-row gap-2 cursor-pointer hover:font-bold">
                                 <img src={ChangePassword} className="w-6 h-6" />
                                 <div>Change Password</div>
                             </Link>
