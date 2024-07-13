@@ -601,7 +601,7 @@ const SalarySummarizie = () => {
                         <div className="flex flex-row gap-2 justify-center item"></div>
                         {userObject?.role === "Admin" && (<button onClick={handleLockSalary} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                             <img src={lockState ? UnLock : LockIcon} className="w-6 h-auto" alt="lock/unlock icon" />
-                            {lockState ? 'Unlock' : 'Lock'}
+                            {lockState ? 'Click to Unlock' : 'Click to Lock'}
                         </button>)}
 
                         <button onClick={handleOpenCountingForm} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">

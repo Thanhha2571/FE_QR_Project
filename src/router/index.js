@@ -28,6 +28,7 @@ import SubmitEmail from "views/ForgotPassword/submitEmail";
 import ForgotPasswordForm from "views/ForgotPassword/ForgotPasswordForm";
 import ChangePassword from "views/ChangePassword/ChangePassword";
 import LoadingLayout from "views/LoadingLayout/LoadingLayout";
+import ScheduleEmployees from "views/ScheduleEmployees/SheduleEmployees";
 const titles = {
     '/': 'QR Checkin',
     '/attendance': 'Attendance',
@@ -68,6 +69,7 @@ const Router = () => {
                 <Route path="generate_qr" element={<GenerateQR />} />
                 <Route path="Qr_link/:selectedDepartment" element={<QrLink />} />
                 <Route path="change-password" element={<ChangePassword />} />
+                <Route path="schedule-employees" element={<ScheduleEmployees />} />
                 {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 
