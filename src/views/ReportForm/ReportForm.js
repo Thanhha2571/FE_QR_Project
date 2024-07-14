@@ -5,6 +5,7 @@ import ReportFormItem from "./ReportFormItem";
 import "./ReportForm.css"
 import { DatePicker, Space } from 'antd';
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
 const { RangePicker } = DatePicker;
 const dateFormat = 'MM/DD/YYYY';
 
@@ -25,15 +26,27 @@ const ReportForm = () => {
     const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen");
     const [departmentList, setDepartmentList] = useState()
 
-    const PAGE_SIZE = 50
-    const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * PAGE_SIZE;
-    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
-    const currentForms = formList?.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(formList?.length / PAGE_SIZE);
+    // const PAGE_SIZE = 50
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const indexOfLastItem = currentPage * PAGE_SIZE;
+    // const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    // const currentForms = formList?.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = Math.ceil(formList?.length / PAGE_SIZE);
 
-    const handlePageChange = (page) => {
+    // const handlePageChange = (page) => {
+    //     setCurrentPage(page);
+    // };
+
+    const [pageSize, setPageSize] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentForms = formList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(formList?.length / pageSize);
+
+    const handlePageChange = (page, size) => {
         setCurrentPage(page);
+        setPageSize(size);
     };
 
     useEffect(() => {
@@ -356,9 +369,9 @@ const ReportForm = () => {
                             <div className="loader_search"></div>
                         </div>)}
                     </div>
-                    <div className="flex justify-center">
-                        {totalPages > 1 && (
-                            <div className="flex flex-row gap-2">
+                    <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                        {/* {totalPages > 1 && (
+                            <div className="flex flex-wrap gap-2 justify-center items-center">
                                 {Array.from({ length: totalPages }).map((_, index) => (
                                     <button
                                         key={index}
@@ -369,7 +382,14 @@ const ReportForm = () => {
                                     </button>
                                 ))}
                             </div>
-                        )}
+                        )} */}
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={formList?.length}
+                            onChange={handlePageChange}
+                            className="text-base"
+                        />
                     </div>
                 </div>
             ) : (

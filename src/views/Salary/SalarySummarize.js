@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 
@@ -34,14 +35,26 @@ const SalarySummarizie = () => {
     const [userList, setUserList] = useState()
     const [userListSearch, setUserListSearch] = useState()
 
-    const PAGE_SIZE = 50
+    // const PAGE_SIZE = 50
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const indexOfLastItem = currentPage * PAGE_SIZE;
+    // const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    // const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = Math.ceil(salaryListByMonth?.length / PAGE_SIZE);
+    // const handlePageChange = (page) => {
+    //     setCurrentPage(page);
+    // };
+
+    const [pageSize, setPageSize] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * PAGE_SIZE;
-    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
-    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(salaryListByMonth?.length / PAGE_SIZE);
-    const handlePageChange = (page) => {
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(salaryListByMonth?.length / pageSize);
+
+    const handlePageChange = (page, size) => {
         setCurrentPage(page);
+        setPageSize(size);
     };
 
     const handleMonthChange = (date, dateString) => {
@@ -159,19 +172,19 @@ const SalarySummarizie = () => {
             console.error("Invalid input: Not a string or empty", str);
             return str; // Handle invalid input as needed
         }
-    
+
         // Replace all commas with dots
         const dotString = str.replace(/,/g, '.');
-    
+
         // Convert to a float
         const number = parseFloat(dotString);
-    
+
         // Check if the conversion was successful (NaN check)
         if (isNaN(number)) {
             console.error("Invalid number format:", str);
             return null; // Handle invalid number format as needed
         }
-    
+
         return number;
     };
 
@@ -627,7 +640,7 @@ const SalarySummarizie = () => {
                             <div className="no-result-text text-center">NO RESULT</div>
                         ) : (
                             <tbody className="tbody">
-                                {currentUsers?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter,g_parameter, h_parameter, k_parameter, total_km, total_salary }) => (
+                                {currentUsers?.map(({ employee_id, employee_name, hour_normal, total_hour_work, total_hour_overtime, a_parameter, b_parameter, c_parameter, d_parameter, f_parameter, g_parameter, h_parameter, k_parameter, total_km, total_salary }) => (
                                     <tr className="tr-item" key={employee_id}>
                                         <td className="p-2 hover:text-buttonColor2">
                                             <h2 className="text-left">
@@ -663,21 +676,14 @@ const SalarySummarizie = () => {
                         )}
                     </table>
                 </div>
-                <div className="flex justify-center">
-                    {totalPages > 1 && (
-                        <div className="flex flex-row gap-2">
-                            {Array.from({ length: totalPages }).map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={salaryListByMonth?.length}
+                        onChange={handlePageChange}
+                        className="text-base"
+                    />
                 </div>
                 {salaryCountingFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
                     <div

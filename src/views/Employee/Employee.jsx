@@ -7,6 +7,7 @@ import "./Employee.css"
 import axios, { all } from "axios";
 import * as XLSX from "xlsx";
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
 // import { response, response } from "express";
 function Employee() {
     document.title = "Employee";
@@ -43,13 +44,24 @@ function Employee() {
     const [checkAdmin, setCheckAdmin] = useState(false)
     const [checkAdminAndInhaber, setCheckAdminAndInhaber] = useState(false)
 
-    const PAGE_SIZE = 50
-    const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * PAGE_SIZE;
-    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
-    const currentUsers = userList?.slice(indexOfFirstItem, indexOfLastItem);
+    // const PAGE_SIZE = 50
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const indexOfLastItem = currentPage * PAGE_SIZE;
+    // const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    // const currentUsers = userList?.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = Math.ceil(userList?.length / PAGE_SIZE);
 
-    const totalPages = Math.ceil(userList?.length / PAGE_SIZE);
+    const [pageSize, setPageSize] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentUsers = userList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(userList?.length / pageSize);
+
+    const handlePageChange = (page, size) => {
+        setCurrentPage(page);
+        setPageSize(size);
+    };
 
     useEffect(() => {
         const userString = localStorage.getItem('user');
@@ -58,9 +70,9 @@ function Employee() {
         console.log(userObject);
     }, [])
 
-    const handlePageChange = (page) => {
-        setCurrentPage(page);
-    };
+    // const handlePageChange = (page) => {
+    //     setCurrentPage(page);
+    // };
 
     const [formData, setFormData] = useState({
         user: {
@@ -657,7 +669,7 @@ function Employee() {
                 } catch (err) {
                     alert(err.response?.data?.message)
                 }
-            }   
+            }
         };
 
         getAllUsers();
@@ -837,21 +849,14 @@ function Employee() {
                     <div className="loader_search"></div>
                 </div>)}
 
-                <div className="flex justify-center">
-                    {totalPages > 1 && (
-                        <div className="flex flex-row gap-2">
-                            {Array.from({ length: totalPages }).map((_, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => handlePageChange(index + 1)}
-                                    className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                    <Pagination
+                        current={currentPage}
+                        pageSize={pageSize}
+                        total={userList?.length}
+                        onChange={handlePageChange}
+                        className="text-base"
+                    />
                 </div>
                 {/* add Employee */}
                 {addEmployee && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">

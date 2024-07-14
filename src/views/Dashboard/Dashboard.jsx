@@ -10,6 +10,7 @@ import { DatePicker, Space } from 'antd';
 import ProfileIconDashboard from "../../assets/images/ProfileIconDashboard.png"
 import LogOutIcon from "../../assets/images/icon-logout.png"
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
 dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
@@ -327,29 +328,53 @@ function Dashboard() {
         }
     }, [userObject?.role]);
 
-    const PAGE_SIZE_WORKING = 30
+    // const PAGE_SIZE_WORKING = 30
+    // const [currentPageWorking, setCurrentPageWorking] = useState(1);
+    // const indexOfLastItemWorking = currentPageWorking * PAGE_SIZE_WORKING;
+    // const indexOfFirstItemWorking = indexOfLastItemWorking - PAGE_SIZE_WORKING;
+    // const currentWorkings = userListToday?.slice(indexOfFirstItemWorking, indexOfLastItemWorking);
+
+    // const totalPageWorking = Math.ceil(userListToday?.length / PAGE_SIZE_WORKING);
+
+    // const handlePageWorkingChange = (page) => {
+    //     setCurrentPageWorking(page);
+    // };
+
+    const [pageSizeWorking, setPageSizeWorking] = useState(20);
     const [currentPageWorking, setCurrentPageWorking] = useState(1);
-    const indexOfLastItemWorking = currentPageWorking * PAGE_SIZE_WORKING;
-    const indexOfFirstItemWorking = indexOfLastItemWorking - PAGE_SIZE_WORKING;
-    const currentWorkings = userListToday?.slice(indexOfFirstItemWorking, indexOfLastItemWorking);
+    const indexOfLastItemWorking = currentPageWorking * pageSizeWorking;
+    const indexOfFirstItemWorking = indexOfLastItemWorking - pageSizeWorking;
+    const currentWorkings = userListToday?.slice(indexOfFirstItemWorking, indexOfFirstItemWorking + pageSizeWorking);
+    // const totalPages = Math.ceil(userListToday?.length / pageSizeWorking);
 
-    const totalPageWorking = Math.ceil(userListToday?.length / PAGE_SIZE_WORKING);
-
-    const handlePageWorkingChange = (page) => {
+    const handlePageWorkingChange = (page, size) => {
         setCurrentPageWorking(page);
+        setPageSizeWorking(size);
     };
 
-    const PAGE_SIZE_ATTEND = 30
+    // const PAGE_SIZE_ATTEND = 30
+    // const [currentPageAttend, setCurrentPageAttend] = useState(1);
+    // const indexOfLastItemAttend = currentPageAttend * PAGE_SIZE_ATTEND;
+    // const indexOfFirstItemAttend = indexOfLastItemAttend - PAGE_SIZE_ATTEND;
+    // const currentAttends = userAttendListToday?.slice(indexOfFirstItemAttend, indexOfLastItemAttend);
+
+    // const totalPageAttend = Math.ceil(userAttendListToday?.length / PAGE_SIZE_ATTEND);
+
+    // const handlePageAttendChange = (page) => {
+    //     setCurrentPageAttend(page);
+    // };
+    const [pageSizeAttend, setPageSizeAttend] = useState(20);
     const [currentPageAttend, setCurrentPageAttend] = useState(1);
-    const indexOfLastItemAttend = currentPageAttend * PAGE_SIZE_ATTEND;
-    const indexOfFirstItemAttend = indexOfLastItemAttend - PAGE_SIZE_ATTEND;
-    const currentAttends = userAttendListToday?.slice(indexOfFirstItemAttend, indexOfLastItemAttend);
+    const indexOfLastItemAttend = currentPageAttend * pageSizeAttend;
+    const indexOfFirstItemAttend = indexOfLastItemAttend - pageSizeAttend;
+    const currentAttends = userAttendListToday?.slice(indexOfFirstItemAttend, indexOfFirstItemAttend + pageSizeAttend);
+    // const totalPages = Math.ceil(userListToday?.length / pageSizeWorking);
 
-    const totalPageAttend = Math.ceil(userAttendListToday?.length / PAGE_SIZE_WORKING);
-
-    const handlePageAttendChange = (page) => {
+    const handlePageAttendChange = (page, size) => {
         setCurrentPageAttend(page);
+        setPageSizeAttend(size);
     };
+
     return (
         <>
             <div className="relative ml-[260px] h-auto flex flex-col font-Changa text-textColor gap-5">
@@ -458,21 +483,14 @@ function Dashboard() {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="flex justify-center mt-4">
-                                {totalPageWorking > 1 && (
-                                    <div className="flex flex-row gap-2">
-                                        {Array.from({ length: totalPageWorking }).map((_, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => handlePageWorkingChange(index + 1)}
-                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                            <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                                <Pagination
+                                    current={currentPageWorking}
+                                    pageSize={pageSizeWorking}
+                                    total={userListToday?.length}
+                                    onChange={handlePageWorkingChange}
+                                    className="text-base"
+                                />
                             </div>
                         </div>
                     </div>
@@ -529,21 +547,14 @@ function Dashboard() {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="flex justify-center mt-4">
-                                {totalPageAttend > 1 && (
-                                    <div className="flex flex-row gap-2">
-                                        {Array.from({ length: totalPageAttend }).map((_, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => handlePageAttendChange(index + 1)}
-                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                            <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                                <Pagination
+                                    current={currentPageAttend}
+                                    pageSize={pageSizeAttend}
+                                    total={userAttendListToday?.length}
+                                    onChange={handlePageAttendChange}
+                                    className="text-base"
+                                />
                             </div>
                         </div>
                     </div>

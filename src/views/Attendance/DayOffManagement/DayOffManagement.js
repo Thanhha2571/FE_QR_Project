@@ -5,6 +5,8 @@ import { statusRequestList } from "assets/data/data";
 // import { Link } from "react-router-dom";
 import DayOffItem from "./DayOffItem";
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
+
 const DayOffManagement = () => {
     document.title = "Day Off Management"
     const [requestList, setRequestList] = useState()
@@ -18,16 +20,29 @@ const DayOffManagement = () => {
 
     const [checkManager, setCheckManager] = useState(false)
 
-    const PAGE_SIZE = 20
-    const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * PAGE_SIZE;
-    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
-    const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(requestList?.length / PAGE_SIZE);
+    // const PAGE_SIZE = 20
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const indexOfLastItem = currentPage * PAGE_SIZE;
+    // const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    // const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfLastItem);
+    // const totalPages = Math.ceil(requestList?.length / PAGE_SIZE);
 
-    const handlePageChange = (page) => {
+    // const handlePageChange = (page) => {
+    //     setCurrentPage(page);
+    // };
+
+    const [pageSize, setPageSize] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(requestList?.length / pageSize);
+
+    const handlePageChange = (page, size) => {
         setCurrentPage(page);
+        setPageSize(size);
     };
+
 
     const handleChangeSelectedStatus = (item) => {
         setSelectedStatus(item)
@@ -298,21 +313,14 @@ const DayOffManagement = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="flex justify-center mt-4">
-                                {totalPages > 1 && (
-                                    <div className="flex flex-row gap-2">
-                                        {Array.from({ length: totalPages }).map((_, index) => (
-                                            <button
-                                                key={index}
-                                                onClick={() => handlePageChange(index + 1)}
-                                                className="text-xl border border-solid py-2 px-4 hover:bg-[#f6f6f6]"
-                                            // className={`pagination-button ${currentPage === index + 1 ? 'active' : ''}`}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
+                            <div className="flex flex-wrap gap-2 justify-center items-center mt-4 mb-4">
+                                <Pagination
+                                    current={currentPage}
+                                    pageSize={pageSize}
+                                    total={requestList?.length}
+                                    onChange={handlePageChange}
+                                    className="text-base"
+                                />
                             </div>
                         </div>
                     </div>
