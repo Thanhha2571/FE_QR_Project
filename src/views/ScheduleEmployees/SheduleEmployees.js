@@ -151,53 +151,171 @@ const ScheduleEmployees = () => {
                 alert(err.response?.data?.message);
             }
         }
+        if (userObject?.role === "Inhaber") {
+            try {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&department=${selectedDepartment}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setUserList(response.data.message);
+            } catch (err) {
+                alert(err.response?.data?.message);
+            }
+        }
+        if (userObject?.role === "Manager") {
+            try {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&department=${selectedDepartment}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                });
+                setUserList(response.data.message);
+            } catch (err) {
+                alert(err.response?.data?.message);
+            }
+        }
     };
 
     const handleAddScheduleEmployees = async () => {
         setEmployees((prevState) => [...prevState, employee]);
-        try {
-            setLoading(true)
-            const formattedValues = datePicker.map(formatDate);
-            const response = await axios.post(
-                `${baseUrl}/api/admin/manage-date-design/create-days/for-employees`,
-                {
-                    shift_code: selectedShiftCode,
-                    employees: employees,
-                    dates: formattedValues,
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        if (userObject?.role === "Admin") {
+            try {
+                setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
+                const response = await axios.post(
+                    `${baseUrl}/api/admin/manage-date-design/create-days/for-employees`,
+                    {
+                        shift_code: selectedShiftCode,
+                        employees: employees,
+                        dates: formattedValues,
                     },
-                }
-            );
-            setLoading(false)
-            alert(`
-            Number of employees created: ${Number(response?.data?.message.successEntries) + Number(response?.data?.message.errorEntries?.length)}
-            Number of employees created successfully: ${Number(response?.data?.message.successEntries)}
-            ${response?.data?.message.errorEntries?.length > 0 ? `Employees created with errors(have same shift of the day): ${response?.data?.message.errorEntries?.map((item, index) => `\n${index + 1}. ${item?.employeeName}`).join('')}` : ''}
-        `);
-            setSelectedShiftCode("")
-            setDatePicker("")
-            setSelectedPositions("")
-            setEmployees([])
-            setSelectedDepartment("")
-            setUserList([])
-            setGuideState1(false);
-            setGuideState2(false);
-            setGuideState3(false);
-        } catch (e) {
-            alert(e.response?.data?.message);
-            setLoading(false)
-            setSelectedShiftCode("")
-            setDatePicker("")
-            setSelectedPositions("")
-            setEmployees([])
-            setSelectedDepartment("")
-            setUserList([])
-            setGuideState1(false);
-            setGuideState2(false);
-            setGuideState3(false);
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                setLoading(false)
+                alert(`
+                Number of employees created: ${Number(response?.data?.message.successEntries) + Number(response?.data?.message.errorEntries?.length)}
+                Number of employees created successfully: ${Number(response?.data?.message.successEntries)}
+                ${response?.data?.message.errorEntries?.length > 0 ? `Employees created with errors(have same shift of the day): ${response?.data?.message.errorEntries?.map((item, index) => `\n${index + 1}. ${item?.employeeName}`).join('')}` : ''}
+            `);
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            } catch (e) {
+                alert(e.response?.data?.message);
+                setLoading(false)
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            }
+        }
+        if (userObject?.role === "Inhaber") {
+            try {
+                setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
+                const response = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-date-design/create-days/for-employees`,
+                    {
+                        shift_code: selectedShiftCode,
+                        employees: employees,
+                        dates: formattedValues,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                setLoading(false)
+                alert(`
+                Number of employees created: ${Number(response?.data?.message.successEntries) + Number(response?.data?.message.errorEntries?.length)}
+                Number of employees created successfully: ${Number(response?.data?.message.successEntries)}
+                ${response?.data?.message.errorEntries?.length > 0 ? `Employees created with errors(have same shift of the day): ${response?.data?.message.errorEntries?.map((item, index) => `\n${index + 1}. ${item?.employeeName}`).join('')}` : ''}
+            `);
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            } catch (e) {
+                alert(e.response?.data?.message);
+                setLoading(false)
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            }
+        }
+        if (userObject?.role === "Manager") {
+            try {
+                setLoading(true)
+                const formattedValues = datePicker.map(formatDate);
+                const response = await axios.post(
+                    `${baseUrl}/api/manager/manage-date-design/create-days/for-employees`,
+                    {
+                        shift_code: selectedShiftCode,
+                        employees: employees,
+                        dates: formattedValues,
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+                setLoading(false)
+                alert(`
+                Number of employees created: ${Number(response?.data?.message.successEntries) + Number(response?.data?.message.errorEntries?.length)}
+                Number of employees created successfully: ${Number(response?.data?.message.successEntries)}
+                ${response?.data?.message.errorEntries?.length > 0 ? `Employees created with errors(have same shift of the day): ${response?.data?.message.errorEntries?.map((item, index) => `\n${index + 1}. ${item?.employeeName}`).join('')}` : ''}
+            `);
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            } catch (e) {
+                alert(e.response?.data?.message);
+                setLoading(false)
+                setSelectedShiftCode("")
+                setDatePicker("")
+                setSelectedPositions("")
+                setEmployees([])
+                setSelectedDepartment("")
+                setUserList([])
+                setGuideState1(false);
+                setGuideState2(false);
+                setGuideState3(false);
+            }
         }
     }
 
