@@ -12,8 +12,8 @@ import { Pagination } from 'antd';
 function Employee() {
     document.title = "Employee";
     const [selectedPosition, setSelectedPosition] = useState("Select Position")
-    const [selectedDepartment, setSelectedDepartment] = useState("Abteilung auswählen")
-    const [selectedRole, setSelectedRole] = useState("Wählen Sie Rolle aus")
+    const [selectedDepartment, setSelectedDepartment] = useState("")
+    const [selectedRole, setSelectedRole] = useState("")
     const [departmentInhaberOrManager, setDepartmentInhaberOrManager] = useState()
     const [exportState, setExportState] = useState(false)
 
@@ -49,16 +49,19 @@ function Employee() {
     // const indexOfLastItem = currentPage * PAGE_SIZE;
     // const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
     // const currentUsers = userList?.slice(indexOfFirstItem, indexOfLastItem);
+
     // const totalPages = Math.ceil(userList?.length / PAGE_SIZE);
 
     const [pageSize, setPageSize] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0)
     const indexOfLastItem = currentPage * pageSize;
     const indexOfFirstItem = indexOfLastItem - pageSize;
-    const currentUsers = userList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
-    const totalPages = Math.ceil(userList?.length / pageSize);
+    // const currentUsers = userList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
 
-    const handlePageChange = (page, size) => {
+    // const totalPages = Math.ceil(userList?.length / pageSize);
+
+    const handlePageChange = async (page, size) => {
         setCurrentPage(page);
         setPageSize(size);
     };
@@ -70,6 +73,13 @@ function Employee() {
         console.log(userObject);
     }, [])
 
+    useEffect(() => {
+        if (userObject?.role === "Inhaber" || userObject?.role === "Manager") {
+            const arrayFilter = userObject?.department?.map(item => ({ name: item.name })) || [];
+            setDepartmentList(arrayFilter);
+            console.log("arrayFilter", arrayFilter);
+        }
+    }, [userObject?.role])
     // const handlePageChange = (page) => {
     //     setCurrentPage(page);
     // };
@@ -373,19 +383,93 @@ function Employee() {
         setSelectedRole(item)
     }
 
-    const SeacrhTyoe = async (department, details, role) => {
-        //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
-        if (userObject.role === 'Admin') {
+    // const SeacrhTyoe = async (department, details, role) => {
+    //     //----------------------------------------------------------------SEARCH BY ADMIN----------------------------------------------------------------//
+    //     if (userObject.role === 'Admin') {
+    //         // setCurrentPage(1)
+    //         setUserList([])
+    //         setLoadingSearching(true)
+    //         try {
+    //             const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
+    //                 headers: {
+    //                     Authorization: `Bearer ${localStorage.getItem("token")}`
+    //                 }
+    //             });
+    //             // console.log(query);
+    //             setUserList(response.data.message);
+    //             setTotalPages(response?.data?.pagination?.totalRecords)
+    //             setLoadingSearching(false)
+    //         } catch (err) {
+    //             // if(error.)
+    //             setUserList([])
+    //             setLoadingSearching(false)
+    //             alert(err.response?.data?.message)
+    //             // console.error('Error fetching data:', error);
+    //         }
+    //     }
+    //     //----------------------------------------------------------------SEARCH BY INHABER----------------------------------------------------------------//
+
+    // };
+
+    const handleSeacrh = async () => {
+        // setCurrentPage(1)
+        if (userObject?.role === 'Admin') {
+            // setCurrentPage(1)
             setUserList([])
             setLoadingSearching(true)
             try {
-                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific?department=${department}&details=${details}&role=${role}`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific?department=${selectedDepartment}&details=${inputSearch}&role=${selectedRole}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
                 });
                 // console.log(query);
                 setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
+                setLoadingSearching(false)
+            } catch (err) {
+                // if(error.)
+                setUserList([])
+                setLoadingSearching(false)
+                alert(err.response?.data?.message)
+                // console.error('Error fetching data:', error);
+            }
+            // if (inputSearch !== "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
+            //     SeacrhTyoe("", inputSearch, "")
+            // }
+            // if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
+            //     SeacrhTyoe(selectedDepartment, "", "")
+            // }
+            // if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
+            //     SeacrhTyoe("", "", selectedRole)
+            // }
+            // if (inputSearch !== "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
+            //     SeacrhTyoe(selectedRole, selectedDepartment, inputSearch)
+            // }
+            // if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
+            //     SeacrhTyoe(selectedDepartment, "", selectedRole)
+            // }
+            // if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
+            //     getAllUsers()
+            // }
+            // setTimeout(() => {
+            //     setSelectedDepartment("Abteilung auswählen")
+            //     setSelectedRole("Wählen Sie Rolle aus")
+            //     setSelectedPosition("Select Position")
+            // }, 2000);
+        }
+        if (userObject.role === 'Inhaber') {
+            setLoadingSearching(true)
+            setUserList([])
+            try {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&department=${selectedDepartment}&details=${inputSearch}&role=${selectedRole}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                // console.log(query);
+                setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
                 setLoadingSearching(false)
             } catch (err) {
                 // if(error.)
@@ -395,153 +479,26 @@ function Employee() {
                 // console.error('Error fetching data:', error);
             }
         }
-        //----------------------------------------------------------------SEARCH BY INHABER----------------------------------------------------------------//
-
-    };
-
-    const handleSeacrh = async () => {
-        if (userObject?.role === 'Admin') {
-            if (inputSearch !== "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
-                SeacrhTyoe("", inputSearch, "")
-            }
-            if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
-                SeacrhTyoe(selectedDepartment, "", "")
-            }
-            if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
-                SeacrhTyoe("", "", selectedRole)
-            }
-            if (inputSearch !== "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
-                SeacrhTyoe(selectedRole, selectedDepartment, inputSearch)
-            }
-            if (inputSearch === "" && selectedDepartment !== "Abteilung auswählen" && selectedRole !== "Wählen Sie Rolle aus") {
-                SeacrhTyoe(selectedDepartment, "", selectedRole)
-            }
-            if (inputSearch === "" && selectedDepartment === "Abteilung auswählen" && selectedRole === "Wählen Sie Rolle aus") {
-                getAllUsers()
-            }
-            setTimeout(() => {
-                setSelectedDepartment("Abteilung auswählen")
-                setSelectedRole("Wählen Sie Rolle aus")
-                setSelectedPosition("Select Position")
-            }, 2000);
-        }
-        if (userObject.role === 'Inhaber') {
-            if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
-                setLoadingSearching(true)
-                setUserList([])
-                try {
-                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    // console.log(query);
-                    setUserList(response.data.message);
-                    setLoadingSearching(false)
-                } catch (err) {
-                    // if(error.)
-                    setUserList([])
-                    setLoadingSearching(false)
-                    alert(err.response?.data?.message)
-                    // console.error('Error fetching data:', error);
-                }
-            }
-            if (inputSearch === "" && selectedRole !== "Wählen Sie Rolle aus") {
-                setLoadingSearching(true)
-                setUserList([])
-                try {
-                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&role=${selectedRole}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    // console.log(query);
-                    setUserList(response.data.message);
-                    setLoadingSearching(false)
-                } catch (err) {
-                    // if(error.)
-                    setUserList([])
-                    setLoadingSearching(false)
-                    alert(err.response?.data?.message)
-                    // console.error('Error fetching data:', error);
-                }
-            }
-            if (inputSearch !== "" && selectedRole === "Wählen Sie Rolle aus") {
-                setLoadingSearching(true)
-                setUserList([])
-                try {
-                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    // console.log(query);
-                    setUserList(response.data.message);
-                    setLoadingSearching(false)
-                } catch (err) {
-                    // if(error.)
-                    setUserList([])
-                    setLoadingSearching(false)
-                    alert(err.response?.data?.message)
-                    // console.error('Error fetching data:', error);
-                }
-            }
-            if (inputSearch !== "" && selectedRole !== "Wählen Sie Rolle aus") {
-                setLoadingSearching(true)
-                setUserList([])
-                try {
-                    const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputSearch}&role=${selectedRole}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    // console.log(query);
-                    setUserList(response.data.message);
-                    setLoadingSearching(false)
-                } catch (err) {
-                    // if(error.)
-                    setUserList([])
-                    setLoadingSearching(false)
-                    alert(err.response?.data?.message)
-                    // console.error('Error fetching data:', error);
-                }
-            }
-            if (inputSearch === "" && selectedRole === "Wählen Sie Rolle aus") {
-                getAllUsers()
-            }
-            setTimeout(() => {
-                setSelectedRole("Wählen Sie Rolle aus")
-                setSelectedPosition("Select Position")
-            }, 2000);
-        }
         if (userObject.role === 'Manager') {
-            if (inputSearch !== "") {
-                setLoadingSearching(true)
+            setLoadingSearching(true)
+            setUserList([])
+            try {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&department=${selectedDepartment}&details=${inputSearch}&role=${selectedRole}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                // console.log(query);
+                setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
+                setLoadingSearching(false)
+            } catch (err) {
+                // if(error.)
                 setUserList([])
-                try {
-                    const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&details=${inputSearch}`, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    // console.log(query);
-                    setUserList(response.data.message);
-                    setLoadingSearching(false)
-                } catch (err) {
-                    // if(error.)
-                    setUserList([])
-                    setLoadingSearching(false)
-                    alert(err.response?.data?.message)
-                    // console.error('Error fetching data:', error);
-                }
+                setLoadingSearching(false)
+                alert(err.response?.data?.message)
+                // console.error('Error fetching data:', error);
             }
-            if (inputSearch === "") {
-                getAllUsers()
-            }
-            setTimeout(() => {
-                setSelectedRole("Wählen Sie Rolle aus")
-                setSelectedPosition("Select Position")
-            }, 2000);
         }
     }
 
@@ -616,32 +573,36 @@ function Employee() {
     }
     const getAllUsers = async () => {
         setLoadingSearching(true);
+        setUserList([]);
         try {
             if (userObject?.role === 'Admin') {
-                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific`, {
+                const response = await axios.get(`${baseUrl}/api/admin/manage-all/search-specific?page=${currentPage}&limit=${pageSize}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
                 });
                 setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
             }
             if (userObject?.role === 'Inhaber') {
                 // console.log("sdfs");
-                const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&page=${currentPage}&limit=${pageSize}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
                 }
                 );
                 setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
             }
             if (userObject?.role === 'Manager') {
-                const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}`, {
+                const response = await axios.get(`${baseUrl}/api/manager/manage-employee/search-specific?manager_name=${userObject?.name}&page=${currentPage}&limit=${pageSize}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
                 });
                 setUserList(response.data.message);
+                setTotalPages(response?.data?.pagination?.totalRecords)
             }
 
         } catch (err) {
@@ -677,12 +638,13 @@ function Employee() {
                 }
             }
         };
-
-        getAllUsers();
         getAllDepartments()
-    }, [selectedRoleUser, userObject?.role, userObject?.name]);
+    }, [selectedRoleUser, userObject?.role]);
 
-
+    useEffect(() => {
+        // setCurrentPage(1)
+        getAllUsers();
+    }, [userObject?.role, userObject?.name, currentPage, pageSize])
     useEffect(() => {
         if (userObject?.role === 'Admin') {
             setCheckRole(true)
@@ -749,43 +711,80 @@ function Employee() {
                         value={inputSearch}
                         onChange={(e) => setInputSearch(e.target.value)}
                     />
-                    {checkAdminAndInhaber && (<div
-                        onClick={handleRoleMenu}
-                        className="w-1/5 h-[50px] text-base cursor-pointer">
-                        <div className="flex flex-col w-full py-3 px-2 border border-solid text-placeholderTextColorw-2/3 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor">
-                            <div className="flex flex-row items-center justify-around w-full">
-                                <div className="ml-4">{selectedRole}</div>
-                                <div className={`w-4 h-4 flex justify-center items-center ${roleMenu ? "rotate-180" : ""}`}>
-                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
-                                </div>
-                            </div>
+                    {checkAdminAndInhaber && (
+                        // <div
+                        //     onClick={handleRoleMenu}
+                        //     className="w-1/5 h-[50px] text-base cursor-pointer">
+                        //     <div className="flex flex-col w-full py-3 px-2 border border-solid text-placeholderTextColorw-2/3 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor">
+                        //         <div className="flex flex-row items-center justify-around w-full">
+                        //             <div className="ml-4">{selectedRole}</div>
+                        //             <div className={`w-4 h-4 flex justify-center items-center ${roleMenu ? "rotate-180" : ""}`}>
+                        //                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                        //             </div>
+                        //         </div>
+                        //     </div>
+
+                        //     {roleMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
+                        //         {roleList.map(({ index, name }) => {
+                        //             return <div onClick={() => handleChangeSelectedRole(name)} className="w-full text-center hover:underline">{name}</div>
+                        //         })}
+                        //     </div>)}
+                        // </div>
+                        <div className="w-1/5">
+                            <select
+                                id="role-search"
+                                name="role-search"
+                                className="w-full cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                                value={selectedRole}
+                                onChange={(e) => setSelectedRole(e.target.value)}
+                                required
+                            >
+                                <option value="" disabled className='italic text-sm'>Wählen Sie Rolle aus</option>
+                                {roleList?.map(({ name }, index) => (
+                                    <option className='text-sm text-textColor w-full' key={index} value={name}>
+                                        {name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
+                    )}
 
-                        {roleMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col justify-center gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
-                            {roleList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedRole(name)} className="w-full text-center hover:underline">{name}</div>
-                            })}
-                        </div>)}
-                    </div>)}
+                    {/* {checkRole && ( */}
+                    <div className="w-1/5">
 
-                    {checkRole && (<div
-                        onClick={handleDepartmetnnMenu}
-                        className="w-1/5 h-[50px] text-base cursor-pointer">
-                        <div className="flex flex-col w-full py-3 px-2 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor border border-solid">
-                            <div className="flex flex-row items-center justify-around w-full">
-                                <div className="ml-4">{selectedDepartment}</div>
-                                <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
-                                    <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
-                                </div>
-                            </div>
-                        </div>
+                        {/* //     onClick={handleDepartmetnnMenu}
+                        //     className="w-1/5 h-[50px] text-base cursor-pointer">
+                        //     <div className="flex flex-col w-full py-3 px-2 text-base border-[#d9d9d9] text-[#6c757d] rounded-[6px] hover:border-[#4096ff] focus:border-[#4096ff] placeholder:text-placeholderTextColor border border-solid">
+                        //         <div className="flex flex-row items-center justify-around w-full">
+                        //             <div className="ml-4">{selectedDepartment}</div>
+                        //             <div className={`w-4 h-4 flex justify-center items-center ${departmentMenu ? "rotate-180" : ""}`}>
+                        //                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-down" class="svg-inline--fa fa-caret-down fa-rotate-180 " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" style={{ color: "rgb(220, 220, 220)" }}><path fill="currentColor" d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z"></path></svg>
+                        //             </div>
+                        //         </div>
+                        //     </div>
 
-                        {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
-                            {departmentList.map(({ index, name }) => {
-                                return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center hover:underline">{name}</div>
-                            })}
-                        </div>)}
-                    </div>)}
+                        //     {departmentMenu && (<div className="text-black bg-placeholderTextColor border border-solid border-placeholderTextColor border-t-black flex flex-col gap-3 px-2 py-3 items-center w-full overflow-y-scroll max-h-[200px]">
+                        //         {departmentList.map(({ index, name }) => {
+                        //             return <div onClick={() => handleChangeSelectedDepartment(name)} className="w-full text-center hover:underline">{name}</div>
+                        //         })}
+                        //     </div>)} */}
+                        <select
+                            id="department-search"
+                            name="department-search"
+                            className="w-full cursor-pointer border-[#d9d9d9] text-[#6c757d] rounded-[6px] h-[45px] text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
+                            value={selectedDepartment}
+                            onChange={(e) => setSelectedDepartment(e.target.value)}
+                            required
+                        >
+                            <option value="" disabled className='italic text-sm'>Abteilung auswählen</option>
+                            {departmentList?.map(({ name }, index) => (
+                                <option className='text-sm text-textColor w-full' key={index} value={name}>
+                                    {name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    {/* )} */}
 
                     <div
                         onClick={handleSeacrh}
@@ -828,11 +827,11 @@ function Employee() {
                                 </th>
                             </tr>
                         </thead>
-                        {Array.isArray(currentUsers) && currentUsers?.length === 0 ? (
+                        {Array.isArray(userList) && userList?.length === 0 ? (
                             <div className="no-result-text text-center">NO RESULT</div>
                         ) : (
                             <tbody className="tbody">
-                                {currentUsers?.map(({ id, name, email, status, department, department_name, role, position }) => (
+                                {userList?.map(({ id, name, email, status, department, department_name, role, position }) => (
                                     <EmployeeItem
                                         key={id}
                                         name={name}
@@ -859,7 +858,7 @@ function Employee() {
                     <Pagination
                         current={currentPage}
                         pageSize={pageSize}
-                        total={userList?.length}
+                        total={totalPages}
                         onChange={handlePageChange}
                         className="text-base"
                     />

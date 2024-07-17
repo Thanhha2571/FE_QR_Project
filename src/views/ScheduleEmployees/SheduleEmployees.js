@@ -51,6 +51,12 @@ const ScheduleEmployees = () => {
     useEffect(() => {
         getAllDepartments();
         getAllShifts()
+
+        if (userObject?.role === "Inhaber" || userObject?.role === "Manager") {
+            const arrayFilter = userObject?.department?.map(item => ({ name: item.name })) || [];
+            setDepartmentList(arrayFilter);
+            console.log("arrayFilter", arrayFilter);
+        }
     }, [userObject?.role]);
 
     const handlePositionChange = (userId, newPosition, userName, department) => {
