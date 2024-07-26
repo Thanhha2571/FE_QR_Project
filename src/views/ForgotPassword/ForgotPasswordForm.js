@@ -9,7 +9,7 @@ import IconHide from "../../assets/images/hide-icon.png"
 import IconUnHide from "../../assets/images/unhide_icon.png"
 import SubmitCode from "./SubmitCode";
 const ForgotPasswordForm = () => {
-    document.title = "Forgot Password Form";
+    document.title = "Forgot Password Form ";
     const [id, setId] = useState('');
     const [name, setName] = useState('');
     const [role, setRole] = useState('');
