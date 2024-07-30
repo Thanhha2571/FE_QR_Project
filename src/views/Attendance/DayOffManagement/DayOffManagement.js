@@ -27,8 +27,15 @@ const DayOffManagement = () => {
     // const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfLastItem);
     // const totalPages = Math.ceil(requestList?.length / PAGE_SIZE);
 
+    const [pageSize, setPageSize] = useState(20);
+    const [currentPage, setCurrentPage] = useState(1);
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(requestList?.length / pageSize);
+
     const [openExportRequest, setOpenExportRequest] = useState(false)
-    const handlePageChange = (page) => {
+    const handlePageChange = (page, size) => {
         setCurrentPage(page);
         setPageSize(size);
     };

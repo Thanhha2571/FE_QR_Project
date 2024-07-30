@@ -12,6 +12,7 @@ import CountIcon from "../../assets/images/icon-count.png"
 import ExportIcon from "../../assets/images/export-icon.png"
 import LockIcon from "../../assets/images/icon-lock.png"
 import UnLock from "../../assets/images/icon-unlock.png"
+import { Pagination } from 'antd';
 
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
@@ -51,15 +52,15 @@ const SalarySummarizie = () => {
 
     const [pageSize, setPageSize] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * PAGE_SIZE;
-    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
-    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(salaryListByMonth?.length / PAGE_SIZE);
+    const indexOfLastItem = currentPage * pageSize;
+    const indexOfFirstItem = indexOfLastItem - pageSize;
+    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
+    const totalPages = Math.ceil(salaryListByMonth?.length / pageSize);
 
     const [lockState, setLockState] = useState(false)
     const [notiLockSalary, setNotiLockSalary] = useState()
 
-    const handlePageChange = (page) => {
+    const handlePageChange = (page, size) => {
         setCurrentPage(page);
         setPageSize(size);
     };
