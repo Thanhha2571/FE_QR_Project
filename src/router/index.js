@@ -24,7 +24,11 @@ import ReportForm from "views/ReportForm/ReportForm";
 import GenerateQR from "views/GenerateQR/GenerateQR";
 import History from "views/Salary/History";
 import QrLink from "views/GenerateQR/QrLink";
+import SubmitEmail from "views/ForgotPassword/submitEmail";
+import ForgotPasswordForm from "views/ForgotPassword/ForgotPasswordForm";
+import ChangePassword from "views/ChangePassword/ChangePassword";
 import LoadingLayout from "views/LoadingLayout/LoadingLayout";
+import ScheduleEmployees from "views/ScheduleEmployees/SheduleEmployees";
 const titles = {
     '/': 'QR Checkin',
     '/attendance': 'Attendance',
@@ -56,7 +60,7 @@ const Router = () => {
                 <Route path="working-schedule" element={<WorkingSchedule />} />
                 <Route path="working-schedule/day-off-management" element={<DayOffManagement />} />
                 <Route path="salary/summarize" element={<SalarySummarize />} />
-                <Route path="salary/history_counting" element={<History />} />
+                {/* <Route path="salary/history_counting" element={<History />} /> */}
                 <Route path="salary/sumarize/:employeeId/:employeeName" element={<SalaryEmployee />} />
                 <Route path="manage-log" element={<ManageLog />} />
                 <Route path="manage-car" element={<Car />} />
@@ -64,14 +68,16 @@ const Router = () => {
                 {/* <Route path="attendance/summarize" element={<AttendanceHistory />} /> */}
                 <Route path="generate_qr" element={<GenerateQR />} />
                 <Route path="Qr_link/:selectedDepartment" element={<QrLink />} />
-
+                <Route path="change-password" element={<ChangePassword />} />
+                <Route path="schedule-employees" element={<ScheduleEmployees />} />
                 {/* <Route path="employee/add-employee" element={<AddEmployee />} /> */}
                 {/* </Route> */}
 
                 {/* missing route */}
                 <Route path="*" element={<Missing />} />
-
             </Route>
+            <Route path="submit-email" element={<SubmitEmail />} />
+            <Route path="reset-password" element={<ForgotPasswordForm />} />
         </Routes>
 
     );

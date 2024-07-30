@@ -27,18 +27,8 @@ const DayOffManagement = () => {
     // const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfLastItem);
     // const totalPages = Math.ceil(requestList?.length / PAGE_SIZE);
 
-    // const handlePageChange = (page) => {
-    //     setCurrentPage(page);
-    // };
-
-    const [pageSize, setPageSize] = useState(20);
-    const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * pageSize;
-    const indexOfFirstItem = indexOfLastItem - pageSize;
-    const currentDayOffLists = requestList?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
-    const totalPages = Math.ceil(requestList?.length / pageSize);
-
-    const handlePageChange = (page, size) => {
+    const [openExportRequest, setOpenExportRequest] = useState(false)
+    const handlePageChange = (page) => {
         setCurrentPage(page);
         setPageSize(size);
     };
@@ -215,6 +205,64 @@ const DayOffManagement = () => {
         console.log(requestList);
     }
 
+    const handleExportRequest = async () => {
+        try {
+            if (userObject?.role === "Admin") {
+                const { data } = await axios.post(
+                    `${baseUrl}/api/admin/manage-xlsx/request-records`,
+                    {
+                        requests:requestList
+                    },
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `Request File.xlsx`;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            if (userObject?.role === "Inhaber") {
+                const { data } = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-xlsx/request-records`,
+                    {
+                        requests:requestList
+                    },
+                    {
+                        responseType: "arraybuffer", headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+
+                const blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+                const link = document.createElement("a");
+
+                link.href = window.URL.createObjectURL(blob);
+                link.download = `Request File.xlsx`;
+
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        } catch (error) {
+            console.error("Error exporting Excel file:", error);
+        } finally {
+            // setLoading(false);
+            setOpenExportRequest(false)
+        }
+
+
+    }
 
     return (
         <div>
@@ -229,7 +277,14 @@ const DayOffManagement = () => {
                                 <span className="text-[#6c757d] font-xl">/ Freie Tage</span>
                             </div>
                         </div>
-
+                        <div className="flex flex-row gap-3">
+                            <div className="flex flex-row px-4 gap-4">
+                                <button onClick={() => setOpenExportRequest(!openExportRequest)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
+                                    <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                                    Export Request
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div className="z-10 flex flex-row mt-10 justify-between h-[50px]">
                         <div
@@ -349,6 +404,32 @@ const DayOffManagement = () => {
                             </div>
                         </div>
                     </div>)}
+
+                    {openExportRequest && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                    <div
+                        onClick={() => setOpenExportRequest(false)}
+                        className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                    <div className="absolute w-[600px] h-[250px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                        <div className="w-full h-full">
+                            <div className="flex flex-col mt-8">
+                                <div className="flex flex-row justify-between px-8 items-center">
+                                    <div className="font-bold text-xl">Export file</div>
+                                    <div
+                                        onClick={() => setOpenExportRequest(false)}
+                                        className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                </div>
+                                <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                <div className="flex flex-col px-8 w-full mt-7 font-Changa justify-center items-center gap-4">
+                                    <span>Do you want to export Request File.xlsx?</span>
+                                    <div className="flex flex-row gap-3">
+                                        <button onClick={() => setOpenExportRequest(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
+                                        <button onClick={handleExportRequest} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>)}
                 </div>)}
         </div>
     )

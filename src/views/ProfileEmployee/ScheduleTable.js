@@ -308,6 +308,30 @@ const ScheduleTable = (props) => {
                 }
             }
         }
+        if (userObject?.role === "Manager") {
+            try {
+                const year = selectedDate.substring(0, 4);
+                const month = selectedDate.substring(5, 7);
+                const day = selectedDate.substring(8, 10)
+                const date = `${month}/${day}/${year}`
+                const response = await axios.get(`${baseUrl}/api/manager/manage-attendance/get-by-specific?manager_name=${userObject?.name}&employeeID=${id}&employeeName=${name}&year=${year}&month=${month}&date=${date}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+
+                setAttendanceDataByDate(response.data.message);
+                console.log("attendance", response.data);
+            } catch (error) {
+                if (error.response && error.response.status) {
+                    if (error.response.status === 404) {
+                        setAttendanceDataByDate([])
+                    }
+                } else {
+                    console.error("Error fetching schedule data:", error.message);
+                }
+            }
+        }
     };
     useEffect(() => {
         if (userObject?.role === 'Admin') {
@@ -1187,6 +1211,244 @@ const ScheduleTable = (props) => {
             }
         }
 
+        if (userObject?.role === 'Manager' && statusAttendance !== "missing") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+        }
+        if (userObject?.role === 'Manager' && statusAttendance !== "missing" && checkRole === "Autofahrer") {
+            if (checkInTimeMissing !== "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing !== "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                            "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing !== "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                            "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+            if (checkInTimeMissing === "" && checkOutTimeMissing === "") {
+                try {
+                    const { data } = await axios.put(
+                        `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                        {
+                            check_in_km: checkInKm,
+                            check_out_km: checkOutKm,
+                            total_km: Number(checkOutKm) - Number(checkInKm),
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
+                        }
+                    );
+
+                    fetchAttendanceDataByDate();
+                } catch (err) {
+                    alert(err.response?.data?.message)
+                } finally {
+                    setLoading(false);
+                    setChangeAttendanceFormState(false);
+                    setCheckInTimeMissing("")
+                    setCheckOutTimeMissing("")
+                    setSelectedCheckInStatus("")
+                    setSelectedCheckOutStatus("")
+                }
+            }
+        }
+        if (userObject?.role === 'Manager' && statusAttendance === "missing") {
+            try {
+                const { data } = await axios.put(
+                    `${baseUrl}/api/manager/manage-attendance/update/${attendanceId}?manager_name=${userObject?.name}`,
+                    {
+                        "shift_info.time_slot.check_in_time": checkInTimeMissing,
+                        "shift_info.time_slot.check_out_time": checkOutTimeMissing,
+                        "shift_info.time_slot.check_in_status": selectedCheckInStatus,
+                        "shift_info.time_slot.check_out_status": selectedCheckOutStatus,
+                        status: "checked"
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+
+                fetchAttendanceDataByDate();
+            } catch (err) {
+                alert(err.response?.data?.message)
+            } finally {
+                setLoading(false);
+                setChangeAttendanceFormState(false);
+                setAttendanceData({
+                    data: {
+                        check_in_time: '',
+                        check_out_time: '',
+                    },
+                });
+                setSelectedCheckInStatus("")
+                setSelectedCheckOutStatus("")
+            }
+        }
+
     };
 
     const handleSubmitCreateAttendanceInfo = async (e) => {
@@ -1259,6 +1521,35 @@ const ScheduleTable = (props) => {
         }
 
 
+        // if (userObject?.role === 'Manager') {
+        //     try {
+        //         const { data } = await axios.post(
+        //             `${baseUrl}/api/manager/manage-attendance/create?employeeID=${id}&employeeName=${name}&date=${date}&shiftCode=${selectedShift}`,
+        //             {
+        //                 "check_in_time": checkInTimeCreate,
+        //                 "check_out_time": checkOutTimeCreate,
+        //                 "check_in_status": selectedCheckInStatusCreate,
+        //                 "check_out_status": selectedCheckOutStatusCreate,
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${localStorage.getItem("token")}`
+        //                 }
+        //             }
+        //         );
+
+        //         fetchAttendanceDataByDate();
+        //     } catch (err) {
+        //         alert(err.response?.data?.message)
+        //     } finally {
+        //         setLoading(false);
+        //         setChangeAttendanceFormState(false);
+        //         setCheckInTimeCreate("")
+        //         setCheckOutTimeCreate("")
+        //         setSelectedCheckInStatusCreate("")
+        //         setSelectedCheckOutStatusCreate("")
+        //     }
+        // }
     };
 
     const handleDeleteShift = async () => {
@@ -1629,7 +1920,7 @@ const ScheduleTable = (props) => {
                                         ))
                                     )}
                                 </div>
-                                {exportState && (selectedShift && (
+                                {selectedShift && (
                                     <div>
                                             <div className="flex flex-col gap-3">
                                                 <div className="text-center font-bold text-gray-600 text-xl mt-4">Keine Anwesenheitsdaten verfügbar</div>
@@ -1923,7 +2214,7 @@ const ScheduleTable = (props) => {
                                                     // </div>
                                                 ))}
                                     </div>
-                                ))}
+                                )}
                                 <div className="w-full border border-solid border-t-[rgba(0,0,0,.10)] mt-4"></div>
                                 {selectedShift && (
                                     <div>

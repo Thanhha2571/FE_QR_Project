@@ -8,7 +8,11 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { DatePicker, Space } from 'antd';
 import { baseUrl } from "components/api/httpService";
-import { Pagination } from 'antd';
+import CountIcon from "../../assets/images/icon-count.png"
+import ExportIcon from "../../assets/images/export-icon.png"
+import LockIcon from "../../assets/images/icon-lock.png"
+import UnLock from "../../assets/images/icon-unlock.png"
+
 dayjs.extend(customParseFormat);
 const monthFormat = 'MM/YYYY';
 
@@ -47,12 +51,15 @@ const SalarySummarizie = () => {
 
     const [pageSize, setPageSize] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
-    const indexOfLastItem = currentPage * pageSize;
-    const indexOfFirstItem = indexOfLastItem - pageSize;
-    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfFirstItem + pageSize);
-    const totalPages = Math.ceil(salaryListByMonth?.length / pageSize);
+    const indexOfLastItem = currentPage * PAGE_SIZE;
+    const indexOfFirstItem = indexOfLastItem - PAGE_SIZE;
+    const currentUsers = salaryListByMonth?.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(salaryListByMonth?.length / PAGE_SIZE);
 
-    const handlePageChange = (page, size) => {
+    const [lockState, setLockState] = useState(false)
+    const [notiLockSalary, setNotiLockSalary] = useState()
+
+    const handlePageChange = (page) => {
         setCurrentPage(page);
         setPageSize(size);
     };
@@ -65,11 +72,29 @@ const SalarySummarizie = () => {
     const handleMonthCountingChange = (date, dateString) => {
         setMonthCountingPikcer(dateString)
     }
+
+    const getLockState = async () => {
+        // if (userObject.role === 'Admin') {
+            try {
+                const { data } = await axios.get(
+                    `${baseUrl}/api/admin/manage-salary/lock/get`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setLockState(data?.message?.status)
+            } catch (err) {
+                alert(err?.response?.data?.message)
+            }
+        // }
+    }
     useEffect(() => {
         if (userObject?.role === 'Manager') {
             setCheckManager(true)
         }
-
+        getLockState()
     }, [userObject?.role]);
 
     const handleSeacrh = async () => {
@@ -316,7 +341,7 @@ const SalarySummarizie = () => {
 
     }, [formData?.user?.id, selectedUserName, monthCountingPikcer])
 
-    console.log(variableCountingSalary);
+    // console.log(variableCountingSalary);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -449,8 +474,11 @@ const SalarySummarizie = () => {
         if (userObject?.role === "Admin") {
             try {
                 setLoading(true);
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-xlsx/salary-data?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/admin/manage-xlsx/salary-stats`,
+                    {
+                        salaries: salaryListByMonth
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -477,8 +505,11 @@ const SalarySummarizie = () => {
         if (userObject?.role === "Inhaber") {
             try {
                 setLoading(true);
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-xlsx/salary-data?inhaberName=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
+                const { data } = await axios.post(
+                    `${baseUrl}/api/inhaber/manage-xlsx/salary-stats`,
+                    {
+                        salaries: salaryListByMonth
+                    },
                     {
                         responseType: "arraybuffer", headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -523,6 +554,37 @@ const SalarySummarizie = () => {
         })
         setSelectedUserName("")
     }
+
+    const handleLockSalary = async (e) => {
+        e.preventDefault();
+        if (userObject.role === 'Admin') {
+            try {
+                const { data } = await axios.put(
+                    `${baseUrl}/api/admin/manage-salary/lock/update`,
+                    {
+                        status: !lockState
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
+                    }
+                );
+                setLockState(data?.message?.status)
+            } catch (err) {
+                alert(err?.response?.data?.message)
+            }
+        }
+    }
+
+    const handleOpenCountingForm = (e) => {
+        e.preventDefault();
+        if (lockState === true) {
+            setNotiLockSalary(true)
+        }else {
+            setSalaryCountingFormState(true)
+        }
+    }
     return (
         <div>
             {checkManager ? (<div className="ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">YOU CANNOT ACCESS THIS ROUTE</div>) : (<div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
@@ -536,12 +598,18 @@ const SalarySummarizie = () => {
                         </div>
                     </div>
                     <div className="flex flex-row px-4 gap-4">
-                        <button onClick={() => setSalaryCountingFormState(!salaryCountingFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
-                            <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                        <div className="flex flex-row gap-2 justify-center item"></div>
+                        {userObject?.role === "Admin" && (<button onClick={handleLockSalary} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
+                            <img src={lockState ? UnLock : LockIcon} className="w-6 h-auto" alt="lock/unlock icon" />
+                            {lockState ? 'Click to Unlock' : 'Click to Lock'}
+                        </button>)}
+
+                        <button onClick={handleOpenCountingForm} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
+                            <img src={CountIcon} className="w-6 h-auto" />
                             Gehaltszählung
                         </button>
                         <button onClick={() => setExportEmployee(!exportEmployee)} className="bg-buttonColor1 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-cyan-800">
-                            <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
+                            <img src={ExportIcon} className="w-6 h-auto" />
                             Exportdatei
                         </button>
                     </div>
@@ -900,6 +968,40 @@ const SalarySummarizie = () => {
                                     <div className="flex flex-row gap-3">
                                         <button onClick={() => setExportEmployee(false)} type="button" className="w-[100px] bg-rose-800 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointe">No</button>
                                         <button onClick={handleExportSalaryByEmloyeeFile} type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Yes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>)}
+                {notiLockSalary && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
+                    <div
+                        onClick={() => setNotiLockSalary(false)}
+                        className="absolute top-0 bottom-0 right-0 left-0 bg-[rgba(0,0,0,.45)] cursor-pointer"></div>
+                    <div className="absolute w-[700px] h-[230px] top-[300px] right-[500px] bottom-0 z-30 bg-white">
+                        <div className="w-full h-full">
+                            <div className="flex flex-col mt-8">
+                                <div className="flex flex-row justify-between px-8 items-center">
+                                    {/* <img src={IconSucess} w-8 h-auto /> */}
+                                    <span className="font-bold text-2xl">Salary Counting is Locked</span>
+                                    <div
+                                        onClick={() => setNotiLockSalary(false)}
+                                        className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
+                                </div>
+                                {/* <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div> */}
+                                <div className="flex flex-col px-8 w-full mt-7 font-Changa gap-4 items-center">
+                                    <div className="flex flex-col gap-3 text-red-600 font-bold">
+                                        <span className="text-xl text-center">Salary Counting is locked by Admin !!!</span>
+                                        <span className="text-xl">Please contact Admin to unlock, if you want to use this function</span>
+                                    </div>
+                                    <div className="flex flex-row gap-3 justify-center items-center" onClick={() => setNotiLockSalary(false)}>
+                                        <span
+                                            // onClick={() => {
+                                            //     setConfirmEmailModal(false)
+                                            //     navigate('/login')
+                                            // }}
+                                            // href="/login"
+                                            type="button" className="w-[100px] bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid px-2 py-1 rounded-md cursor-pointer">Okay</span>
                                     </div>
                                 </div>
                             </div>

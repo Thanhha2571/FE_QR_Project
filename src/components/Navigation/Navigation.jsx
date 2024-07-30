@@ -68,6 +68,16 @@ const Navigation = () => {
                                     </span>
                                 </li>
                             </a>
+                            <a href='/schedule-employees'>
+                                <li className='px-8 py-2'>
+                                    <span className="flex flex-row gap-2 justify-center items-center">
+                                        <img src={DotIcon} alt="" className='w-3 h-3' />
+                                        <div className="item-sub-menu">
+                                            <div className="item-title">Schedule employees</div>
+                                        </div>
+                                    </span>
+                                </li>
+                            </a>
                             {/* <li>
                                 <Link className="tags" to="employee/departments">
                                     <div className="item-sub-menu">
@@ -152,7 +162,7 @@ const Navigation = () => {
                                     </span>
                                 </li>
                             </Link>
-                            <Link to="salary/history_counting">
+                            {/* <Link to="salary/history_counting">
                                 <li className='px-8 py-2'>
                                     <span className="flex flex-row justify-center items-center gap-4">
                                         <img src={DotIcon} alt="" className='w-3 h-3' />
@@ -161,7 +171,7 @@ const Navigation = () => {
                                         </div>
                                     </span>
                                 </li>
-                            </Link>
+                            </Link> */}
                         </ul>)}
                     </div>
                     <div onClick={() => setLogMenu(!logMenu)}>
