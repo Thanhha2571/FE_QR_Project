@@ -11,6 +11,7 @@ import ProfileIconDashboard from "../../assets/images/ProfileIconDashboard.png"
 import LogOutIcon from "../../assets/images/icon-logout.png"
 import ChangePassword from "../../assets/images/changePassword.png"
 import { baseUrl } from "components/api/httpService";
+import { Pagination } from 'antd';
 dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
