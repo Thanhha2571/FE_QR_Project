@@ -1,1 +1,1 @@
-export const baseUrl = `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com/`
+export const baseUrl = `https://qrcodecheckin-d350fcfb1cb9.herokuapp.com`
