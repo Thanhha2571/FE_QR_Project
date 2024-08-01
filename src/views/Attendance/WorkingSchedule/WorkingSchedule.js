@@ -732,7 +732,7 @@ const WorkingSchedule = () => {
                                 <span className="table-title-id">Shift ID</span>
                             </th>
                             <th className="p-4 text-left">
-                                <span className="table-title-role">Time</span>
+                                <span className="table-title-role">Zeit</span>
                             </th>
                         </tr>
                     </thead>

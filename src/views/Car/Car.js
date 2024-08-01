@@ -12,7 +12,7 @@ dayjs.extend(customParseFormat);
 const dateFormat = 'MM/DD/YYYY';
 
 const Car = () => {
-    document.title = 'Car Management';
+    document.title = 'Autos Management';
     const [carList, setCarList] = useState()
     const [loading, setLoading] = useState(false);
     const [exportState, setExportState] = useState(false)
@@ -548,23 +548,23 @@ const Car = () => {
                 <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
                     <div className="flex flex-row items-center justify-between">
                         <div>
-                            <h1 className="font-bold text-3xl">Car Management</h1>
+                            <h1 className="font-bold text-3xl">Autos Management</h1>
                             <div className="flex flex-row">
                                 <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
-                                <span className="text-[#6c757d] font-xl">/ Car Management</span>
+                                <span className="text-[#6c757d] font-xl">/ Autos Management</span>
                             </div>
                         </div>
                         <div className="flex gap-3">
                             {exportState && (<div className="flex flex-row px-4 gap-4">
                                 <button onClick={() => setCreateCarFormState(!createCarFormState)} className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md hover:bg-emerald-800">
                                     <svg style={{ width: '14px', height: '16px' }} aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" class="svg-inline--fa fa-plus " role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"></path></svg>
-                                    Create Car
+                                    Auto erstellen
                                 </button>
                             </div>)}
 
                         </div>
                     </div>
-                    <div className="text-xl font-semibold leading-6">Car Management</div>
+                    <div className="text-xl font-semibold leading-6">Autos Management</div>
 
                     {/* //---------------------------------------------------------------- CREATE CAR ------------------------------------------------------------------------------------// */}
                     {createCarFormState && (<div className="fixed top-0 bottom-0 right-0 left-0 z-20 font-Changa">
@@ -628,7 +628,7 @@ const Car = () => {
                                             {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
                                                     <span className="text-rose-500">*</span>
-                                                    <span className="">Department</span>
+                                                    <span className="">Abteilung</span>
                                                 </div>
                                                 <div className="w-full flex flex-row gap-8 justify-between">
                                                     <div className="flex flex-col gap-2">
@@ -684,7 +684,7 @@ const Car = () => {
                                             {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
                                                     <span className="text-rose-500">*</span>
-                                                    <span className="">Department</span>
+                                                    <span className="">Abteilung</span>
                                                 </div>
                                                 <div className="w-full flex flex-row gap-8 justify-between">
                                                     <div className="flex flex-col gap-2">
@@ -867,7 +867,7 @@ const Car = () => {
                                             <div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
                                                     <span className="text-rose-500">*</span>
-                                                    <span className="">Department</span>
+                                                    <span className="">Abteilung</span>
                                                 </div>
                                                 <select
                                                     id="department"
@@ -877,7 +877,7 @@ const Car = () => {
                                                     onChange={(e) => setSelectedDepartment(e.target.value)}
                                                     required
                                                 >
-                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                                     {restDepartmentList?.map((item, index) => (
                                                         <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                             {item}
@@ -920,7 +920,7 @@ const Car = () => {
                                             <div className="w-full flex flex-col gap-2">
                                                 <div className="flex flex-row gap-2">
                                                     <span className="text-rose-500">*</span>
-                                                    <span className="">Department</span>
+                                                    <span className="">Abteilung</span>
                                                 </div>
                                                 <select
                                                     id="department"
@@ -930,7 +930,7 @@ const Car = () => {
                                                     onChange={(e) => setSelectedDepartment(e.target.value)}
                                                     required
                                                 >
-                                                    <option value="" disabled className='italic text-sm'>Select Department*</option>
+                                                    <option value="" disabled className='italic text-sm'>Abteilung auswählen*</option>
                                                     {departmentDefined?.map((item, index) => (
                                                         <option className='text-sm text-textColor w-full' key={index} value={item}>
                                                             {item}
@@ -964,10 +964,10 @@ const Car = () => {
                                         <span className="table-title-role">Register Date</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="table-title-role">Department</span>
+                                        <span className="table-title-role">Abteilung</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="table-title-role">Action</span>
+                                        <span className="table-title-role">Aktion</span>
                                     </th>
                                 </tr>
                             </thead>

@@ -576,7 +576,7 @@ const SalaryEmployee = () => {
                             }}
                             className={`hover:text-buttonColor1 cursor-pointer ${salaryInfoState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
                         >
-                            Attendance Overview</div>
+                            Anwesenheitsübersicht</div>
                         <div
                             onClick={() => {
                                 setAttendanceState(true)
@@ -585,7 +585,7 @@ const SalaryEmployee = () => {
                             }}
                             className={`hover:text-buttonColor1 cursor-pointer ${attendanceState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}
                         >
-                            Attendance History</div>
+                            Anwesenheit Historie</div>
                         <div
                             onClick={() => {
                                 setAttendanceState(false)
@@ -598,7 +598,7 @@ const SalaryEmployee = () => {
                     </div>
                 </div>
 
-                {salaryInfoState ? (salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_schedule_times, attendance_total_times, month, year }) => (
+                {salaryInfoState ? (salaryListByMonth?.map(({ employee_name, employee_id, default_schedule_times, realistic_day_offs,sick_day_offs,normal_day_offs,  realistic_schedule_times, attendance_total_times, month, year }) => (
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white h-auto w-1/3 flex flex-col p-4 rounded-md">
                             <div className="flex flex-col justify-center items-center gap-1 mt-4">
@@ -608,12 +608,12 @@ const SalaryEmployee = () => {
                             </div>
                         </div>
                         {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-2 rounded-md">
-                            <div className="text-2xl font-semibold leading-6">ATTENDANCE STATS</div>
+                            <div className="text-2xl font-semibold leading-6">Teilnehmerstatistik</div>
                             <div className="flex flex-wrap w-full">
                                 {user && user[0]?.attendance_stats?.map(({ _id, shift_on_time, shift_late, shift_missing, department_name, month, year }) => (
                                     <div className="flex flex-col w-1/2 py-4 gap-2">
                                         <span>Time: {month}/{year}</span>
-                                        <div className="text-xl font-semibold leading-6">Department: {department_name}</div>
+                                        <div className="text-xl font-semibold leading-6">Abteilung: {department_name}</div>
                                         <div key={_id} className="flex flex-col gap-2">
                                             <span>Shift Late: {shift_late}</span>
                                             <span>Shift Missing: {shift_missing}</span>
@@ -624,12 +624,15 @@ const SalaryEmployee = () => {
                             </div>
                         </div>}
                         {salaryInfoState && <div className="bg-white h-auto w-2/3 flex flex-col p-4 gap-6 rounded-md">
-                            <div className="text-2xl font-semibold leading-6">SUMMARIZE</div>
+                            <div className="text-2xl font-semibold leading-6">Zusammenfassung</div>
                             <span>Time: {month}/{year}</span>
                             <div className="flex flex-col gap-3">
                                 <div>Default Working Time: {default_schedule_times}</div>
                                 {/* <div>Rest Working Time: {realistic_schedule_times}</div> */}
                                 <div> Working Time: {attendance_total_times}</div>
+                                <div> Verbleibenden freien Tage : {realistic_day_offs}</div>
+                                <div> Sick day off : {sick_day_offs}</div>
+                                <div> Holiday day off : {normal_day_offs}</div>
                             </div>
                         </div>}
                     </div>))) : <div className="text-center font-extrabold"></div>}
@@ -642,7 +645,7 @@ const SalaryEmployee = () => {
                                     <span className="font-bold">Date</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-id">Department</span>
+                                    <span className="table-title-id">Abteilung</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-id">Shift Code</span>

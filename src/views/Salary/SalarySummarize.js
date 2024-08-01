@@ -21,8 +21,10 @@ const SalarySummarizie = () => {
     document.title = 'Salary Summarization'
     const [inputMonth, setInputMonth] = useState("")
     const [inputYear, setInputYear] = useState("")
-    const [inputId, setInputId] = useState("")
-    const [inputName, setInputName] = useState("")
+    // const [inputId, setInputId] = useState("")
+    // const [inputName, setInputName] = useState("")
+    const [inputDetails, setInputDetails] = useState("")
+    const [notice, setNotice] = useState(false)
     const [salaryListByMonth, setSalaryListByMonth] = useState()
     const [monthPicker, setMonthPicker] = useState("")
     const [monthCountingPikcer, setMonthCountingPikcer] = useState("")
@@ -76,19 +78,19 @@ const SalarySummarizie = () => {
 
     const getLockState = async () => {
         // if (userObject.role === 'Admin') {
-            try {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-salary/lock/get`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
+        try {
+            const { data } = await axios.get(
+                `${baseUrl}/api/admin/manage-salary/lock/get`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
-                );
-                setLockState(data?.message?.status)
-            } catch (err) {
-                alert(err?.response?.data?.message)
-            }
+                }
+            );
+            setLockState(data?.message?.status)
+        } catch (err) {
+            alert(err?.response?.data?.message)
+        }
         // }
     }
     useEffect(() => {
@@ -99,79 +101,48 @@ const SalarySummarizie = () => {
     }, [userObject?.role]);
 
     const handleSeacrh = async () => {
-        if (userObject.role === 'Admin' && monthPicker !== "" && inputId === "" && inputName === "") {
-            try {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    }
-                );
-                setSalaryListByMonth(data?.message)
-                console.log(data?.message);
-                // setInputMonth("")
-                // setInputYear("")
-                // console.log("data", data?.message);
-                // console.log(data?.);
-            } catch (err) {
-                alert("No salary recorded")
-            }
+        setNotice(false);
+        if (monthPicker === "") {
+            setNotice(true);
         }
-        if (userObject.role === 'Admin' && monthPicker !== "" && inputId !== "" && inputName !== "") {
-            setSalaryListByMonth([])
-            try {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&employeeID=${inputId}&employeeName=${inputName}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
+        else {
+            if (userObject.role === 'Admin') {
+                setSalaryListByMonth([])
+                try {
+                    const { data } = await axios.get(
+                        `${baseUrl}/api/admin/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&details=${inputDetails}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
                         }
-                    }
-                );
-                setSalaryListByMonth(data?.message)
-                console.log(data?.message);
-                // console.log("data", data?.message);
-                // console.log(data?.);
-            } catch (err) {
-                alert("No salary recorded")
+                    );
+                    setSalaryListByMonth(data?.message)
+                    console.log(data?.message);
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    alert("No salary recorded")
+                }
             }
-        }
-        if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId === "" && inputName === "") {
-            setSalaryListByMonth([])
-            try {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
+            if (userObject.role === 'Inhaber') {
+                setSalaryListByMonth([])
+                try {
+                    const { data } = await axios.get(
+                        `${baseUrl}/api/inhaber/manage-salary/get?inhaber_name=${userObject?.name}&year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&details=${inputDetails}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`
+                            }
                         }
-                    }
-                );
-                setSalaryListByMonth(data?.message)
-                // console.log("data", data?.message);
-                // console.log(data?.);
-            } catch (err) {
-                alert("No salary recorded")
-            }
-        }
-        if (userObject.role === 'Inhaber' && monthPicker !== "" && inputId !== "" && inputName !== "") {
-            setSalaryListByMonth([])
-            try {
-                const { data } = await axios.get(
-                    `${baseUrl}/api/inhaber/manage-salary/get?year=${monthPicker.substring(3, 7)}&month=${monthPicker.substring(0, 2)}&inhaber_name=${userObject?.name}&employeeID=${inputId}&employeeName=${inputName}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("token")}`
-                        }
-                    }
-                );
-                setSalaryListByMonth(data?.message)
-                // console.log("data", data?.message);
-                // console.log(data?.);
-            } catch (err) {
-                alert("No salary recorded")
+                    );
+                    setSalaryListByMonth(data?.message)
+                    console.log(data?.message);
+                    // console.log("data", data?.message);
+                    // console.log(data?.);
+                } catch (err) {
+                    alert("No salary recorded")
+                }
             }
         }
     }
@@ -252,50 +223,8 @@ const SalarySummarizie = () => {
                 }
             }
         }
-        const getUserListSearch = async () => {
-            if (userObject.role === 'Admin' && inputId !== "") {
-                setLoading(true)
-                try {
-                    const { data } = await axios.get(
-                        `${baseUrl}/api/admin/manage-all/search-specific?details=${inputId}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`
-                            }
-                        }
-                    );
-                    setUserListSearch(data?.message)
-                    setLoading(false)
-                    // console.log("data", data?.message);
-                    // console.log(data?.);
-                } catch (err) {
-                    setLoading(false)
-                    // alert(err.response?.data?.message)
-                }
-            }
-            if (userObject.role === 'Inhaber' && inputId !== "") {
-                setLoading(true)
-                try {
-                    const { data } = await axios.get(
-                        `${baseUrl}/api/inhaber/manage-employee/search-specific?inhaber_name=${userObject?.name}&details=${inputId}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`
-                            }
-                        }
-                    );
-                    setUserListSearch(data?.message)
-                    setLoading(false)
-                    // console.log("data", data?.message);
-                    // console.log(data?.);
-                } catch (err) {
-                    // alert(err.response?.data?.message)
-                }
-            }
-        }
         getUserList()
-        getUserListSearch()
-    }, [formData?.user?.id, inputId]);
+    }, [formData?.user?.id]);
 
     useEffect(() => {
         const getUseVariableCoutingSalary = async () => {
@@ -582,7 +511,7 @@ const SalarySummarizie = () => {
         e.preventDefault();
         if (lockState === true) {
             setNotiLockSalary(true)
-        }else {
+        } else {
             setSalaryCountingFormState(true)
         }
     }
@@ -625,27 +554,10 @@ const SalarySummarizie = () => {
                         <input
                             className="border-[#d9d9d9] text-[#6c757d] rounded-[6px] w-1/3 text-base px-4 py-3 placeholder:text-placeholderTextColor hover:border-[#4096ff] focus:border-[#4096ff]"
                             type="text"
-                            placeholder="Enter ID"
-                            value={inputId}
-                            onChange={(e) => setInputId(e.target.value)}
+                            placeholder="Enter ID, Name"
+                            value={inputDetails}
+                            onChange={(e) => setInputDetails(e.target.value)}
                         />
-                        <div className="w-2/3 flex flex-col gap-2 h-[50px]">
-                            <select
-                                id="name_search"
-                                name="name_search"
-                                className="w-full cursor-pointer h-[50px] border-[#d9d9d9] rounded-[6px] text-[#6c757d] hover:border-[#4096ff] focus:border-[#4096ff]"
-                                value={inputName}
-                                onChange={(e) => setInputName(e.target.value)}
-                            // required
-                            >
-                                <option value="" disabled className='italic text-sm'>Select Employee Name*</option>
-                                {userListSearch?.map((item, index) => (
-                                    <option className='text-sm text-[#6c757d] w-full' key={index} value={item.name}>
-                                        {item.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                     </div>
                     <div
                         onClick={handleSeacrh}
@@ -653,7 +565,7 @@ const SalarySummarizie = () => {
                         <button className="search-btn">Suchen</button>
                     </div>
                 </div>
-
+                {notice && <div className="font-bold text-xl text-red-700">Month is required</div>}
                 <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                     <table className="w-full table">
                         <thead className="">
@@ -814,7 +726,7 @@ const SalarySummarizie = () => {
                                         <div className="w-full h-auto flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Month</span>
+                                                <span className="">Monat</span>
                                             </div>
                                             <Space className="w-full text-[#6c757d] font-Changa" direction="vertical" size={12}>
                                                 <DatePicker required onChange={handleMonthCountingChange} placeholder="Select Month" className="placeholder:text-sm placeholder:text-placeholderTextColor w-full h-[45px] text-base text-placeholderTextColor" format={monthFormat} picker="month" />
@@ -941,7 +853,7 @@ const SalarySummarizie = () => {
                                             />
                                         </div>
                                         <div
-                                            className=" bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
+                                            className=" mb-4 bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid py-3 rounded-md cursor-pointer hover:bg-emerald-700 w-full">
                                             <button type="submit" className="w-full">Gehaltszählung</button>
                                         </div>
                                     </form>

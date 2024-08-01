@@ -8,7 +8,7 @@ import { baseUrl } from "components/api/httpService";
 import { Pagination } from 'antd';
 
 const DayOffManagement = () => {
-    document.title = "Day Off Management"
+    document.title = "Die Verwaltung der Urlaubsanträge"
     const [requestList, setRequestList] = useState()
     const [requestModal, setRequestModal] = useState(false)
     const [requestId, setRequestId] = useState()
@@ -277,7 +277,7 @@ const DayOffManagement = () => {
                 : (<div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
                     <div className="flex flex-row items-center justify-between">
                         <div>
-                            <h1 className="font-bold text-3xl mb-2">Verwaltung freier Tage</h1>
+                            <h1 className="font-bold text-3xl mb-2">Die Verwaltung der Urlaubsanträge</h1>
                             <div className="flex flex-row">
                                 <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
                                 <div className="text-base font-semibold leading-6 text-[#6c757d]">/ Arbeitsmanagement</div>
@@ -320,7 +320,7 @@ const DayOffManagement = () => {
                     </div>
                     <div className="bg-[#f0f2f5] w-full flex flex-row p-5 font-Changa text-textColor gap-4">
                         <div className="bg-white w-full h-auto p-10">
-                            <div className="font-bold text-2xl text-textColor mb-8">Fordern Sie die Liste der freien Tage an</div>
+                            <div className="font-bold text-2xl text-textColor mb-8">Die Liste der Urlaubsanträge</div>
                             <div className="block w-full text-base font-Changa mt-5 overflow-y-scroll overflow-x-scroll">
                                 <table className="w-full table">
                                     <thead className="">
@@ -332,13 +332,13 @@ const DayOffManagement = () => {
                                                 <span className="table-title-id">Employee ID</span>
                                             </th>
                                             <th className="p-2 text-left">
-                                                <span className="table-title-role">From</span>
+                                                <span className="table-title-role">Von</span>
                                             </th>
                                             <th className="p-2 text-left">
-                                                <span className="table-title-role">To</span>
+                                                <span className="table-title-role">Bis</span>
                                             </th>
                                             <th className="p-2 text-left">
-                                                <span className="table-title-role">Reason</span>
+                                                <span className="table-title-role">Gründe</span>
                                             </th>
                                             <th className="p-2 text-left">
                                                 <span className="table-title-role">Status</span>

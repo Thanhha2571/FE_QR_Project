@@ -19,7 +19,7 @@ const History = (props) => {
                             <span className="table-title-id">Employee ID</span>
                         </th>
                         <th className="p-2 text-left">
-                            <span className="table-title-status">Month</span>
+                            <span className="table-title-status">Monat</span>
                         </th>
                         <th className="p-2 text-left">
                             <span className="table-title-status">Year</span>

@@ -10,7 +10,7 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'MM/DD/YYYY';
 
 const ReportForm = () => {
-    document.title = "Report Form";
+    document.title = "Berichtsformular";
     const [formList, setFormList] = useState()
     const [loading, setLoading] = useState(false);
 
@@ -318,10 +318,10 @@ const ReportForm = () => {
                 <div className="relative ml-[260px] h-auto p-5 flex flex-col font-Changa text-textColor gap-5">
                     <div className="flex flex-row items-center justify-between">
                         <div>
-                            <h1 className="font-bold text-3xl">Report Form Management</h1>
+                            <h1 className="font-bold text-3xl">Berichtsformular</h1>
                             <div className="flex flex-row">
                                 <Link className="text-xl font-semibold leading-6 hover:underline" to="/dashboard">Dashboard</Link>
-                                <span className="text-[#6c757d] font-xl">/ Report Form Management</span>
+                                <span className="text-[#6c757d] font-xl">/ Berichtsformular</span>
                             </div>
                         </div>
                         <div className="flex flex-row gap-3">
@@ -333,7 +333,7 @@ const ReportForm = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="text-xl font-semibold leading-6">Report Form Management</div>
+                    <div className="text-xl font-semibold leading-6">Berichtsformular</div>
                     {/* //----------------------------------------------------------------FORM MANAGEMENT------------------------------------------------------------------------------------// */}
 
                     <div className="p-5 w-full flex flex-col gap-10">
@@ -367,7 +367,7 @@ const ReportForm = () => {
                                 <div
                                     onClick={handleSeacrh}
                                     className="bg-buttonColor2 text-white text-base flex flex-row gap-1 justify-center items-center border border-solid p-2 rounded-md cursor-pointer hover:bg-emerald-700 w-1/6">
-                                    <button className="search-btn">Seacrh</button>
+                                    <button className="search-btn">Suchen</button>
                                 </div>
                             </div>
                         </div>
@@ -380,7 +380,7 @@ const ReportForm = () => {
                                         <span className="font-bold">Date</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="font-bold">Time</span>
+                                        <span className="font-bold">Zeit</span>
                                     </th>
                                     <th className="p-4 text-left">
                                         <span className="table-title-id">Name</span>
@@ -389,7 +389,7 @@ const ReportForm = () => {
                                         <span className="table-title-role">ID</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="table-title-role">Department</span>
+                                        <span className="table-title-role">Abteilung</span>
                                     </th>
                                     <th className="p-4 text-left">
                                         <span className="table-title-role">Position</span>
@@ -404,7 +404,7 @@ const ReportForm = () => {
                                         <span className="table-title-role">Check Out Km</span>
                                     </th>
                                     <th className="p-4 text-left">
-                                        <span className="table-title-role">Information Form</span>
+                                        <span className="table-title-role">Informationsformular</span>
                                     </th>
                                 </tr>
                             </thead>

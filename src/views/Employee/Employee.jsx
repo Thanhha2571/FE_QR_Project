@@ -811,7 +811,7 @@ function Employee() {
                                     <span className="table-title-role">Rolle</span>
                                 </th>
                                 <th className="p-2 text-left">
-                                    <span className="table-title-role">Filiale</span>
+                                    <span className="table-title-role">Abteilung</span>
                                 </th>
                                 <th className="p-2 text-left">
                                     <span className="table-title-role"></span>
@@ -872,12 +872,12 @@ function Employee() {
                         <div className="w-full h-full">
                             <div className="flex flex-col mt-8">
                                 <div className="flex flex-row justify-between px-8 items-center">
-                                    <div className="font-bold text-xl">Create Employee</div>
+                                    <div className="font-bold text-xl">Mitarbeiter anlegen</div>
                                     <div
                                         onClick={() => setAddEmployee(false)}
                                         className="text-lg border border-solid border-[rgba(0,0,0,.45)] py-1 px-3 rounded-full cursor-pointer">x</div>
                                 </div>
-                                <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div>
+                                {/* <div className="w-full border border-solid border-t-[rgba(0,0,0,.45)] mt-4"></div> */}
                                 <div className="flex flex-col px-8 w-full mt-7o">
                                     <form
                                         className="flex flex-col gap-6 w-full justify-center items-center"
@@ -944,7 +944,7 @@ function Employee() {
                                         {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Filiale</span>
+                                                <span className="">Abteilung</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">
@@ -1000,7 +1000,7 @@ function Employee() {
                                         {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Filiale</span>
+                                                <span className="">Abteilung</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">
@@ -1056,7 +1056,7 @@ function Employee() {
                                         {checkManager && (<div className="w-full flex flex-col gap-2">
                                             <div className="flex flex-row gap-2">
                                                 <span className="text-rose-500">*</span>
-                                                <span className="">Filiale</span>
+                                                <span className="">Abteilung</span>
                                             </div>
                                             <div className="w-full flex flex-row gap-8 justify-between">
                                                 <div className="flex flex-col gap-2">

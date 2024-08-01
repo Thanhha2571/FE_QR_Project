@@ -1649,7 +1649,7 @@ const ScheduleTable = (props) => {
 
     return (
         <div className="flex flex-col justify-center items-center w-full gap-4 font-Changa text-textColor">
-            <h2 className="text-2xl font-bold">Schedule Calendar</h2>
+            <h2 className="text-2xl font-bold">Arbeitsplan</h2>
             {selectedYear && (
                 <Calendar
                     onChange={handleMonthChange}
@@ -1723,7 +1723,7 @@ const ScheduleTable = (props) => {
                                     {checkAdmin && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Filiale</span>
+                                            <span className="">Abteilung</span>
                                         </div>
                                         <select
                                             id="department"
@@ -1769,7 +1769,7 @@ const ScheduleTable = (props) => {
                                     {checkInhaber && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Filiale</span>
+                                            <span className="">Abteilung</span>
                                         </div>
                                         <select
                                             id="department"
@@ -1822,7 +1822,7 @@ const ScheduleTable = (props) => {
                                     {checkManager && (<div className="w-full flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Filiale</span>
+                                            <span className="">Abteilung</span>
                                         </div>
                                         <select
                                             id="department"
@@ -1875,7 +1875,7 @@ const ScheduleTable = (props) => {
                                     <div className="w-full h-auto flex flex-col gap-2">
                                         <div className="flex flex-row gap-2">
                                             <span className="text-rose-500">*</span>
-                                            <span className="">Dates</span>
+                                            <span className="">Datum</span>
                                         </div>
                                         {/* <input
                                             type="text"
@@ -2231,7 +2231,7 @@ const ScheduleTable = (props) => {
                                                         <span className="w-2/3">{id}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">
-                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Filiale</span>
+                                                        <span className="text-[#6c757d] w-1/3 text-right px-3">Abteilung</span>
                                                         <span className="w-2/3">{filteredItem?.department_name}</span>
                                                     </div>
                                                     <div className="flex flex-wrap w-full items-center justify-center">

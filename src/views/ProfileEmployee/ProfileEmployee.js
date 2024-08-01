@@ -693,7 +693,7 @@ const ProfileEmployee = () => {
                             setScheduleState(true)
                             setProfileState(false)
                         }}
-                        className={`hover:text-buttonColor1 cursor-pointer ${scheduleState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Zeitplan Kalender</div>
+                        className={`hover:text-buttonColor1 cursor-pointer ${scheduleState ? "text-buttonColor1 underline decoration-buttonColor1" : ""}`}>Arbeitsplan</div>
                 </div>
             </div>
             {user?.map((index, item) =>
@@ -1003,7 +1003,7 @@ const ProfileEmployee = () => {
                                         />
                                     </div>
                                     <div className="flex flex-wrap w-[600px] items-center">
-                                        <label className="w-1/4 text-right p-4" htmlFor="phone">Hausvermietung:</label>
+                                        <label className="w-1/4 text-right p-4" htmlFor="phone">Miete:</label>
                                         <input
                                             type="text"
                                             id="house_rent_money"
